@@ -9,15 +9,10 @@ Let $d \geq 3$ be a fixed integer. A $d$-regular graph is a finite graph $G=(V,E
 The first eigenvalue $\lambda_1$ is always equal to $d$; this is the eigenvalue corresponding to constant eigenvectors. The second eigenvalue is equal to $d$ if and only if the graph is disconnected. The last eigenvalue $\lambda_n$ is equal to $-d$ if and only if the graph is bipartite, i.e. we can split the vertices $V = V_1 \sqcup V_2$ so that every edge of $G$ has one endpoint in $V_1$ and the other in $V_2$.
 
 The quantity at the heart of this project is the *spectral gap* of the graph, defined as the spacing between the trivial eigenvalue $d$ and
-```math
-\lambda_+ := \max_{2 \leq i \leq n} |\lambda_i| \leq d.
-```
+$\lambda_+ := \max_{2 \leq i \leq n} |\lambda_i| \leq d$.
 This spacing measures the connectivity of the graph, the speed of convergence of random walks.
 
 As the graph grows, the size of the spectral gap is limited by the Alon-Boppana bound, which states that
-```math
-\lambda_2 \geq 2 \sqrt{d-1} - \frac{2 \sqrt{d-1}-1}{\lfloor \mathrm{diam}(G) /2 \rfloor}
-```
-where $\mathrm{diam}(G)$ is the diameter of $G$. As the number of vertices $n$ goes to infinity, we obtain that $\lambda_+ \geq 2 \sqrt{d-1} - o(1)$. The value $2 \sqrt{d-1}$ appears here in relation to the spectrum of the infinite $d$-regular tree.
+$\lambda_2 \geq 2 \sqrt{d-1} - o(1)$ as $n \rightarrow \infty$. The value $2 \sqrt{d-1}$ appears here in relation to the spectrum of the infinite $d$-regular tree.
 
 ## Random $d$-regular graphs
