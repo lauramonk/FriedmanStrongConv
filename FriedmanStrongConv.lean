@@ -1,1 +1,2 @@
 import FriedmanStrongConv.Example
+import FriedmanStrongConv.Graph.Finite
