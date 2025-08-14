@@ -78,10 +78,12 @@ section LocallyFinite
 abbrev LocallyFinite :=
   ∀ x : V(G), Fintype (G.incSet x)
 
+/- To fix
+
 variable [LocallyFinite G]
 
 /-- A locally finite graph is regular of degree `d` if every vertex has degree `d`. -/
 def IsRegularOfDegree (d : ℕ) [DecidableRel G.IsLoopAt] : Prop :=
-  ∀ x : V(G), G.degree x = d
+  ∀ x : V(G), G.degree x = d -/
 
 end LocallyFinite
