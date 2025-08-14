@@ -20,22 +20,7 @@ namespace Graph
 
 variable {α β : Type*} {G : Graph α β}
 
-section FiniteAt
-
-variable (x) [Fintype (G.incSet x)]
-/-- `G.incFinset x` is the `Finset` version of `G.incSet x` in case `G` is
-locally finite at `x`. -/
-def incFinset : Finset β := (G.incSet x).toFinset
-
-theorem incFinset_def : G.incFinset x = (G.incSet x).toFinset := rfl
-
-@[simp]
-theorem mem_incFinset (e : β) : e ∈ G.incFinset x ↔ G.Inc e x :=
-  Set.mem_toFinset
-
-end FiniteAt
-
-section FiniteLoop
+section FiniteLoopAt
 
 variable (x) [Fintype (G.loopSet x)]
 
@@ -43,17 +28,44 @@ variable (x) [Fintype (G.loopSet x)]
 a finite number of loops at `x`.-/
 def loopFinset : Finset β := (G.loopSet x).toFinset
 
-theorem loopFinset_def : G.loopFinset x = (G.loopSet x).toFinset := rfl
+theorem loopFinset_def :
+  G.loopFinset x = (G.loopSet x).toFinset := rfl
 
 @[simp]
-theorem mem_loopFinset (e : β) : e ∈ G.loopFinset x ↔ G.IsLink e x x :=
-  Set.mem_toFinset
+theorem mem_loopFinset (e : β) :
+  e ∈ G.loopFinset x ↔ G.IsLink e x x := Set.mem_toFinset
 
-end FiniteLoop
+end FiniteLoopAt
+
+section FiniteAt
+
+variable (x) [Fintype (G.incSet x)]
+
+/-- `G.incFinset x` is the `Finset` version of `G.incSet x` in case `G` is
+locally finite at `x`. -/
+def incFinset : Finset β := (G.incSet x).toFinset
+
+theorem incFinset_def :
+  G.incFinset x = (G.incSet x).toFinset := rfl
+
+@[simp]
+theorem mem_incFinset (e : β) : e ∈ G.incFinset x ↔ G.Inc e x := Set.mem_toFinset
+
+/-- If a graph has a finite number of incident edges at x then it has a finite number
+of loops at x.-/
+instance loopSetFintype : Fintype (G.loopSet x) := sorry
+
+/-- theorem loopFinset_eq_filter [DecidableRel IsLoopAt] :
+    G.loopFinset x = ({e ∈ G.incFinset x | G.IsLoopAt e x} : Finset _) := by sorry--/
+
+theorem loopFinset_subset :
+    G.loopFinset x ⊆ G.incFinset x := sorry
+
+end FiniteAt
 
 section Degree
 
-variable (x) [Fintype (G.incSet x)] [Fintype (G.loopSet x)]  /-Remove redundant hypothesis-/
+variable (x) [Fintype (G.incSet x)] [DecidableRel G.IsLoopAt]
 
 /-- `G.degree x` is the number of edges incident to `x`, with loops counted twice. -/
 def degree : ℕ := #(G.incFinset x) + #(G.loopFinset x)
@@ -64,15 +76,12 @@ section LocallyFinite
 
 /-- A graph is locally finite if every vertex has a finite incidence set. -/
 abbrev LocallyFinite :=
-  ∀ x : α, Fintype (G.incSet x)
+  ∀ x : V(G), Fintype (G.incSet x)
 
-abbrev LocallyFiniteLoop :=
-  ∀ x : α, Fintype (G.loopSet x)
-
-variable [LocallyFinite] [LocallyFiniteLoop]
+variable [LocallyFinite G]
 
 /-- A locally finite graph is regular of degree `d` if every vertex has degree `d`. -/
-def IsRegularOfDegree (d : ℕ) : Prop :=
-  ∀ x : V(G), G.degree x = d /-???-/
+def IsRegularOfDegree (d : ℕ) [DecidableRel G.IsLoopAt] : Prop :=
+  ∀ x : V(G), G.degree x = d
 
 end LocallyFinite
