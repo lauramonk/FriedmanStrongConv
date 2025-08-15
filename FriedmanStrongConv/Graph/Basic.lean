@@ -21,7 +21,7 @@ theorem mem_loopSet (x : α) (e : β) : e ∈ G.loopSet x ↔ G.IsLoopAt e x :=
   Iff.rfl
 
 /-- The loopSet is included in the incSet-/
-lemma loopSet_incl_incSet : G.loopSet x ⊆ G.incSet x := by
+theorem loopSet_subset (x : α): G.loopSet x ⊆ G.incSet x := by
   intro _ h
   use x
   exact h

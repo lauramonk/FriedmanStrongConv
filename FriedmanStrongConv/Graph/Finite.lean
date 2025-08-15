@@ -18,7 +18,7 @@ open Finset Function
 
 namespace Graph
 
-variable {α β : Type*} {G : Graph α β}
+variable {α β : Type*} (G : Graph α β)
 
 section FiniteLoopAt
 
@@ -53,13 +53,14 @@ theorem mem_incFinset (e : β) : e ∈ G.incFinset x ↔ G.Inc e x := Set.mem_to
 
 /-- If a graph has a finite number of incident edges at x then it has a finite number
 of loops at x.-/
-instance loopSetFintype : Fintype (G.loopSet x) := sorry
+instance loopSetFintype [DecidableRel G.IsLoopAt] : Fintype (G.loopSet x) := sorry
 
 /-- theorem loopFinset_eq_filter [DecidableRel IsLoopAt] :
     G.loopFinset x = ({e ∈ G.incFinset x | G.IsLoopAt e x} : Finset _) := by sorry--/
 
-theorem loopFinset_subset :
-    G.loopFinset x ⊆ G.incFinset x := sorry
+theorem loopFinset_subset (x : α) [Fintype (G.incSet x)] [DecidableRel G.IsLoopAt] :
+    G.loopFinset x ⊆ G.incFinset x :=
+  Set.toFinset_subset_toFinset.mpr (G.loopSet_subset x)
 
 end FiniteAt
 
@@ -76,14 +77,10 @@ section LocallyFinite
 
 /-- A graph is locally finite if every vertex has a finite incidence set. -/
 abbrev LocallyFinite :=
-  ∀ x : V(G), Fintype (G.incSet x)
-
-/- To fix
-
-variable [LocallyFinite G]
+  ∀ x : α, Fintype (G.incSet x)
 
 /-- A locally finite graph is regular of degree `d` if every vertex has degree `d`. -/
-def IsRegularOfDegree (d : ℕ) [DecidableRel G.IsLoopAt] : Prop :=
-  ∀ x : V(G), G.degree x = d -/
+def IsRegularOfDegree (d : ℕ) [LocallyFinite G] [DecidableRel G.IsLoopAt] : Prop :=
+  ∀ x : V(G), G.degree x = d
 
 end LocallyFinite
