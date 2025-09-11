@@ -6,6 +6,77 @@
 % the current file can be a simple sequence of \input. Otherwise It
 % can start with a \section or \chapter for instance.
 
-\chapter{The project}
-
 \chapter{Random regular graphs}
+
+\section{Degree and regular graphs}
+
+Let $G = (V, E)$ be a graph, i.e. a set of vertices $V$ and edges $E$ (each edge links two
+unordered, possibly identical vertices $x$, $y$). We say an edge $e$ is \emph{indicent} to a vertex
+$x$ if there exists a vertex $y$ such that $e$ links $x$ and $y$. An edge is a \emph{loop} based at
+a vertex $x$ if it links the vertex $x$ to itself.
+
+\begin{definition}
+  The \emph{degree} of a vertex $x \in V$ is the number of incident edges, counting loops twice:
+  \begin{equation*}
+    \mathrm{deg}(x) = \# \{\text{edges incident to } x\}
+    + \# \{ \text{loops based at } x\}.
+  \end{equation*}
+\end{definition}
+
+\begin{definition}
+  Let $d$ be a non-negative integer. We say $G$ is $d$-regular if every vertex of $G$ has degree $d$.
+\end{definition}
+
+\section{Random regular graphs: the permutation model}
+
+In the rest of this blueprint, $N$ is a positive integer, and $[N] = \{1, \ldots, N\}$.
+We also fix an even positive integer $d = 2r$.
+
+\begin{definition}
+  We denote as $\mathbf{S}_N$ the set of permutations of $[N]$, i.e. bijective maps $\sigma
+  : [N] \rightarrow [N]$. 
+\end{definition}
+
+\begin{lemma}
+  The set $\mathbf{S}_N$ is finite and has cardinality $N!$.
+\end{lemma}
+We can therefore equip $\mathbf{S}_N$ with the uniform probability measure.
+
+It will be more useful in what follows to view permutations as matrices.
+
+\begin{definition}
+  A square matrix is called a \emph{permutation matrix} if all of its entries are equal to $0$ or
+  $1$, with exactly one $1$ on each row and column.
+\end{definition}
+
+\begin{lemma}
+  Let $U$ be a permutation matrix. Then, $U$ is invertible and its inverse is the transpose $U^*$ of $U$.
+\end{lemma}
+
+\begin{definition}
+  Let $\sigma \in \mathbf{S}_N$. We associate to $\sigma$ the $N \times N$ matrix
+  $U_\sigma$ by letting, for each $i, j \in [N]$, $(U_\sigma)_{ij} = 1$ if $j = \sigma(i)$. [todo: check]
+\end{definition}
+
+\begin{lemma}
+  The map $\sigma \mapsto U_\sigma$ is a bijection from $\mathbf{S}_N$ to the set of $N \times N$
+  permutation matrices.
+\end{lemma}
+
+\section{The infinite $d$-regular tree}
+
+\begin{definition}
+  A \emph{walk} from $x$ to $y$ is a sequence of vertices and edges
+  $x = v_0, e_1, v_1, \ldots, e_k, v_k = y$ such that for every $1 \leq j \leq k$, the edge $e_j$
+  links the vertices $v_{j-1}$ and $v_j$. A walk is a \emph{path} if its edges are all distinct.
+\end{definition}
+
+\begin{definition}
+  A graph $G$ is called a \emph{tree} if, for any pair of distinct vertices $x$, $y$, there exists
+  one unique path from $x$ to $y$.
+\end{definition}
+
+[todo: define the infinite $d$-regular tree]
+
+
+
