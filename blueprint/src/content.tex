@@ -8,12 +8,44 @@
 
 \chapter{Random regular graphs}
 
+In this chapter, we introduce the definitions related to random regular graphs and their spectrum.
+We refer the reader to \cite{chung1992} for a more detailed introduction and motivations.
+
+\section{Definition of a graph}
+
+In this section, we define a few simple notions of graph theory, to set conventions.
+
+\begin{definition}
+  \lean{Graph}
+  \leanok
+  A \emph{graph} is a pair $G = (V, E)$ where $V$ is a set of vertices, and $E$ a set of edges,
+  and each edge links two unordered, possibly identical vertices.
+\end{definition}
+
+Note that this definition allows for loops (i.e. edges going from one vertex to itself) and
+multi-edges (i.e. multiple edges connecting two vertices). This convention is essential to the proof
+we are aiming for.
+
+\begin{definition}
+  \lean{Inc}
+  \leanok
+  We say an edge $e$ is \emph{indicent} to a vertex $x$ if there exists a vertex $y$ such that $e$
+  links $x$ and $y$.
+\end{definition}
+
+\begin{definition}
+  \lean{IsLoopAt}
+  \leanok
+  An edge is a \emph{loop} based at a vertex $x$ if it links the vertex $x$ to itself.
+\end{definition}
+
 \section{Degree and regular graphs}
 
-Let $G = (V, E)$ be a graph, i.e. a set of vertices $V$ and edges $E$ (each edge links two
-unordered, possibly identical vertices $x$, $y$). We say an edge $e$ is \emph{indicent} to a vertex
-$x$ if there exists a vertex $y$ such that $e$ links $x$ and $y$. An edge is a \emph{loop} based at
-a vertex $x$ if it links the vertex $x$ to itself.
+Let us now focus on locally finite graphs.
+
+\begin{definition}
+  A graph is said to be \emph{locally finite} if any vertex has a finite number of incident edges.
+\end{definition}
 
 \begin{definition}
   The \emph{degree} of a vertex $x \in V$ is the number of incident edges, counting loops twice:
