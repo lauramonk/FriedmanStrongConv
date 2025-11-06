@@ -15,49 +15,76 @@ We refer the reader to \cite{chung1992} for a more detailed introduction and mot
 
 In this section, we define a few simple notions of graph theory, to set conventions.
 
-\begin{definition}
-  \lean{Graph}
-  \leanok
-  A \emph{graph} is a pair $G = (V, E)$ where $V$ is a set of vertices, and $E$ a set of edges,
-  and each edge links two unordered, possibly identical vertices.
-\end{definition}
+As in \mathlibok{Graph}, a \emph{graph} is a pair $G = (V, E)$ where $V$ is a set of vertices, and
+$E$ a set of edges, and each edge links two unordered, possibly identical vertices.
 
 Note that this definition allows for loops (i.e. edges going from one vertex to itself) and
 multi-edges (i.e. multiple edges connecting two vertices). This convention is essential to the proof
-we are aiming for.
+we are aiming for, which is why we use \mathlibok{Graph} instead of the much better-developed
+\mathlibok{SimpleGraph}.
+
+Following \mathlibok{Inc}, we say an edge $e$ is \emph{indicent} to a vertex $x$ if there exists a
+vertex $y$ such that $e$ links $x$ and $y$. As \mathlibok{IsLoopAt}, an edge is a \emph{loop} based
+at a vertex $x$ if it links the vertex $x$ to itself.
+
+\section{Finiteness, degree and regularity}
+
+Let us now focus on the degree of vertices and regularity. We make definitions with minimal
+hypotheses as these are fundamental objects.
 
 \begin{definition}
-  \lean{Inc}
-  \leanok
-  We say an edge $e$ is \emph{indicent} to a vertex $x$ if there exists a vertex $y$ such that $e$
-  links $x$ and $y$.
+  \label{def:locally_finite_at}
+  \lean{LocallyFiniteAt}
+  \uses{def:incidence}
+  Let $G$ be a graph and $x$ be a vertex of $G$.
+  We say $G$ is \emph{locally finite at $x$} if $x$ has a finite number of incident edges.
 \end{definition}
 
 \begin{definition}
-  \lean{IsLoopAt}
-  \leanok
-  An edge is a \emph{loop} based at a vertex $x$ if it links the vertex $x$ to itself.
-\end{definition}
-
-\section{Degree and regular graphs}
-
-Let us now focus on locally finite graphs.
-
-\begin{definition}
-  A graph is said to be \emph{locally finite} if any vertex has a finite number of incident edges.
-\end{definition}
-
-\begin{definition}
-  The \emph{degree} of a vertex $x \in V$ is the number of incident edges, counting loops twice:
+  \label{def:degree}
+  \lean{degree}
+  \uses{def:incidence, def:loop, def:locally_finite_at}
+  Let $G$ be a graph and $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
+  The \emph{degree} of $x$ is the number of incident edges, counting loops twice:
   \begin{equation*}
     \mathrm{deg}(x) = \# \{\text{edges incident to } x\}
     + \# \{ \text{loops based at } x\}.
   \end{equation*}
 \end{definition}
 
+\begin{proof}
+  The set of loops at $x$ is included in the incidence set of $x$ by IsLoopAt.inc. Hence, if $G$ is
+  locally finite at $x$, then $x$ has a finite number of loops and the degree is well-defined.
+\end{proof}
+
 \begin{definition}
-  Let $d$ be a non-negative integer. We say $G$ is $d$-regular if every vertex of $G$ has degree $d$.
+  \label{def:locally_finite}
+  \lean{LocallyFinite}
+  \uses{def:locally_finite_at}
+  A graph is said to be locally finite if it is locally finite at every vertex.
 \end{definition}
+
+\begin{definition}
+  \label{def:regular}
+  \lean{IsRegularOfDegree}
+  \uses{def:locally_finite, def:degree}
+  Let $d$ be a non-negative integer.
+  Let $G$ be a locally finite graph.
+  We say $G$ is regular of degree $d$ if every vertex of $G$ has degree $d$.
+\end{definition}
+
+We now conclude with the definition of a finite graph.
+
+\begin{definition}
+  \label{def:finite}
+  \lean{Finite}
+  \uses{def:locally_finite}
+  A graph is \emph{finite} if its set of vertices is finite and it is locally finite.
+\end{definition}
+
+\section{Adjacency matrix}
+
+
 
 \section{Random regular graphs: the permutation model}
 
