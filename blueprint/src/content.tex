@@ -34,16 +34,15 @@ hypotheses as these are fundamental objects.
 
 \begin{definition}
   \label{def:locally_finite_at}
-  \lean{LocallyFiniteAt}
-  \uses{def:incidence}
+%  \lean{LocallyFiniteAt}
   Let $G$ be a graph and $x$ be a vertex of $G$.
   We say $G$ is \emph{locally finite at $x$} if $x$ has a finite number of incident edges.
 \end{definition}
 
 \begin{definition}
   \label{def:degree}
-  \lean{degree}
-  \uses{def:incidence, def:loop, def:locally_finite_at}
+%  \lean{degree}
+  \uses{def:locally_finite_at}
   Let $G$ be a graph and $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
   The \emph{degree} of $x$ is the number of incident edges, counting loops twice:
   \begin{equation*}
@@ -59,14 +58,14 @@ hypotheses as these are fundamental objects.
 
 \begin{definition}
   \label{def:locally_finite}
-  \lean{LocallyFinite}
+%  \lean{LocallyFinite}
   \uses{def:locally_finite_at}
   A graph is said to be locally finite if it is locally finite at every vertex.
 \end{definition}
 
 \begin{definition}
   \label{def:regular}
-  \lean{IsRegularOfDegree}
+%  \lean{IsRegularOfDegree}
   \uses{def:locally_finite, def:degree}
   Let $d$ be a non-negative integer.
   Let $G$ be a locally finite graph.
@@ -77,7 +76,7 @@ We now conclude with the definition of a finite graph.
 
 \begin{definition}
   \label{def:finite}
-  \lean{Finite}
+%  \lean{Finite}
   \uses{def:locally_finite}
   A graph is \emph{finite} if its set of vertices is finite and it is locally finite.
 \end{definition}
