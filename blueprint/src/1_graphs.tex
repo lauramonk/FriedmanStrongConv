@@ -95,15 +95,21 @@ We now conclude with the definition of a finite graph.
 \begin{lemma}
   \label{lem:adjacency_symmetric}
   \uses{def:adjacency_matrix}
-  Let $G$ be a finite, $n$-labelled graph.
-  The adjacency matrix of $G$ is symmetric.
+  The adjacency matrix of a graph is symmetric.
 \end{lemma}
+
+\begin{proof}
+  Direct from Definition \ref{def:adjacency_matrix} and \mathlibok{isLink symm}.
+\end{proof}
+
+In any space $\mathbb{R}^n$ for $n \geq 1$, we denote as $\mathbf{1}$ the constant vector with
+all coefficients equal to $1$.
 
 \begin{lemma}
   \label{lem:adjacency_degree_vertex}
   \uses{def:degree,def:adjacency_matrix}
   Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
-  For any $i \in V$, the degree of $G$ at $i$ is equal to $\sum_{j=1}^n A_{i,j}$.
+  For any $i \in V$, the degree of $G$ at $i$ is equal to $(A \mathbf{1})_i$.
 \end{lemma}
 
 \begin{proof}
@@ -113,12 +119,40 @@ We now conclude with the definition of a finite graph.
 \begin{corollary}
   \label{cor:adjacency_regular}
   \uses{def:regular,lem:adjacency_degree_vertex}
-  Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$. Let $d \geq 1$ be an integer.
-  The graph $G$ is regular of degree $d$ if and only if, for every $1 \leq i \leq n$,
-  $\sum_{j=1}^n A_{i,j} = d$.
+  Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
+  Let $d \geq 1$ be an integer.
+  The graph $G$ is regular of degree $d$ if and only if
+  $\mathbf{1}$ is an eigenvector of $A$ with eigenvalue $d$.
 \end{corollary}
 
 \begin{proof}
-  This follows directly from the definition of regular graph \ref{def:regular} together with
-  Lemma \ref{lem:adjacency_degree_vertex}.
+  [todo]
 \end{proof}
+
+\begin{lemma}
+  \label{lemma:finite_of_label_and_reg}
+  \uses{def:regular,def:finite,def:n_labelled}
+  Let $G$ be a $n$-labelled $d$-regular graph. Then, $G$ is finite, $\# V(G) = n$
+  and $\#E(G) = nd/2$.
+\end{lemma}
+
+\begin{proposition}
+  \label{prop:spectral_radius}
+  \uses{def:adjacency_matrix,def:regular}
+  [to write]
+\end{proposition}
+
+\begin{definition}
+  \label{def:bipartite}
+  A graph $G$ is called \emph{bipartite} if there exists a partition $(V_1, V_2)$ of $V$ such that
+  every edge of $G$ links a vertex of $V_1$ to a vertex of $V_2$.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:adjacency_bipartite}
+  \uses{def:bipartite,def:adjacency_matrix}
+  Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
+  Let $d \geq 1$ be an integer.
+  We assume that the graph $G$ is regular of degree $d$.
+  Then, $G$ is bipartite if and only if $-d$ is an eigenvalue of $A$.
+\end{proposition}
