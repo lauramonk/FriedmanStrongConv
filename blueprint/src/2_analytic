@@ -1,0 +1,15 @@
+\chapter{Analytic tools}
+
+Here we define some analytic prerequisites, following the structure of \cite[Section 4]{chen2025}.
+
+\section{Spaces of functions and norms}
+
+[todo: define $C^m[a,b]$ and the norm on it.]
+
+\section{Markov inequalities}
+
+\section{Chebyshev polynomials}
+
+\section{Compactly supported distributions}
+
+[todo: define a distribution and the notion of compactly supported distribution]
