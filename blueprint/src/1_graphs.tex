@@ -12,7 +12,7 @@ $E$ a set of edges, and each edge links two unordered, possibly identical vertic
 
 Note that this definition allows for loops (i.e. edges going from one vertex to itself) and
 multi-edges (i.e. multiple edges connecting two vertices). This convention is essential to the proof
-we are aiming for, which is why we use \mathlibok{Graph} instead of the much better-developed
+we are aiming for, which is why we use \mathlibok{Graph} instead of the more developed
 \mathlibok{SimpleGraph}.
 
 Following \mathlibok{Inc}, we say an edge $e$ is \emph{incident} to a vertex $x$ if there exists a
@@ -22,18 +22,16 @@ at a vertex $x$ if it links the vertex $x$ to itself.
 \section{Finiteness, degree and regularity}
 
 Let us now focus on the degree of vertices and regularity. We make definitions with minimal
-hypotheses as these are fundamental objects.
+hypotheses as these are fundamental objects that should be added to Mathlib.
 
 \begin{definition}
   \label{def:locally_finite_at}
-%  \lean{LocallyFiniteAt}
   Let $G$ be a graph and $x$ be a vertex of $G$.
   We say $G$ is \emph{locally finite at $x$} if $x$ has a finite number of incident edges.
 \end{definition}
 
 \begin{definition}
   \label{def:degree}
-%  \lean{degree}
   \uses{def:locally_finite_at}
   Let $G$ be a graph and $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
   The \emph{degree} of $x$ is the number of incident edges, counting loops twice:
@@ -50,80 +48,77 @@ hypotheses as these are fundamental objects.
 
 \begin{definition}
   \label{def:locally_finite}
-%  \lean{LocallyFinite}
   \uses{def:locally_finite_at}
-  A graph is said to be locally finite if it is locally finite at every vertex.
+  A graph is said to be \emph{locally finite} if it is locally finite at every vertex.
 \end{definition}
 
 \begin{definition}
   \label{def:regular}
-%  \lean{IsRegularOfDegree}
   \uses{def:locally_finite, def:degree}
   Let $d$ be a non-negative integer.
   Let $G$ be a locally finite graph.
-  We say $G$ is regular of degree $d$ if every vertex of $G$ has degree $d$.
+  We say $G$ is \emph{regular of degree $d$} if every vertex of $G$ has degree $d$.
 \end{definition}
 
 We now conclude with the definition of a finite graph.
 
 \begin{definition}
   \label{def:finite}
-%  \lean{Finite}
   \uses{def:locally_finite}
   A graph is \emph{finite} if its set of vertices is finite and it is locally finite.
 \end{definition}
 
 \section{Adjacency matrix}
 
-
-
-\section{Random regular graphs: the permutation model}
-
-In the rest of this blueprint, $N$ is a positive integer, and $[N] = \{1, \ldots, N\}$.
-We also fix an even positive integer $d = 2r$.
+\begin{definition}
+  \label{def:n_labelled}
+  Let $n \geq 1$ be a natural integer. We say a graph $G = (V,E)$ is
+  \emph{$n$-labelled} if the vertex set $V$ is $\{1, \ldots, n\}$.
+\end{definition}
 
 \begin{definition}
-  We denote as $\mathbf{S}_N$ the set of permutations of $[N]$, i.e. bijective maps $\sigma
-  : [N] \rightarrow [N]$.
+  \label{def:adjacency_matrix}
+  \uses{def:finite,def:n_labelled}
+  Let $G$ be a finite, $n$-labelled graph.
+  The \emph{adjacency matrix $A$} of $G$ is a $n \times n$ matrix with integer coefficients,
+  defined by
+  \begin{equation}
+    \forall (i, j) \in \{1, \ldots, n\}^2,
+    A_{i,j} :=
+    \begin{cases}
+      \# \{e \in E : e \text{ links } i \text{ and } j\} & \text{ if } i \neq j \\
+      2 \# \{e \in E : e \text{ is a loop at } i\} & \text{ if } i=j.
+    \end{cases}
+  \end{equation}
 \end{definition}
 
 \begin{lemma}
-  The set $\mathbf{S}_N$ is finite and has cardinality $N!$.
+  \label{lem:adjacency_symmetric}
+  \uses{def:adjacency_matrix}
+  Let $G$ be a finite, $n$-labelled graph.
+  The adjacency matrix of $G$ is symmetric.
 \end{lemma}
-We can therefore equip $\mathbf{S}_N$ with the uniform probability measure.
-
-It will be more useful in what follows to view permutations as matrices.
-
-\begin{definition}
-  A square matrix is called a \emph{permutation matrix} if all of its entries are equal to $0$ or
-  $1$, with exactly one $1$ on each row and column.
-\end{definition}
 
 \begin{lemma}
-  Let $U$ be a permutation matrix. Then, $U$ is invertible and its inverse is the transpose $U^*$ of $U$.
+  \label{lem:adjacency_degree_vertex}
+  \uses{def:degree,def:adjacency_matrix}
+  Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
+  For any $i \in V$, the degree of $G$ at $i$ is equal to $\sum_{j=1}^n A_{i,j}$.
 \end{lemma}
 
-\begin{definition}
-  Let $\sigma \in \mathbf{S}_N$. We associate to $\sigma$ the $N \times N$ matrix
-  $U_\sigma$ by letting, for each $i, j \in [N]$, $(U_\sigma)_{ij} = 1$ if $j = \sigma(i)$. [todo: check]
-\end{definition}
+\begin{proof}
+  This follows directly from the definition of degree and the adjacency matrix coefficients.
+\end{proof}
 
-\begin{lemma}
-  The map $\sigma \mapsto U_\sigma$ is a bijection from $\mathbf{S}_N$ to the set of $N \times N$
-  permutation matrices.
-\end{lemma}
+\begin{corollary}
+  \label{cor:adjacency_regular}
+  \uses{def:regular,lem:adjacency_degree_vertex}
+  Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$. Let $d \geq 1$ be an integer.
+  The graph $G$ is regular of degree $d$ if and only if, for every $1 \leq i \leq n$,
+  $\sum_{j=1}^n A_{i,j} = d$.
+\end{corollary}
 
-\section{The infinite $d$-regular tree}
-
-\begin{definition}
-  A \emph{walk} from $x$ to $y$ is a sequence of vertices and edges
-  $x = v_0, e_1, v_1, \ldots, e_k, v_k = y$ such that for every $1 \leq j \leq k$, the edge $e_j$
-  links the vertices $v_{j-1}$ and $v_j$. A walk is a \emph{path} if its edges are all distinct.
-\end{definition}
-
-\begin{definition}
-  A graph $G$ is called a \emph{tree} if, for any pair of distinct vertices $x$, $y$, there exists
-  one unique path from $x$ to $y$.
-\end{definition}
-
-[todo: define the infinite $d$-regular tree]
+\begin{proof}
+  This follows directly from the definition of regular graph \ref{def:regular} together with
+  Lemma \ref{lem:adjacency_degree_vertex}.
+\end{proof}
