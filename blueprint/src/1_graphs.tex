@@ -1,14 +1,12 @@
-\chapter{Random regular graphs}
+\chapter{Spectral theory of regular graphs}
 
-In this chapter, we introduce the definitions related to random regular graphs and their spectrum.
+In this chapter, we introduce the definitions related to regular graphs and their spectrum.
 We refer the reader to \cite{chung1992} for a more detailed introduction and motivations.
-
-\section{Definition of a graph}
-
-In this section, we define a few simple notions of graph theory, to set conventions.
 
 As in \mathlibok{Graph}, a \emph{graph} is a pair $G = (V, E)$ where $V$ is a set of vertices, and
 $E$ a set of edges, and each edge links two unordered, possibly identical vertices.
+The notations $V(G)$ and $E(G)$ respectively denote the subsets of $V$ and $E$ corresponding to
+vertices or edges of $G$.
 
 Note that this definition allows for loops (i.e. edges going from one vertex to itself) and
 multi-edges (i.e. multiple edges connecting two vertices). This convention is essential to the proof
@@ -24,16 +22,35 @@ at a vertex $x$ if it links the vertex $x$ to itself.
 Let us now focus on the degree of vertices and regularity. We make definitions with minimal
 hypotheses as these are fundamental objects that should be added to Mathlib.
 
+\subsection{Notions of finiteness}
+
+Let $G$ be a graph.
+
 \begin{definition}
   \label{def:locally_finite_at}
-  Let $G$ be a graph and $x$ be a vertex of $G$.
+  Let $x$ be a vertex of $G$.
   We say $G$ is \emph{locally finite at $x$} if $x$ has a finite number of incident edges.
 \end{definition}
 
 \begin{definition}
+  \label{def:locally_finite}
+  \uses{def:locally_finite_at}
+  $G$ is said to be \emph{locally finite} if it is locally finite at every vertex.
+\end{definition}
+
+\begin{definition}
+  \label{def:finite}
+  We say $G$ is \emph{finite} if $V(G)$ and $E(G)$ are both finite.
+\end{definition}
+
+\subsection{Degree and regularity}
+
+Let $G$ be a graph.
+
+\begin{definition}
   \label{def:degree}
   \uses{def:locally_finite_at}
-  Let $G$ be a graph and $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
+  Let $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
   The \emph{degree} of $x$ is the number of incident edges, counting loops twice:
   \begin{equation*}
     \mathrm{deg}(x) = \# \{\text{edges incident to } x\}
@@ -47,25 +64,11 @@ hypotheses as these are fundamental objects that should be added to Mathlib.
 \end{proof}
 
 \begin{definition}
-  \label{def:locally_finite}
-  \uses{def:locally_finite_at}
-  A graph is said to be \emph{locally finite} if it is locally finite at every vertex.
-\end{definition}
-
-\begin{definition}
   \label{def:regular}
   \uses{def:locally_finite, def:degree}
+  We assume that $G$ is locally finite.
   Let $d$ be a non-negative integer.
-  Let $G$ be a locally finite graph.
   We say $G$ is \emph{regular of degree $d$} if every vertex of $G$ has degree $d$.
-\end{definition}
-
-We now conclude with the definition of a finite graph.
-
-\begin{definition}
-  \label{def:finite}
-  \uses{def:locally_finite}
-  A graph is \emph{finite} if its set of vertices is finite and it is locally finite.
 \end{definition}
 
 \section{Adjacency matrix}
