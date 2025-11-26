@@ -29,19 +29,25 @@ Let $G$ be a graph.
 \begin{definition}
   \label{def:locally_finite_at}
   Let $x$ be a vertex of $G$.
-  We say $G$ is \emph{locally finite at $x$} if $x$ has a finite number of incident edges.
+  We say $G$ is \emph{locally finite at $x$} if $\incset (x)$ is finite.
 \end{definition}
 
 \begin{definition}
   \label{def:locally_finite}
   \uses{def:locally_finite_at}
-  $G$ is said to be \emph{locally finite} if it is locally finite at every vertex.
+  $G$ is said to be \emph{locally finite} if, for all $x \in V(G)$, $G$ is locally finite at $x$.
 \end{definition}
 
 \begin{definition}
   \label{def:finite}
   We say $G$ is \emph{finite} if $V(G)$ and $E(G)$ are both finite.
 \end{definition}
+
+\begin{proposition}
+  \label{def:finite_vs_locally_finite}
+  \uses{def:finite,def:locally_finite}
+  $G$ is finite if and only if $V(G)$ is finite and $G$ is locally finite.
+\end{proposition}
 
 \subsection{Degree and regularity}
 
@@ -53,8 +59,8 @@ Let $G$ be a graph.
   Let $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
   The \emph{degree} of $x$ is the number of incident edges, counting loops twice:
   \begin{equation*}
-    \mathrm{deg}(x) = \# \{\text{edges incident to } x\}
-    + \# \{ \text{loops based at } x\}.
+    \mathrm{deg}(x) = \# \incset(x)
+    + \# \loopset(x).
   \end{equation*}
 \end{definition}
 
@@ -68,116 +74,168 @@ Let $G$ be a graph.
   \uses{def:locally_finite, def:degree}
   We assume that $G$ is locally finite.
   Let $d$ be a non-negative integer.
-  We say $G$ is \emph{regular of degree $d$} if every vertex of $G$ has degree $d$.
+  We say $G$ is \emph{regular of degree $d$} if, for every $x \in V(G)$, $\deg (x) = d$.
 \end{definition}
 
-\section{$\C^*$ algebra and adjacency operator}
+\section{$\C^*$-algebra and adjacency operator}
 
 Let $G$ be a graph.
-We will be interested in the Hilbert space $\ell^2(V(G))$, which is defined as the set of
+We will be interested in the Hilbert space $\ell^2(G) := \ell^2(V(G))$, which is defined as the set of
 functions $f : V(G) \rightarrow \C$ which are square-summable, equipped with the inner product
 $$\langle f_1, f_2 \rangle = \sum_{x \in V(G)} f_1(x) \overline{f_2(x)}.$$
 
-The space $\B(\ell^2(V(G)))$ of bounded linear operators on $\ell^2(V(G))$ is a unital $\C^*$
-algebra.
+The space $\B(\ell^2(G))$ of bounded linear operators on $\ell^2(G)$ is a unital $\C^*$-algebra.
+
+\subsection{Constant fonctions}
 
 \begin{definition}
-  \label{def:adjacency_operator}
-  \uses{def:locally_finite}
-  Assume $G$ is locally finite.
-  We define the adjacency operator $a$ as the linear operator acting on the space of
-  functions $V(G) \rightarrow \C$ by
-  $$ a f (x) :=
-  [write].$$
-\end{definition}
-
-
-
-\section{Adjacency matrix}
-
-\begin{definition}
-  \label{def:n_labelled}
-  Let $n \geq 1$ be a natural integer. We say a graph $G = (V,E)$ is
-  \emph{$n$-labelled} if the vertex set $V$ is $\{1, \ldots, n\}$.
-\end{definition}
-
-\begin{definition}
-  \label{def:adjacency_matrix}
-  \uses{def:finite,def:n_labelled}
-  Let $G$ be a finite, $n$-labelled graph.
-  The \emph{adjacency matrix $A$} of $G$ is a $n \times n$ matrix with integer coefficients,
-  defined by
+  \label{def:constant_function}
+  The constant function equal to $1$ is defined by
   \begin{equation}
-    \forall (i, j) \in \{1, \ldots, n\}^2,
-    A_{i,j} :=
+    \const :
     \begin{cases}
-      \# \{e \in E : e \text{ links } i \text{ and } j\} & \text{ if } i \neq j \\
-      2 \# \{e \in E : e \text{ is a loop at } i\} & \text{ if } i=j.
+      V(G) & \rightarrow \C \\
+      x & \mapsto 1.
     \end{cases}
   \end{equation}
 \end{definition}
 
 \begin{lemma}
-  \label{lem:adjacency_symmetric}
-  \uses{def:adjacency_matrix}
-  The adjacency matrix of a graph is symmetric.
+  \label{lem:constant_is_l2}
+  \uses{def:constant_function}
+  The constant function $\const$ belongs in $\ell^2(G)$
+  if and only if $V(G)$ is finite.
 \end{lemma}
 
-\begin{proof}
-  Direct from Definition \ref{def:adjacency_matrix} and \mathlibok{isLink symm}.
-\end{proof}
+\subsection{Adjacency operator}
 
-In any space $\mathbb{R}^n$ for $n \geq 1$, we denote as $\mathbf{1}$ the constant vector with
-all coefficients equal to $1$.
-
-\begin{lemma}
-  \label{lem:adjacency_degree_vertex}
-  \uses{def:degree,def:adjacency_matrix}
-  Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
-  For any $i \in V$, the degree of $G$ at $i$ is equal to $(A \mathbf{1})_i$.
-\end{lemma}
-
-\begin{proof}
-  This follows directly from the definition of degree and the adjacency matrix coefficients.
-\end{proof}
-
-\begin{corollary}
-  \label{cor:adjacency_regular}
-  \uses{def:regular,lem:adjacency_degree_vertex}
-  Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
-  Let $d \geq 1$ be an integer.
-  The graph $G$ is regular of degree $d$ if and only if
-  $\mathbf{1}$ is an eigenvector of $A$ with eigenvalue $d$.
-\end{corollary}
-
-\begin{proof}
-  [todo]
-\end{proof}
-
-\begin{lemma}
-  \label{lemma:finite_of_label_and_reg}
-  \uses{def:regular,def:finite,def:n_labelled}
-  Let $G$ be a $n$-labelled $d$-regular graph. Then, $G$ is finite, $\# V(G) = n$
-  and $\#E(G) = nd/2$.
-\end{lemma}
-
-\begin{proposition}
-  \label{prop:spectral_radius}
-  \uses{def:adjacency_matrix,def:regular}
-  [to write]
-\end{proposition}
+Assume $G$ is locally finite.
 
 \begin{definition}
-  \label{def:bipartite}
-  A graph $G$ is called \emph{bipartite} if there exists a partition $(V_1, V_2)$ of $V$ such that
-  every edge of $G$ links a vertex of $V_1$ to a vertex of $V_2$.
+  \label{def:adjacency_operator}
+  \uses{def:locally_finite}
+  We define the adjacency operator $a$ as the linear operator acting on the space of
+  functions $f : V(G) \rightarrow \C$ by
+  $$ a f (x) :=
+  \sum_{e \in \incset(x)} f(\incother(e, x)) + \# \loopset(x) f(x).$$
 \end{definition}
 
+\begin{lemma}
+  \label{lem:adjacency_of_constant}
+  \uses{def:constant_function,def:adjacency_operator}
+  For any $x \in V(G)$, $a \const(x) = \deg(x)$.
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:adjacency_regular}
+  \uses{def:adjacency_of_constant,def:regular}
+  Let $d$ be a non-negative integer. Then, $G$ is regular of degree $d$ iff
+  $a \const = d \const$.
+\end{lemma}
+
+We now enquire about the boundedness and norm of the adjacency operator.
+
+\begin{lemma}
+  \label{lem:adjacency_bounded}
+  \uses{def:adjacency_operator,def:degree}
+  We assume that there exists a non-negative integer $M$ such that:
+  \begin{equation}
+    \forall x \in V(G), \quad \deg(x) \leq M.
+  \end{equation}
+  Then the adjacency operator $a$ is bounded and $\| a \| \leq M$.
+\end{lemma}
+
 \begin{proposition}
-  \label{prop:adjacency_bipartite}
-  \uses{def:bipartite,def:adjacency_matrix}
-  Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
-  Let $d \geq 1$ be an integer.
-  We assume that the graph $G$ is regular of degree $d$.
-  Then, $G$ is bipartite if and only if $-d$ is an eigenvalue of $A$.
+  \label{prop:norm_adjacency_regular}
+  \uses{lem:adjacency_regular,lem:adjacency_bounded,lem:constant_is_l2}
+  We assume that $G$ is finite and $d$-regular. Then $\|a\|=d$.
 \end{proposition}
+
+% \section{Adjacency matrix}
+
+% \begin{definition}
+%   \label{def:n_labelled}
+%   Let $n \geq 1$ be a natural integer. We say a graph $G = (V,E)$ is
+%   \emph{$n$-labelled} if the vertex set $V$ is $\{1, \ldots, n\}$.
+% \end{definition}
+
+% \begin{definition}
+%   \label{def:adjacency_matrix}
+%   \uses{def:finite,def:n_labelled}
+%   Let $G$ be a finite, $n$-labelled graph.
+%   The \emph{adjacency matrix $A$} of $G$ is a $n \times n$ matrix with integer coefficients,
+%   defined by
+%   \begin{equation}
+%     \forall (i, j) \in \{1, \ldots, n\}^2,
+%     A_{i,j} :=
+%     \begin{cases}
+%       \# \{e \in E : e \text{ links } i \text{ and } j\} & \text{ if } i \neq j \\
+%       2 \# \{e \in E : e \text{ is a loop at } i\} & \text{ if } i=j.
+%     \end{cases}
+%   \end{equation}
+% \end{definition}
+
+% \begin{lemma}
+%   \label{lem:adjacency_symmetric}
+%   \uses{def:adjacency_matrix}
+%   The adjacency matrix of a graph is symmetric.
+% \end{lemma}
+
+% \begin{proof}
+%   Direct from Definition \ref{def:adjacency_matrix} and \mathlibok{isLink symm}.
+% \end{proof}
+
+% In any space $\mathbb{R}^n$ for $n \geq 1$, we denote as $\mathbf{1}$ the constant vector with
+% all coefficients equal to $1$.
+
+% \begin{lemma}
+%   \label{lem:adjacency_degree_vertex}
+%   \uses{def:degree,def:adjacency_matrix}
+%   Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
+%   For any $i \in V$, the degree of $G$ at $i$ is equal to $(A \mathbf{1})_i$.
+% \end{lemma}
+
+% \begin{proof}
+%   This follows directly from the definition of degree and the adjacency matrix coefficients.
+% \end{proof}
+
+% \begin{corollary}
+%   \label{cor:adjacency_regular}
+%   \uses{def:regular,lem:adjacency_degree_vertex}
+%   Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
+%   Let $d \geq 1$ be an integer.
+%   The graph $G$ is regular of degree $d$ if and only if
+%   $\mathbf{1}$ is an eigenvector of $A$ with eigenvalue $d$.
+% \end{corollary}
+
+% \begin{proof}
+%   [todo]
+% \end{proof}
+
+% \begin{lemma}
+%   \label{lemma:finite_of_label_and_reg}
+%   \uses{def:regular,def:finite,def:n_labelled}
+%   Let $G$ be a $n$-labelled $d$-regular graph. Then, $G$ is finite, $\# V(G) = n$
+%   and $\#E(G) = nd/2$.
+% \end{lemma}
+
+% \begin{proposition}
+%   \label{prop:spectral_radius}
+%   \uses{def:adjacency_matrix,def:regular}
+%   [to write]
+% \end{proposition}
+
+% \begin{definition}
+%   \label{def:bipartite}
+%   A graph $G$ is called \emph{bipartite} if there exists a partition $(V_1, V_2)$ of $V$ such that
+%   every edge of $G$ links a vertex of $V_1$ to a vertex of $V_2$.
+% \end{definition}
+
+% \begin{proposition}
+%   \label{prop:adjacency_bipartite}
+%   \uses{def:bipartite,def:adjacency_matrix}
+%   Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
+%   Let $d \geq 1$ be an integer.
+%   We assume that the graph $G$ is regular of degree $d$.
+%   Then, $G$ is bipartite if and only if $-d$ is an eigenvalue of $A$.
+% \end{proposition}
