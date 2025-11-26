@@ -126,12 +126,35 @@ Assume $G$ is locally finite.
   For any $x \in V(G)$, $a \const(x) = \deg(x)$.
 \end{lemma}
 
+\begin{proof}
+  Let $x \in V(G)$. We have
+  \begin{align*}
+    a \const(x)
+    & = \sum_{e \in \incset(x)} \const(\incother(e, x)) + \# \loopset(x) \times \const(x)
+    & \text{by Definition \ref{def:adjacency_operator}} \\
+    & = \sum_{e \in \incset(x)} 1 + \# \loopset(x) \times 1
+    & \text{by Definition \ref{def:constant_function}} \\
+    & =  \# \incset(x) + \# \loopset(x)
+    & \text{by summation of constant} \\
+    & = \deg(x)
+    & \text{by Definition \ref{def:degree}}.
+  \end{align*}
+\end{proof}
+
 \begin{lemma}
   \label{lem:adjacency_regular}
   \uses{lem:adjacency_of_constant,def:regular}
   Let $d$ be a non-negative integer. Then, $G$ is regular of degree $d$ iff
   $a \const = d \const$.
 \end{lemma}
+
+\begin{proof}
+  By Definition \ref{def:regular},
+  $G$ is regular of degree $d$ if and only if for all $x \in V(G)$, $\deg(x)=d$.
+  By Lemma \ref{lem:adjacency_of_constant}, this is equivalent to
+  having, for all $x \in V(G)$, $a \const (x) = d$, which is equivalent to
+  $a \const = d \const$ by Definition \ref{def:constant_function}.
+\end{proof}
 
 We now enquire about the boundedness and norm of the adjacency operator.
 
@@ -142,7 +165,7 @@ We now enquire about the boundedness and norm of the adjacency operator.
   \begin{equation}
     \forall x \in V(G), \quad \deg(x) \leq M.
   \end{equation}
-  Then the adjacency operator $a$ is bounded and $\| a \| \leq M$.
+  Then the adjacency operator $a$ is bounded on $\ell^2(G)$ and $\| a \| \leq M$.
 \end{lemma}
 
 \begin{proposition}
@@ -151,7 +174,13 @@ We now enquire about the boundedness and norm of the adjacency operator.
   We assume that $G$ is finite and $d$-regular. Then $\|a\|=d$.
 \end{proposition}
 
-
+\begin{proof}
+  Since $G$ is $d$-regular, for all $x \in V(G)$, $\deg(x) \leq d$. Then, by
+  Lemma \ref{lem:adjacency_bounded}, $a$ is bounded and $\|a \| \leq d$.
+  By Lemma \ref{lem:constant_is_l2}, since $G$ is finite, $\const$ is an element of $\ell^2(G)$.
+  By Lemma \ref{lem:adjacency_of_constant}, $a \const = d \const$, and hence $\|a \| \geq d$ by definition
+  of the operator norm.
+\end{proof}
 
 % \section{Adjacency matrix}
 
