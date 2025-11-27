@@ -254,7 +254,7 @@ Let $d$ be a non-negative integer.
 \end{proof}
 
 \begin{lemma}
-  \label{lem:constant_eigenfunction}
+  \label{lem:constant_eigenfunction_regular}
   \uses{lem:constant_is_l2,lem:constant_neq_zero,lem:adjacency_of_constant_regular}
   If $G$ is finite and regular of degree $d$,
   then $d$ is an eigenvalue of the adjacency
@@ -271,14 +271,14 @@ Let $d$ be a non-negative integer.
 
 \begin{proposition}
   \label{prop:norm_adjacency_regular}
-  \uses{prop:norm_adjacency_sup_degree,lem:constant_eigenfunction}
+  \uses{prop:norm_adjacency_sup_degree,lem:constant_eigenfunction_regular}
   If $G$ is finite and regular of degree $d$, then $\|a\|=d$.
 \end{proposition}
 
 \begin{proof}
   Since $G$ is regular of degree $d$, for all $x \in V(G)$, $\deg(x) \leq d$. Then, by
   Lemma \ref{prop:norm_adjacency_sup_degree}, $a$ is bounded and $\|a \| \leq d$.
-  By Lemma \ref{lem:constant_eigenfunction}, $d$ is an eigenvalue of $a$ and hence $\|a\| \geq d$,
+  By Lemma \ref{lem:constant_eigenfunction_regular}, $d$ is an eigenvalue of $a$ and hence $\|a\| \geq d$,
   which is enough to conclude.
 \end{proof}
 
