@@ -110,7 +110,7 @@ Note that, in this context, $0$ is the constant function equal to $0$.
 \end{definition}
 
 \begin{lemma}
-  \label{lem:constant_function_eq_zero}
+  \label{lem:constant_neq_zero}
   \uses{def:empty,def:constant_function}
   Assume $G$ is not empty. Then the constant function $\const$ is not equal to $0$.
 \end{lemma}
@@ -255,7 +255,7 @@ Let $d$ be a non-negative integer.
 
 \begin{lemma}
   \label{lem:constant_eigenfunction}
-  \uses{lem:constant_is_l2,lem:constant_function_eq_zero,lem:adjacency_of_constant_regular}
+  \uses{lem:constant_is_l2,lem:constant_neq_zero,lem:adjacency_of_constant_regular}
   If $G$ is finite and regular of degree $d$,
   then $d$ is an eigenvalue of the adjacency
   operator with associated eigenfunction the constant function $\const$.
@@ -263,7 +263,7 @@ Let $d$ be a non-negative integer.
 
 \begin{proof}
   Since $G$ is finite, $\const \in \ell^2(G)$ by Lemma \ref{lem:constant_is_l2}.
-  Furthermore, $\const \neq 0$ by Lemma \ref{lem:constant_function_eq_zero}
+  Furthermore, $\const \neq 0$ by Lemma \ref{lem:constant_neq_zero}
   and since $G$ is not empty by Definition \ref{def:regular}.
   By Lemma \ref{lem:adjacency_of_constant_regular}, if $G$ is regular of degree $d$,
   then $a \const = d \const$.  We conclude by the definition of eigenvalue and eigenvector.
