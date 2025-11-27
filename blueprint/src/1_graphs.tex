@@ -168,8 +168,8 @@ Let $G$ be a locally finite graph.
 The aim of this subsection is to prove the following.
 
 \begin{proposition}
-  \label{prop:norm_adjacency_sup_degree}
-  \uses{lem:bound_a_degree_x}
+  \label{prop:norm_adjacency_leq_sup_degree}
+  \uses{lem:bound_a_sup_degree}
   Assume $G$ is locally bounded.
   Then the adjacency operator is a bounded operator on $\ell^2(G)$ and
   its norm satisfies $\|a\| \leq \sup_{x \in V(G)} \deg(x)$.
@@ -207,12 +207,12 @@ Here is a key lemma.
   This leads to the claim by Definition \ref{def:degree}.
 \end{proof}
 
-Then Proposition \ref{prop:norm_adjacency_sup_degree} is a trivial consequence of the
+Then Proposition \ref{prop:norm_adjacency_leq_sup_degree} is a trivial consequence of the
 following lemma, together with the definition of bounded operator and operator norm.
 
 \begin{lemma}
-  \label{lem:bound_a_degree}
-  \uses{lem:bound_a_degree_x}
+  \label{lem:bound_a_sup_degree}
+  \uses{lem:bound_a_degree_x,def:locally_bounded}
   Assume $G$ is locally bounded. Then, for any $f \in \ell^2(G)$,
   $a f \in \ell^2(G)$ and
   \begin{equation}
