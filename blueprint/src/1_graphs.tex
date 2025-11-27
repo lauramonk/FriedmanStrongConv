@@ -22,6 +22,11 @@ at a vertex $x$ if it links the vertex $x$ to itself.
 Let us now focus on the degree of vertices and regularity. We make definitions with minimal
 hypotheses as these are fundamental objects that should be added to Mathlib.
 
+\begin{definition}
+\label{def:empty}
+We say a graph $G$ is empty if $V(G) = \emptyset$.
+\end{definition}
+
 \subsection{Notions of finiteness}
 
 Let $G$ be a graph.
@@ -72,12 +77,20 @@ Let $G$ be a graph.
 \begin{definition}
   \label{def:regular}
   \uses{def:locally_finite, def:degree}
-  We assume that $G$ is locally finite.
   Let $d$ be a non-negative integer.
-  We say $G$ is \emph{regular of degree $d$} if, for every $x \in V(G)$, $\deg (x) = d$.
+  We say $G$ is \emph{regular of degree $d$} if it is locally finite and,
+  for every $x \in V(G)$, $\deg (x) = d$.
 \end{definition}
 
-\section{$\C^*$-algebra and adjacency operator}
+\begin{definition}
+  \label{def:locally_bounded}
+  \uses{def:degree,def:locally_finite}
+  We say $G$ is \emph{locally bounded} if
+  it is locally finite and there exists a constant $D$ such that,
+  for all $x \in V(G)$, $\deg(x) \leq D$.
+\end{definition}
+
+\section{Adjacency operator}
 
 Let $G$ be a graph.
 We will be interested in the Hilbert space $\ell^2(G) := \ell^2(V(G))$, which is defined as the set of
@@ -85,6 +98,7 @@ functions $f : V(G) \rightarrow \C$ which are square-summable, equipped with the
 $$\langle f_1, f_2 \rangle = \sum_{x \in V(G)} f_1(x) \overline{f_2(x)}.$$
 
 The space $\B(\ell^2(G))$ of bounded linear operators on $\ell^2(G)$ is a unital $\C^*$-algebra.
+Note that, in this context, $0$ is the constant function equal to $0$.
 
 \subsection{Constant fonctions}
 
@@ -101,13 +115,24 @@ The space $\B(\ell^2(G))$ of bounded linear operators on $\ell^2(G)$ is a unital
 \end{definition}
 
 \begin{lemma}
+  \label{lem:constant_function_eq_zero}
+  \uses{def:empty,def:constant_function}
+  Assume $G$ is not empty. Then the constant function $\const$ is not equal to $0$.
+\end{lemma}
+
+\begin{proof}
+  If $G$ is not empty, then by Definition \ref{def:empty}, there exists $x \in V(G)$.
+  Then $\const (x) = 1 \neq 0$, and hence $\const$ is not equal to the constant function $0$.
+\end{proof}
+
+\begin{lemma}
   \label{lem:constant_is_l2}
   \uses{def:constant_function}
   The constant function $\const$ belongs in $\ell^2(G)$
   if and only if $V(G)$ is finite.
 \end{lemma}
 
-\subsection{Adjacency operator}
+\subsection{Definition of the adjacency operator and elementary properties}
 
 Assume $G$ is locally finite.
 
@@ -135,17 +160,73 @@ Assume $G$ is locally finite.
     & = \sum_{e \in \incset(x)} 1 + \# \loopset(x) \times 1
     & \text{by Definition \ref{def:constant_function}} \\
     & =  \# \incset(x) + \# \loopset(x)
-    & \text{by summation of constant} \\
+    & \text{by calculation} \\
     & = \deg(x)
     & \text{by Definition \ref{def:degree}}.
   \end{align*}
 \end{proof}
 
+\subsection{Norm of the adjacency operator}
+
+Let $G$ be a locally finite graph.
+The aim of this subsection is to prove the following.
+
+\begin{proposition}
+  \label{prop:adjacency_bounded_iff}
+  The adjacency matrix of $G$ is a bounded operator on $\ell^2(G)$ if and only
+  if $G$ is locally bounded.
+\end{proposition}
+
+We will also prove the following upper bound on the operator norm of $a$.
+
+\begin{proposition}
+  \label{prop:norm_adjacency_sup_degree}
+  Assume $G$ is locally bounded. Then $\|a\| \leq \sup_{x \in V(G)} \deg(x)$.
+\end{proposition}
+
+Here is a key lemma.
+
 \begin{lemma}
-  \label{lem:adjacency_regular}
+  \label{lem:bound_a_degree_x}
+  \uses{def:adjacency_operator,def:degree}
+  For any $x \in V(G)$,
+  \begin{equation}
+    |af(x)|^2
+    \leq \deg(x) \left( \sum_{e \in \incset(x)} |f(\incother(e,x))|^2
+    + \# \loopset(x) |f(x)|^2 \right).
+  \end{equation}
+\end{lemma}
+
+\begin{proof}
+  Let $x \in V(G)$. By Definition \ref{def:adjacency_operator},
+  \begin{equation}
+    |af(x)|^2
+    = \left| \sum_{e \in \incset(x)} f(\incother(e, x)) + \sum_{e \in \loopset(x)}
+    f(x) \right|^2.
+  \end{equation}
+  By \mathlibok{Cauchy-Schwarz},
+  \begin{multline*}
+    |af(x)|^2
+    \leq
+    \left(\sum_{e \in \incset(x)} 1 + \sum_{e \in \loopset (x)} 1
+    \right)\\
+      \times
+    \left( \sum_{e \in \incset(x)} |f(\incother(e, x))|^2
+    + \sum_{e \in \loopset (x)} |f(x)|^2
+    \right).
+  \end{multline*}
+  This leads to the claim by Definition \ref{def:degree}.
+\end{proof}
+
+\subsection{The case of regular graphs}
+
+Assume $G$ is locally finite.
+Let $d$ be a non-negative integer.
+
+\begin{lemma}
+  \label{lem:adjacency_of_constant_regular}
   \uses{lem:adjacency_of_constant,def:regular}
-  Let $d$ be a non-negative integer. Then, $G$ is regular of degree $d$ iff
-  $a \const = d \const$.
+  $G$ is regular of degree $d$ iff $a \const = d \const$.
 \end{lemma}
 
 \begin{proof}
@@ -156,30 +237,32 @@ Assume $G$ is locally finite.
   $a \const = d \const$ by Definition \ref{def:constant_function}.
 \end{proof}
 
-We now enquire about the boundedness and norm of the adjacency operator.
-
 \begin{lemma}
-  \label{lem:adjacency_bounded}
-  \uses{def:adjacency_operator,def:degree}
-  We assume that there exists a non-negative integer $M$ such that:
-  \begin{equation}
-    \forall x \in V(G), \quad \deg(x) \leq M.
-  \end{equation}
-  Then the adjacency operator $a$ is bounded on $\ell^2(G)$ and $\| a \| \leq M$.
+  \label{lem:constant_eigenfunction}
+  \uses{lem:constant_is_l2,lem:adjacency_of_constant_regular,lem:constant_function_eq_zero}
+  Assume $G$ is finite and not empty.
+  If $G$ is regular of degree $d$, then $d$ is an eigenvalue of the adjacency
+  operator with associated eigenfunction the constant function $\const$.
 \end{lemma}
+
+\begin{proof}
+  Since $G$ is finite, $\const \in \ell^2(G)$ by Lemma \ref{lem:constant_is_l2}.
+  By Lemma \ref{lem:adjacency_of_constant_regular}, if $G$ is regular of degree $d$,
+  then $a \const = d \const$, which is enough to conclude by the definition
+  of eigenvalue and eigenvector, since $\const \neq 0$ by Lemma \ref{lem:constant_function_eq_zero}.
+\end{proof}
 
 \begin{proposition}
   \label{prop:norm_adjacency_regular}
-  \uses{lem:adjacency_regular,lem:adjacency_bounded,lem:constant_is_l2}
-  We assume that $G$ is finite and $d$-regular. Then $\|a\|=d$.
+  \uses{prop:norm_adjacency_sup_degree,lem:constant_eigenfunction}
+  We assume that $G$ is finite, not empty and $d$-regular. Then $\|a\|=d$.
 \end{proposition}
 
 \begin{proof}
   Since $G$ is $d$-regular, for all $x \in V(G)$, $\deg(x) \leq d$. Then, by
-  Lemma \ref{lem:adjacency_bounded}, $a$ is bounded and $\|a \| \leq d$.
-  By Lemma \ref{lem:constant_is_l2}, since $G$ is finite, $\const$ is an element of $\ell^2(G)$.
-  By Lemma \ref{lem:adjacency_of_constant}, $a \const = d \const$, and hence $\|a \| \geq d$ by definition
-  of the operator norm.
+  Lemma \ref{prop:norm_adjacency_sup_degree}, $a$ is bounded and $\|a \| \leq d$.
+  By Lemma \ref{lem:constant_eigenfunction}, $d$ is an eigenvalue of $a$ and hence $\|a\| \geq d$,
+  which is enough to conclude.
 \end{proof}
 
 % \section{Adjacency matrix}
