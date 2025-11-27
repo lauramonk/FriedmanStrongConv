@@ -64,21 +64,16 @@ Let $G$ be a graph.
   Let $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
   The \emph{degree} of $x$ is the number of incident edges, counting loops twice:
   \begin{equation*}
-    \mathrm{deg}(x) = \# \incset(x)
-    + \# \loopset(x).
+    \mathrm{deg}(x) = \sum_{e \in \incset(x)}
+    2^{\isloop(e)}.
   \end{equation*}
 \end{definition}
-
-\begin{proof}
-  The set of loops at $x$ is included in the incidence set of $x$ by IsLoopAt.inc. Hence, if $G$ is
-  locally finite at $x$, then $x$ has a finite number of loops and the degree is well-defined.
-\end{proof}
 
 \begin{definition}
   \label{def:regular}
   \uses{def:locally_finite, def:degree}
   Let $d$ be a non-negative integer.
-  We say $G$ is \emph{regular of degree $d$} if it is locally finite and,
+  We say $G$ is \emph{regular of degree $d$} if it is not empty, locally finite and,
   for every $x \in V(G)$, $\deg (x) = d$.
 \end{definition}
 
@@ -142,7 +137,8 @@ Assume $G$ is locally finite.
   We define the adjacency operator $a$ as the linear operator acting on the space of
   functions $f : V(G) \rightarrow \C$ by
   $$ a f (x) :=
-  \sum_{e \in \incset(x)} f(\incother(e, x)) + \# \loopset(x) f(x).$$
+  \sum_{e \in \incset(x)}
+  2^{\isloop(e)} f(\incother(e,x)).$$
 \end{definition}
 
 \begin{lemma}
@@ -155,12 +151,12 @@ Assume $G$ is locally finite.
   Let $x \in V(G)$. We have
   \begin{align*}
     a \const(x)
-    & = \sum_{e \in \incset(x)} \const(\incother(e, x)) + \# \loopset(x) \times \const(x)
+    & = \sum_{e \in \incset(x)}
+    2^{\isloop(e)}\const(\incother(e,x))
     & \text{by Definition \ref{def:adjacency_operator}} \\
-    & = \sum_{e \in \incset(x)} 1 + \# \loopset(x) \times 1
+    & = \sum_{e \in \incset(x)}
+    2^{\isloop(e)}
     & \text{by Definition \ref{def:constant_function}} \\
-    & =  \# \incset(x) + \# \loopset(x)
-    & \text{by calculation} \\
     & = \deg(x)
     & \text{by Definition \ref{def:degree}}.
   \end{align*}
@@ -172,16 +168,11 @@ Let $G$ be a locally finite graph.
 The aim of this subsection is to prove the following.
 
 \begin{proposition}
-  \label{prop:adjacency_bounded_iff}
-  The adjacency matrix of $G$ is a bounded operator on $\ell^2(G)$ if and only
-  if $G$ is locally bounded.
-\end{proposition}
-
-We will also prove the following upper bound on the operator norm of $a$.
-
-\begin{proposition}
   \label{prop:norm_adjacency_sup_degree}
-  Assume $G$ is locally bounded. Then $\|a\| \leq \sup_{x \in V(G)} \deg(x)$.
+  \uses{lem:bound_a_degree_x}
+  Assume $G$ is locally bounded.
+  Then the adjacency operator is a bounded operator on $\ell^2(G)$ and
+  its norm satisfies $\|a\| \leq \sup_{x \in V(G)} \deg(x)$.
 \end{proposition}
 
 Here is a key lemma.
@@ -189,43 +180,68 @@ Here is a key lemma.
 \begin{lemma}
   \label{lem:bound_a_degree_x}
   \uses{def:adjacency_operator,def:degree}
-  For any $x \in V(G)$,
+  For any function $f : V(G) \rightarrow \C$, any vertex $x \in V(G)$,
   \begin{equation}
     |af(x)|^2
-    \leq \deg(x) \left( \sum_{e \in \incset(x)} |f(\incother(e,x))|^2
-    + \# \loopset(x) |f(x)|^2 \right).
+    \leq \deg(x)
+    \sum_{e \in \incset(x)} 2^{\isloop(e)} |f(\incother(e,x))|^2.
   \end{equation}
 \end{lemma}
 
 \begin{proof}
-  Let $x \in V(G)$. By Definition \ref{def:adjacency_operator},
+  Let $f : V(G) \rightarrow \C$ and $x \in V(G)$.
+  By Definition \ref{def:adjacency_operator},
   \begin{equation}
     |af(x)|^2
-    = \left| \sum_{e \in \incset(x)} f(\incother(e, x)) + \sum_{e \in \loopset(x)}
-    f(x) \right|^2.
+    = \left| \sum_{e \in \incset(x)} 2^{\isloop(e)} f(\incother(e, x))\right|^2.
   \end{equation}
-  By \mathlibok{Cauchy-Schwarz},
-  \begin{multline*}
+  By the \mathlibok{Cauchy-Schwarz} inequality,
+  \begin{equation*}
     |af(x)|^2
     \leq
-    \left(\sum_{e \in \incset(x)} 1 + \sum_{e \in \loopset (x)} 1
-    \right)\\
-      \times
-    \left( \sum_{e \in \incset(x)} |f(\incother(e, x))|^2
-    + \sum_{e \in \loopset (x)} |f(x)|^2
+    \left(\sum_{e \in \incset(x)} 2^{\isloop(e)}
+    \right)
+    \left( \sum_{e \in \incset(x)} 2^{\isloop(e)} |f(\incother(e, x))|^2
     \right).
-  \end{multline*}
+  \end{equation*}
   This leads to the claim by Definition \ref{def:degree}.
+\end{proof}
+
+Then Proposition \ref{prop:norm_adjacency_sup_degree} is a trivial consequence of the
+following lemma, together with the definition of bounded operator and operator norm.
+
+\begin{lemma}
+  \label{lem:bound_a_degree}
+  \uses{lem:bound_a_degree}
+  Assume $G$ is locally bounded. Then, for any $f \in \ell^2(G)$,
+  $a f \in \ell^2(G)$ and
+  \begin{equation}
+    \|a f\| \leq \sup_{x \in V(G)} \deg(x) \times \|f\|.
+  \end{equation}
+\end{lemma}
+
+\begin{proof}
+  To write, basically we need to sum Lemma \ref{lem:bound_a_degree_x} for $x \in V(G)$
+  (find the correct summation result), change the order of summation (same)
+  and observe that
+  \begin{align*}
+    \sum_{x \in V(G)}
+    \sum_{e \in \incset(x)}
+    2^{\isloop(e)}
+    |f(\incother(e,x))|^2
+    & = \sum_{x \in V(G)} \deg(x) |f(x)|^2 \\
+    & \leq \sup_{x \in V(G)} \deg(x) \times \|f\|^2.
+  \end{align*}
 \end{proof}
 
 \subsection{The case of regular graphs}
 
-Assume $G$ is locally finite.
 Let $d$ be a non-negative integer.
 
 \begin{lemma}
   \label{lem:adjacency_of_constant_regular}
   \uses{lem:adjacency_of_constant,def:regular}
+  Assume $G$ is not empty and locally finite. Then
   $G$ is regular of degree $d$ iff $a \const = d \const$.
 \end{lemma}
 
@@ -239,27 +255,28 @@ Let $d$ be a non-negative integer.
 
 \begin{lemma}
   \label{lem:constant_eigenfunction}
-  \uses{lem:constant_is_l2,lem:adjacency_of_constant_regular,lem:constant_function_eq_zero}
-  Assume $G$ is finite and not empty.
-  If $G$ is regular of degree $d$, then $d$ is an eigenvalue of the adjacency
+  \uses{lem:constant_is_l2,lem:constant_function_eq_zero,lem:adjacency_of_constant_regular}
+  If $G$ is finite and regular of degree $d$,
+  then $d$ is an eigenvalue of the adjacency
   operator with associated eigenfunction the constant function $\const$.
 \end{lemma}
 
 \begin{proof}
   Since $G$ is finite, $\const \in \ell^2(G)$ by Lemma \ref{lem:constant_is_l2}.
+  Furthermore, $\const \neq 0$ by Lemma \ref{lem:constant_function_eq_zero}
+  and since $G$ is not empty by Definition \ref{def:regular}.
   By Lemma \ref{lem:adjacency_of_constant_regular}, if $G$ is regular of degree $d$,
-  then $a \const = d \const$, which is enough to conclude by the definition
-  of eigenvalue and eigenvector, since $\const \neq 0$ by Lemma \ref{lem:constant_function_eq_zero}.
+  then $a \const = d \const$.  We conclude by the definition of eigenvalue and eigenvector.
 \end{proof}
 
 \begin{proposition}
   \label{prop:norm_adjacency_regular}
   \uses{prop:norm_adjacency_sup_degree,lem:constant_eigenfunction}
-  We assume that $G$ is finite, not empty and $d$-regular. Then $\|a\|=d$.
+  If $G$ is finite and regular of degree $d$, then $\|a\|=d$.
 \end{proposition}
 
 \begin{proof}
-  Since $G$ is $d$-regular, for all $x \in V(G)$, $\deg(x) \leq d$. Then, by
+  Since $G$ is regular of degree $d$, for all $x \in V(G)$, $\deg(x) \leq d$. Then, by
   Lemma \ref{prop:norm_adjacency_sup_degree}, $a$ is bounded and $\|a \| \leq d$.
   By Lemma \ref{lem:constant_eigenfunction}, $d$ is an eigenvalue of $a$ and hence $\|a\| \geq d$,
   which is enough to conclude.
