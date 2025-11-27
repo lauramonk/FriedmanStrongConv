@@ -1,6 +1,4 @@
-import Mathlib.Data.Finset.Max
 import Mathlib.Combinatorics.Graph.Basic
-import Mathlib.Data.Fintype.BigOperators
 
 /-!
 # Definitions for finite and locally finite graphs
