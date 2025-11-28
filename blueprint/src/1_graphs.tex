@@ -17,14 +17,29 @@ Following \mathlibok{Inc}, we say an edge $e$ is \emph{incident} to a vertex $x$
 vertex $y$ such that $e$ links $x$ and $y$. As \mathlibok{IsLoopAt}, an edge is a \emph{loop} based
 at a vertex $x$ if it links the vertex $x$ to itself.
 
-\section{Finiteness, degree and regularity}
+\section{Basic notions of graph theory}
 
-Let us now focus on the degree of vertices and regularity. We make definitions with minimal
+Let us define a few basic notions from graph theory.
+We make definitions with minimal
 hypotheses as these are fundamental objects that should be added to Mathlib.
+
+\subsection{General definitions}
 
 \begin{definition}
 \label{def:empty}
 We say a graph $G$ is empty if $V(G) = \emptyset$.
+\end{definition}
+
+\begin{definition}
+  \label{def:bipartite}
+  A graph $G$ is \emph{bipartite} if there exists two disjoint subsets $U_1$,
+  $U_2$ of $V(G)$ such that, for all $e \in E(G)$, $e$ links an element of $U_1$
+  and an element of $U_2$.
+\end{definition}
+
+\begin{definition}
+  \label{def:number_connected_components}
+  todo
 \end{definition}
 
 \subsection{Notions of finiteness}
@@ -329,10 +344,38 @@ Let $d$ be a non-negative integer.
 \end{proof}
 
 \begin{lemma}
+  \label{lem:norm_adjacency_regular_leq_degree}
+  \uses{lem:bound_a_sup_degree}
+  If $G$ is regular of degree $d$, then $\| a \| \leq d$.
+\end{lemma}
+
+\begin{proof}
+  This is simply Lemma \ref{lem:bound_a_sup_degree}.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:spectrum_regular_in_segment}
+  \uses{}
+  If $G$ is regular of degree $d$, then the spectrum of $a$ is included in the
+  segment $[-d,d]$.
+\end{lemma}
+
+\begin{proof}
+  By Corollary \ref{cor:spectrum_is_real}, the spectrum of $a$ is real.
+  By \mathlibok{spectrum.subset\_closedBall\_norm},
+  it is included in the closed ball of center $0$ and
+  radius $\|a\|$.
+  We have $\|a\| \leq d$ by Lemma \ref{lem:norm_adjacency_regular_leq_degree}.
+\end{proof}
+
+\subsection{The case of finite regular graphs}
+
+Let $G$ be a regular graph of degree $d$, which we assume to be finite.
+
+\begin{lemma}
   \label{lem:constant_eigenfunction_regular}
   \uses{lem:constant_is_l2,lem:constant_neq_zero,lem:adjacency_of_constant_regular}
-  If $G$ is finite and regular of degree $d$,
-  then $d$ is an eigenvalue of the adjacency
+  $d$ is an eigenvalue of the adjacency
   operator with associated eigenfunction the constant function $\const$.
 \end{lemma}
 
@@ -346,103 +389,46 @@ Let $d$ be a non-negative integer.
 
 \begin{proposition}
   \label{prop:norm_adjacency_regular}
-  \uses{prop:norm_adjacency_leq_sup_degree,lem:constant_eigenfunction_regular}
+  \uses{lem:norm_adjacency_regular_leq_degree,lem:constant_eigenfunction_regular}
   If $G$ is finite and regular of degree $d$, then $\|a\|=d$.
 \end{proposition}
 
 \begin{proof}
-  Since $G$ is regular of degree $d$, for all $x \in V(G)$, $\deg(x) \leq d$. Then, by
-  Lemma \ref{prop:norm_adjacency_sup_degree}, $a$ is bounded and $\|a \| \leq d$.
+  Since $G$ is regular of degree $d$, by
+  Lemma \ref{lem:norm_adjacency_regular_leq_degree}, $\|a \| \leq d$.
   By Lemma \ref{lem:constant_eigenfunction_regular}, $d$ is an eigenvalue of $a$ and hence $\|a\| \geq d$,
   which is enough to conclude.
 \end{proof}
 
+\begin{theorem}
+  \uses{lem:spectrum_regular_in_segment,lem:constant_eigenfunction_regular}
+  The spectrum of the adjacency operator is a family of $n$ eigenvalues
+  $$d = \lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_n \geq -d.$$
+\end{theorem}
 
-% \section{Adjacency matrix}
+\begin{proof}
+  This is the spectral theorem in finite dimension together with
+  Lemma \ref{lem:spectrum_regular_in_segment} and \ref{lem:constant_eigenfunction_regular}.
+\end{proof}
 
-% \begin{definition}
-%   \label{def:n_labelled}
-%   Let $n \geq 1$ be a natural integer. We say a graph $G = (V,E)$ is
-%   \emph{$n$-labelled} if the vertex set $V$ is $\{1, \ldots, n\}$.
-% \end{definition}
+Now we can be more precise about special cases.
 
-% \begin{definition}
-%   \label{def:adjacency_matrix}
-%   \uses{def:finite,def:n_labelled}
-%   Let $G$ be a finite, $n$-labelled graph.
-%   The \emph{adjacency matrix $A$} of $G$ is a $n \times n$ matrix with integer coefficients,
-%   defined by
-%   \begin{equation}
-%     \forall (i, j) \in \{1, \ldots, n\}^2,
-%     A_{i,j} :=
-%     \begin{cases}
-%       \# \{e \in E : e \text{ links } i \text{ and } j\} & \text{ if } i \neq j \\
-%       2 \# \{e \in E : e \text{ is a loop at } i\} & \text{ if } i=j.
-%     \end{cases}
-%   \end{equation}
-% \end{definition}
+\begin{proposition}
+  \label{prop:regular_multiplicity_trivial_eigenvalue}
+  \uses{def:number_connected_components}
+  The multiplicity of $d$ as an eigenvalue is the number of connected components of $G$.
+\end{proposition}
 
-% \begin{lemma}
-%   \label{lem:adjacency_symmetric}
-%   \uses{def:adjacency_matrix}
-%   The adjacency matrix of a graph is symmetric.
-% \end{lemma}
+\begin{proof}
+  todo
+\end{proof}
 
-% \begin{proof}
-%   Direct from Definition \ref{def:adjacency_matrix} and \mathlibok{isLink symm}.
-% \end{proof}
+\begin{proposition}
+  \label{prop:eigenvalue_regular_bipartite}
+  \uses{def:regular,def:bipartite}
+  The number $-d$ is an eigenvalue of the adjacency operator iff the graph is bipartite.
+\end{proposition}
 
-% In any space $\mathbb{R}^n$ for $n \geq 1$, we denote as $\mathbf{1}$ the constant vector with
-% all coefficients equal to $1$.
-
-% \begin{lemma}
-%   \label{lem:adjacency_degree_vertex}
-%   \uses{def:degree,def:adjacency_matrix}
-%   Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
-%   For any $i \in V$, the degree of $G$ at $i$ is equal to $(A \mathbf{1})_i$.
-% \end{lemma}
-
-% \begin{proof}
-%   This follows directly from the definition of degree and the adjacency matrix coefficients.
-% \end{proof}
-
-% \begin{corollary}
-%   \label{cor:adjacency_regular}
-%   \uses{def:regular,lem:adjacency_degree_vertex}
-%   Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
-%   Let $d \geq 1$ be an integer.
-%   The graph $G$ is regular of degree $d$ if and only if
-%   $\mathbf{1}$ is an eigenvector of $A$ with eigenvalue $d$.
-% \end{corollary}
-
-% \begin{proof}
-%   [todo]
-% \end{proof}
-
-% \begin{lemma}
-%   \label{lemma:finite_of_label_and_reg}
-%   \uses{def:regular,def:finite,def:n_labelled}
-%   Let $G$ be a $n$-labelled $d$-regular graph. Then, $G$ is finite, $\# V(G) = n$
-%   and $\#E(G) = nd/2$.
-% \end{lemma}
-
-% \begin{proposition}
-%   \label{prop:spectral_radius}
-%   \uses{def:adjacency_matrix,def:regular}
-%   [to write]
-% \end{proposition}
-
-% \begin{definition}
-%   \label{def:bipartite}
-%   A graph $G$ is called \emph{bipartite} if there exists a partition $(V_1, V_2)$ of $V$ such that
-%   every edge of $G$ links a vertex of $V_1$ to a vertex of $V_2$.
-% \end{definition}
-
-% \begin{proposition}
-%   \label{prop:adjacency_bipartite}
-%   \uses{def:bipartite,def:adjacency_matrix}
-%   Let $G$ be a finite, $n$-labelled graph, of adjacency matrix $A$.
-%   Let $d \geq 1$ be an integer.
-%   We assume that the graph $G$ is regular of degree $d$.
-%   Then, $G$ is bipartite if and only if $-d$ is an eigenvalue of $A$.
-% \end{proposition}
+\begin{proof}
+  todo
+\end{proof}
