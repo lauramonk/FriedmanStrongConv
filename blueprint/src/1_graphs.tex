@@ -90,7 +90,7 @@ Let $G$ be a graph.
 Let $G$ be a graph.
 We will be interested in the Hilbert space $\ell^2(G) := \ell^2(V(G))$, which is defined as the set of
 functions $f : V(G) \rightarrow \C$ which are square-summable, equipped with the inner product
-$$\langle f_1, f_2 \rangle = \sum_{x \in V(G)} f_1(x) \overline{f_2(x)}.$$
+$$\langle f, g \rangle = \sum_{x \in V(G)} f(x) \overline{g(x)}.$$
 
 The space $\B(\ell^2(G))$ of bounded linear operators on $\ell^2(G)$ is a unital $\C^*$-algebra.
 Note that, in this context, $0$ is the constant function equal to $0$.
@@ -234,6 +234,81 @@ following lemma, together with the definition of bounded operator and operator n
   \end{align*}
 \end{proof}
 
+\subsection{Adjacency operator is self-adjoint}
+
+Let $G$ be a locally bounded graph.
+
+\begin{proposition}
+  \label{prop:adjacency_is_selfadjoint}
+  \uses{lem:scal_of_adjacency}
+  The adjacency operator is selfadjoint.
+\end{proposition}
+
+The following lemma will be very handy.
+
+\begin{lemma}
+  \label{lem:scal_of_adjacency}
+  \uses{lem:bound_a_sup_degree}
+  For any $f$, $g$ in $\ell^2(G)$,
+  \begin{equation}
+    \langle af, g \rangle
+    = \sum_{\substack{e \in E(G)\\ e \text{ links } x,y}}
+    (f(x) \overline{g(y)} + f(y) \overline{g(x)}).
+  \end{equation}
+\end{lemma}
+
+\begin{proof}
+  Let $f$, $g$ be elements of $\ell^2(G)$.
+  By Proposition \ref{lem:bound_a_sup_degree}, $a f \in \ell^2(G)$.
+  By definition of the scalar product,
+  \begin{equation}
+    \langle af, g \rangle
+    = \sum_{x \in V(G)} af(x) \overline{g(x)}.
+  \end{equation}
+  By Definition \ref{def:adjacency_operator},
+  \begin{equation}
+    \langle af, g \rangle
+    = \sum_{x \in V(G)} \sum_{e \in \incset(x)} 2^{\isloop(e)}
+    f(\incother(e,x)) \overline{g(x)}
+  \end{equation}
+  (todo: justify the change of order of summation, notably using Lemma
+  \ref{lem:bound_a_sup_degree} to have absolute convergence)
+  which we can reorder to the result.
+\end{proof}
+
+We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
+
+\begin{proof}
+  Let $f$, $g$ be elements of $\ell^2(G)$.
+  We have by Lemma \ref{lem:scal_of_adjacency}
+  \begin{equation*}
+    \langle af, g \rangle
+    = \sum_{\substack{e \in E(G)\\ e \text{ links } x,y}}
+    (f(x) \overline{g(y)} + f(y) \overline{g(x)})
+    = \overline{\sum_{\substack{e \in E(G)\\ e \text{ links } x,y}}
+    (g(x) \overline{f(y)} + g(y) \overline{f(x)})}
+  \end{equation*}
+  by complex conjugation, commutativity of addition and \mathlibok{isLink\_symm}.
+  Hence by Lemma \ref{lem:scal_of_adjacency}
+  \begin{equation*}
+    \langle af, g \rangle
+    = \overline{\langle ag, f \rangle} = \langle f, ag \rangle
+  \end{equation*}
+  by \mathlibok{inner\_conj\_symm}. This means that $a^*=a$ by definition of
+  the adjoint, which means $a$ is self-adjoint by definition.
+\end{proof}
+
+\begin{corollary}
+  \label{cor:spectrum_is_real}
+  \uses{prop:adjacency_is_selfadjoint}
+  The spectrum of the adjacency matrix is real.
+\end{corollary}
+
+\begin{proof}
+  This follows from Proposition \ref{prop:adjacency_is_selfadjoint} with
+  \mathlibok{selfAdjoint.mem\_spectrum\_eq\_re}.
+\end{proof}
+
 \subsection{The case of regular graphs}
 
 Let $d$ be a non-negative integer.
@@ -271,7 +346,7 @@ Let $d$ be a non-negative integer.
 
 \begin{proposition}
   \label{prop:norm_adjacency_regular}
-  \uses{prop:norm_adjacency_sup_degree,lem:constant_eigenfunction_regular}
+  \uses{prop:norm_adjacency_leq_sup_degree,lem:constant_eigenfunction_regular}
   If $G$ is finite and regular of degree $d$, then $\|a\|=d$.
 \end{proposition}
 
@@ -281,6 +356,7 @@ Let $d$ be a non-negative integer.
   By Lemma \ref{lem:constant_eigenfunction_regular}, $d$ is an eigenvalue of $a$ and hence $\|a\| \geq d$,
   which is enough to conclude.
 \end{proof}
+
 
 % \section{Adjacency matrix}
 
