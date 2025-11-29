@@ -368,13 +368,26 @@ Let $d$ be a non-negative integer.
   We have $\|a\| \leq d$ by Lemma \ref{lem:norm_adjacency_regular_leq_degree}.
 \end{proof}
 
-\subsection{The case of finite regular graphs}
+\subsection{The case of finite graphs}
 
-Let $G$ be a regular graph of degree $d$, which we assume to be finite.
+\begin{theorem}
+  \label{thm:spectral_finite}
+  \ref{prop:adjacency_is_selfadjoint}
+  Assume $G$ is finite and let $n$ denote the cardinal of $V(G)$.
+  Then the spectrum of the adjacency operator is a family of $n$ real eigenvalues
+  $$\lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_n.$$
+\end{theorem}
+
+\begin{proof}
+  This is the spectral theorem in finite dimension.
+\end{proof}
+
+Let $d$ be a non-negative integer.
 
 \begin{lemma}
   \label{lem:constant_eigenfunction_regular}
   \uses{lem:constant_is_l2,lem:constant_neq_zero,lem:adjacency_of_constant_regular}
+  Assume $G$ is regular of degree $d$ and finite. Then
   $d$ is an eigenvalue of the adjacency
   operator with associated eigenfunction the constant function $\const$.
 \end{lemma}
@@ -400,23 +413,12 @@ Let $G$ be a regular graph of degree $d$, which we assume to be finite.
   which is enough to conclude.
 \end{proof}
 
-\begin{theorem}
-  \uses{lem:spectrum_regular_in_segment,lem:constant_eigenfunction_regular}
-  The spectrum of the adjacency operator is a family of $n$ eigenvalues
-  $$d = \lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_n \geq -d.$$
-\end{theorem}
-
-\begin{proof}
-  This is the spectral theorem in finite dimension together with
-  Lemma \ref{lem:spectrum_regular_in_segment} and \ref{lem:constant_eigenfunction_regular}.
-\end{proof}
-
-Now we can be more precise about special cases.
-
 \begin{proposition}
   \label{prop:regular_multiplicity_trivial_eigenvalue}
-  \uses{def:number_connected_components}
-  The multiplicity of $d$ as an eigenvalue is the number of connected components of $G$.
+  \uses{def:number_connected_components,thm:spectral_finite}
+  Let $G$ be a regular graph of degree $d$. Assume $G$ is finite with $n$ vertices.
+  Let $m$ be the number of connected components of $G$. Then $\lambda_i = d$ for
+  all $i \in \{1, \ldots, m\}$.
 \end{proposition}
 
 \begin{proof}
@@ -425,8 +427,9 @@ Now we can be more precise about special cases.
 
 \begin{proposition}
   \label{prop:eigenvalue_regular_bipartite}
-  \uses{def:regular,def:bipartite}
-  The number $-d$ is an eigenvalue of the adjacency operator iff the graph is bipartite.
+  \uses{thm:spectral_finite,def:bipartite}
+  Let $G$ be a regular graph of degree $d$. Assume $G$ is finite with $n$ vertices. Then
+  $\lambda_n = -d$ iff the graph is bipartite.
 \end{proposition}
 
 \begin{proof}
