@@ -37,6 +37,11 @@ We say a graph $G$ is empty if $V(G) = \emptyset$.
   and an element of $U_2$.
 \end{definition}
 
+\subsection{Paths and distance}
+
+We define a notion of paths on the graph, and a corresponding distance function.
+
+
 \begin{definition}
   \label{def:number_connected_components}
   todo
@@ -355,7 +360,7 @@ Let $d$ be a non-negative integer.
 
 \begin{lemma}
   \label{lem:spectrum_regular_in_segment}
-  \uses{}
+  \uses{cor:spectrum_is_real,lem:norm_adjacency_regular_leq_degree}
   If $G$ is regular of degree $d$, then the spectrum of $a$ is included in the
   segment $[-d,d]$.
 \end{lemma}
@@ -372,7 +377,7 @@ Let $d$ be a non-negative integer.
 
 \begin{theorem}
   \label{thm:spectral_finite}
-  \ref{prop:adjacency_is_selfadjoint}
+  \uses{prop:adjacency_is_selfadjoint}
   Assume $G$ is finite and let $n$ denote the cardinal of $V(G)$.
   Then the spectrum of the adjacency operator is a family of $n$ real eigenvalues
   $$\lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_n.$$
