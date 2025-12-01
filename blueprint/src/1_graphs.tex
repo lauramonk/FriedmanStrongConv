@@ -37,9 +37,9 @@ We say a graph $G$ is empty if $V(G) = \emptyset$.
   and an element of $U_2$.
 \end{definition}
 
-\subsection{Paths and distance}
+\subsection{Walks}
 
-We define a notion of walk on the graph, and a corresponding distance function.
+We define a notion of walk on the graph.
 Let $G$ be a graph.
 
 \begin{definition}
@@ -59,27 +59,76 @@ Let $G$ be a graph.
 \end{definition}
 
 \begin{definition}
+  \label{def:connected_vertices}
+  \uses{def:walk}
+  We say two vertices are connected if there exists a walk from one to the other in $G$.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:vertex_connectedness_eq_rel}
+  \uses{def:connected_vertices}
+  The vertex connectedness relation is an equivalence relation.
+\end{proposition}
+
+\subsection{Connected components}
+
+We define the connected components of a graph.
+Let $G$ be a graph.
+
+\begin{definition}
   \label{def:connected}
     \uses{def:walk}
-  We say $G$ is \emph{connected} if, for all $x$, $y \in V(G)$, there exists a walk from $x$ to $y$.
+  A subset $U$ of $V(G)$ is \emph{connected} if,
+  for all $x$, $y \in U$, there exists a walk from $x$ to $y$ in $G$.
 \end{definition}
 
 \begin{definition}
-  \label{def:distance}
-  \uses{def:connected}
-  todo
+  \label{def:disconnected}
+  \uses{def:disconnected}
+  A subset of $V(G)$ is \emph{disconnected} if it is not connected.
 \end{definition}
+
+Let us list some simple monotony properties.
+
+\begin{lemma}
+  \label{lem:connected_is_decreasing}
+  \uses{def:connected}
+  Let $U_1$, $U_2$ be two subsets of $V(G)$ such that $U_1 \subseteq U_2$.
+  If $U_2$ is connected, then $U_1$ is connected.
+\end{lemma}
+
+\begin{proof}
+  Assume $U_2$ is connected. Then, for all $x, y \in U_2$, there exists a walk
+  from $x$ to $y$ in $G$. Since $U_1 \subseteq U_2$, this implies that for all
+  $x$ and $y$ in $U_1$, there exists a walk from $x$ to $y$ in $G$, and hence
+  $U_1$ is connected.
+\end{proof}
 
 \begin{definition}
   \label{def:connected_component}
-  \uses{def:distance}
-  todo
+  \uses{def:connected,def:disconnected}
+  A \emph{connected component} of $G$ is a non-empty subset $U$ of $V(G)$
+  that is connected and maximal for inclusion, i.e. any subset $U'$ of
+  $V(G)$ containing $U$ is disconnected.
 \end{definition}
+
+\begin{proposition}
+  \label{prop:connected_component_of_a_vertex}
+  Let $x \in V(G)$. Then the set of $y \in V(G)$ such that there exists a
+  walk from $x$ to $y$ is the unique connected component of $G$ containing $x$.
+\end{proposition}
+
+\begin{proposition}
+  \label{prop:connected_components_partition}
+  The connected components of $G$ form a partition of $V(G)$ into non-empty sets.
+\end{proposition}
+
 
 \begin{definition}
   \label{def:number_connected_components}
   \uses{def:connected_component}
-  todo
+  The \emph{number of connected components} of a graph is the number of its
+  connected components, as an element of $\N \cup \{ \infty\}$.
 \end{definition}
 
 \subsection{Notions of finiteness}
