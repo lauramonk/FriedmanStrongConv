@@ -47,8 +47,8 @@ Let $G$ be a graph.
   Let $x, y \in V(G)$. A \emph{walk} from $x$ to $y$ on $G$ is given by:
   \begin{itemize}
     \item a non-negative integer $m$;
-    \item an ordered sequence of $m+1$ vertices $v_0, \ldots, v_m \in V(G)$;
-    \item an ordered sequence of $m$ edges $e_1, \ldots, e_m \in E(G)$;
+    \item a family $(v_i)_{0 \leq i \leq m}$ of vertices in $V(G)$;
+    \item a family $(e_i)_{1 \leq i \leq m}$ of edges in $E(G)$;
   \end{itemize}
   satisfying the following:
     \begin{itemize}
@@ -59,16 +59,71 @@ Let $G$ be a graph.
 \end{definition}
 
 \begin{definition}
-  \label{def:connected_vertices}
+  \label{def:connected_relation}
   \uses{def:walk}
-  We say two vertices are connected if there exists a walk from one to the other in $G$.
+  We define a binary relation on $V(G)$ by: $x \sim y$ if there exists a walk
+  from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{connected}.
 \end{definition}
 
+The following three lemmas together prove this is an equivalence relation.
+
 \begin{proposition}
-  \label{prop:vertex_connectedness_eq_rel}
-  \uses{def:connected_vertices}
-  The vertex connectedness relation is an equivalence relation.
+  \label{prop:connected_relation_is_equivalence}
+  \uses{lem:connected_relation_reflexive,lem:connected_relation_symmetric,
+  lem:connected_relation_transitive}
+  $\sim$ is an equivalence relation.
 \end{proposition}
+
+\begin{lemma}
+  \label{lem:connected_relation_reflexive}
+  \uses{def:connected_relation}
+  $\sim$ is reflexive: $x \sim x$ for any $x \in V(G)$.
+\end{lemma}
+
+\begin{proof}
+  Let $x \in V(G)$. We take $m=0$ and set $v_0=x$. Then this is a walk from
+  $x$ to $x$ on $G$.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:connected_relation_symmetric}
+  \uses{def:connected_relation}
+  $\sim$ is symmetric: if $x \sim y$ then  $y \sim x$.
+\end{lemma}
+
+\begin{proof}
+  Let $x$, $y$ be two vertices. We assume $x \sim y$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
+  be a walk from $x$ to $y$. Then $(v_{m-i})_{0 \leq i \leq m}$ and $(e_{m+1-i})_{1 \leq i \leq m}$
+  is a walk from $y$ to $x$ by the \mathlibok{is\_link\_symm}. So $y \sim x$.
+\end{proof}
+
+\begin{lemma}
+    \label{lem:connected_relation_transitive}
+  \uses{def:connected_relation}
+  $\sim$ is transitive: if $x \sim y$ and $y \sim z$ then
+  $x \sim z$.
+\end{lemma}
+
+\begin{proof}
+  Assume $x \sim y$ and $y \sim z$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
+  be a walk from $x$ to $y$ and $(v_i')_{0 \leq i \leq m'}$, $(e_i')_{1 \leq i \leq m'}$
+  be a walk from $y$ to $z$.
+  We let $m''=m+m'$ and define for $i \in \{0, \ldots, m'\}$
+  \begin{equation}
+    v_i'' := \begin{cases}
+      v_i & \text{if } i \leq m \\
+      v_{i-m-1}' & \text{otherwise}
+    \end{cases}
+  \end{equation}
+ and for $i \in \{1, \ldots, m'\}$
+   \begin{equation}
+    e_i'' := \begin{cases}
+      e_i & \text{if } i \leq m \\
+      e_{i-m}' & \text{otherwise}.
+    \end{cases}
+  \end{equation}
+  Then this is a walk from $x$ to $z$, hence $x \sim z$.
+\end{proof}
 
 \subsection{Connected components}
 
@@ -88,21 +143,21 @@ Let $G$ be a graph.
   A subset of $V(G)$ is \emph{disconnected} if it is not connected.
 \end{definition}
 
-Let us list some simple monotony properties.
+% Let us list some simple monotony properties.
 
-\begin{lemma}
-  \label{lem:connected_is_decreasing}
-  \uses{def:connected}
-  Let $U_1$, $U_2$ be two subsets of $V(G)$ such that $U_1 \subseteq U_2$.
-  If $U_2$ is connected, then $U_1$ is connected.
-\end{lemma}
+% \begin{lemma}
+%   \label{lem:connected_is_decreasing}
+%   \uses{def:connected}
+%   Let $U_1$, $U_2$ be two subsets of $V(G)$ such that $U_1 \subseteq U_2$.
+%   If $U_2$ is connected, then $U_1$ is connected.
+% \end{lemma}
 
-\begin{proof}
-  Assume $U_2$ is connected. Then, for all $x, y \in U_2$, there exists a walk
-  from $x$ to $y$ in $G$. Since $U_1 \subseteq U_2$, this implies that for all
-  $x$ and $y$ in $U_1$, there exists a walk from $x$ to $y$ in $G$, and hence
-  $U_1$ is connected.
-\end{proof}
+% \begin{proof}
+%   Assume $U_2$ is connected. Then, for all $x, y \in U_2$, there exists a walk
+%   from $x$ to $y$ in $G$. Since $U_1 \subseteq U_2$, this implies that for all
+%   $x$ and $y$ in $U_1$, there exists a walk from $x$ to $y$ in $G$, and hence
+%   $U_1$ is connected.
+% \end{proof}
 
 \begin{definition}
   \label{def:connected_component}
@@ -112,17 +167,21 @@ Let us list some simple monotony properties.
   $V(G)$ containing $U$ is disconnected.
 \end{definition}
 
-\begin{proposition}
-  \label{prop:connected_component_of_a_vertex}
-  Let $x \in V(G)$. Then the set of $y \in V(G)$ such that there exists a
-  walk from $x$ to $y$ is the unique connected component of $G$ containing $x$.
-\end{proposition}
+The following observation will allow to prove a few automatic properties directly.
+
+\begin{lemma}
+  \label{lem:connected_component_equivalence_class}
+  \uses{def:connected_component,prop:connected_relation_is_equivalence}
+  The connected components of $G$ are exactly the equivalence classes of $\sim$.
+\end{lemma}
+
+Here is an immediate consequence.
 
 \begin{proposition}
   \label{prop:connected_components_partition}
+  \uses{lem:connected_component_equivalence_class}
   The connected components of $G$ form a partition of $V(G)$ into non-empty sets.
 \end{proposition}
-
 
 \begin{definition}
   \label{def:number_connected_components}
@@ -130,6 +189,19 @@ Let us list some simple monotony properties.
   The \emph{number of connected components} of a graph is the number of its
   connected components, as an element of $\N \cup \{ \infty\}$.
 \end{definition}
+
+The following observation is also useful.
+
+\begin{proposition}
+  \label{prop:connected_component_of_a_vertex}
+  \uses{lem:connected_component_equivalence_class}
+  Let $x \in V(G)$. Then the set of $y \in V(G)$ such that there exists a
+  walk from $x$ to $y$ is the unique connected component of $G$ containing $x$.
+\end{proposition}
+
+\begin{proof}
+  This follows from Lemma \ref{lem:connected_component_equivalence_class}.
+\end{proof}
 
 \subsection{Notions of finiteness}
 
