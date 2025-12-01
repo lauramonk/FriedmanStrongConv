@@ -39,11 +39,46 @@ We say a graph $G$ is empty if $V(G) = \emptyset$.
 
 \subsection{Paths and distance}
 
-We define a notion of paths on the graph, and a corresponding distance function.
+We define a notion of walk on the graph, and a corresponding distance function.
+Let $G$ be a graph.
 
+\begin{definition}
+  \label{def:walk}
+  Let $x, y \in V(G)$. A \emph{walk} from $x$ to $y$ on $G$ is given by:
+  \begin{itemize}
+    \item a non-negative integer $m$;
+    \item an ordered sequence of $m+1$ vertices $v_0, \ldots, v_m \in V(G)$;
+    \item an ordered sequence of $m$ edges $e_1, \ldots, e_m \in E(G)$;
+  \end{itemize}
+  satisfying the following:
+    \begin{itemize}
+      \item $v_0=x$ and $v_m=y$;
+      \item for any $i \in \{1, \ldots, m\}$, $e_i$ links $v_{i-1}$ and $v_i$.
+    \end{itemize}
+  The integer $m$ is the \emph{length} of the walk.
+\end{definition}
+
+\begin{definition}
+  \label{def:connected}
+    \uses{def:walk}
+  We say $G$ is \emph{connected} if, for all $x$, $y \in V(G)$, there exists a walk from $x$ to $y$.
+\end{definition}
+
+\begin{definition}
+  \label{def:distance}
+  \uses{def:connected}
+  todo
+\end{definition}
+
+\begin{definition}
+  \label{def:connected_component}
+  \uses{def:distance}
+  todo
+\end{definition}
 
 \begin{definition}
   \label{def:number_connected_components}
+  \uses{def:connected_component}
   todo
 \end{definition}
 
@@ -355,7 +390,7 @@ Let $d$ be a non-negative integer.
 \end{lemma}
 
 \begin{proof}
-  This is simply Lemma \ref{lem:bound_a_sup_degree}.
+  This is simply Proposition \ref{prop:norm_adjacency_leq_sup_degree}.
 \end{proof}
 
 \begin{lemma}
@@ -386,6 +421,8 @@ Let $d$ be a non-negative integer.
 \begin{proof}
   This is the spectral theorem in finite dimension.
 \end{proof}
+
+\subsection{The case of finite regular graphs}
 
 Let $d$ be a non-negative integer.
 
