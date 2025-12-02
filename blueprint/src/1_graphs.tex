@@ -139,7 +139,7 @@ Let $G$ be a graph.
 
 \begin{definition}
   \label{def:disconnected}
-  \uses{def:disconnected}
+  \uses{def:connected}
   A subset of $V(G)$ is \emph{disconnected} if it is not connected.
 \end{definition}
 
@@ -183,6 +183,11 @@ Here is an immediate consequence.
   The connected components of $G$ form a partition of $V(G)$ into non-empty sets.
 \end{proposition}
 
+\begin{proof}
+  This follows from Lemma \ref{lem:connected_component_equivalence_class}
+  and properties of equivalence classes.
+\end{proof}
+
 \begin{definition}
   \label{def:number_connected_components}
   \uses{def:connected_component}
@@ -200,7 +205,8 @@ The following observation is also useful.
 \end{proposition}
 
 \begin{proof}
-  This follows from Lemma \ref{lem:connected_component_equivalence_class}.
+  This follows from Lemma \ref{lem:connected_component_equivalence_class}
+  and properties of equivalence classes.
 \end{proof}
 
 \subsection{Notions of finiteness}
