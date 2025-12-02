@@ -59,7 +59,7 @@ Let $G$ be a graph.
 \end{definition}
 
 \begin{definition}
-  \label{def:connected_relation}
+  \label{def:connected_rel}
   \uses{def:walk}
   We define a binary relation on $V(G)$ by: $x \sim y$ if there exists a walk
   from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{connected}.
@@ -68,15 +68,15 @@ Let $G$ be a graph.
 The following three lemmas together prove this is an equivalence relation.
 
 \begin{proposition}
-  \label{prop:connected_relation_is_equivalence}
-  \uses{lem:connected_relation_reflexive,lem:connected_relation_symmetric,
-  lem:connected_relation_transitive}
+  \label{prop:connected_rel_is_equivalence}
+  \uses{lem:connected_rel_reflexive,lem:connected_rel_symmetric,
+  lem:connected_rel_transitive}
   $\sim$ is an equivalence relation.
 \end{proposition}
 
 \begin{lemma}
-  \label{lem:connected_relation_reflexive}
-  \uses{def:connected_relation}
+  \label{lem:connected_rel_reflexive}
+  \uses{def:connected_rel}
   $\sim$ is reflexive: $x \sim x$ for any $x \in V(G)$.
 \end{lemma}
 
@@ -86,8 +86,8 @@ The following three lemmas together prove this is an equivalence relation.
 \end{proof}
 
 \begin{lemma}
-  \label{lem:connected_relation_symmetric}
-  \uses{def:connected_relation}
+  \label{lem:connected_rel_symmetric}
+  \uses{def:connected_rel}
   $\sim$ is symmetric: if $x \sim y$ then  $y \sim x$.
 \end{lemma}
 
@@ -98,8 +98,8 @@ The following three lemmas together prove this is an equivalence relation.
 \end{proof}
 
 \begin{lemma}
-    \label{lem:connected_relation_transitive}
-  \uses{def:connected_relation}
+    \label{lem:connected_rel_transitive}
+  \uses{def:connected_rel}
   $\sim$ is transitive: if $x \sim y$ and $y \sim z$ then
   $x \sim z$.
 \end{lemma}
@@ -171,7 +171,7 @@ The following observation will allow to prove a few automatic properties directl
 
 \begin{lemma}
   \label{lem:connected_component_equivalence_class}
-  \uses{def:connected_component,prop:connected_relation_is_equivalence}
+  \uses{def:connected_component,prop:connected_rel_is_equivalence}
   The connected components of $G$ are exactly the equivalence classes of $\sim$.
 \end{lemma}
 
@@ -189,11 +189,24 @@ Here is an immediate consequence.
 \end{proof}
 
 \begin{definition}
-  \label{def:number_connected_components}
+  \label{def:number_cc}
   \uses{def:connected_component}
   The \emph{number of connected components} of a graph is the number of its
   connected components, as an element of $\N \cup \{ \infty\}$.
 \end{definition}
+
+We have the following upper bound.
+
+\begin{lemma}
+  \label{lem:bound_number_cc}
+  \uses{prop:connected_components_partition}
+  If $V(G)$ is finite, then its number of connected components is finite and at most $\# V(G)$.
+\end{lemma}
+
+\begin{proof}
+  This follows from Proposition \ref{prop:connected_components_partition}
+  and the fact that the number of elements in a partition of a finite set is at most its cardinal.
+\end{proof}
 
 The following observation is also useful.
 
@@ -314,7 +327,7 @@ Note that, in this context, $0$ is the constant function equal to $0$.
   the constant sequence is summable if and only if the set is finite.
 \end{proof}
 
-\subsection{Definition of the adjacency operator and elementary properties}
+\subsection{Definition of the adjacency operator and action on constants}
 
 Assume $G$ is locally finite.
 
@@ -373,6 +386,10 @@ Here is a key lemma.
     \leq \deg(x)
     \sum_{e \in \incset(x)} 2^{\isloop(e)} |f(\incother(e,x))|^2.
   \end{equation}
+  Furthermore, this is an equality if and only if there exists $c \in \C$ such that
+  \begin{equation}
+    \forall e \in \incset(x), f(\incother(e,x)) = c.
+  \end{equation}
 \end{lemma}
 
 \begin{proof}
@@ -382,16 +399,30 @@ Here is a key lemma.
     |af(x)|^2
     = \left| \sum_{e \in \incset(x)} 2^{\isloop(e)} f(\incother(e, x))\right|^2.
   \end{equation}
-  By the \mathlibok{Cauchy-Schwarz} inequality,
-  \begin{equation*}
+  By the \mathlibok{Cauchy-Schwarz} inequality applied to the complex vectors
+  \begin{equation}
+    v_1 := (2^{\isloop(e)/2})_{e \in \incset(x)}
+  \end{equation}
+  and
+  \begin{equation}
+    v_2 := (2^{\isloop(e)/2} f(\incother(e,x)))_{e \in \incset(x)}
+  \end{equation}
+  we have
+  \begin{align*}
     |af(x)|^2
-    \leq
+    & = \left| v_1 \cdot v_2 \right|^2
+    \leq \|v_1\|_2^2 \|v_2\|_2^2 \\
+    &\leq
     \left(\sum_{e \in \incset(x)} 2^{\isloop(e)}
     \right)
     \left( \sum_{e \in \incset(x)} 2^{\isloop(e)} |f(\incother(e, x))|^2
     \right).
-  \end{equation*}
-  This leads to the claim by Definition \ref{def:degree}.
+  \end{align*}
+  This leads to the inequality by Definition \ref{def:degree}.
+  The equality case comes from the equality case in Cauchy-Schwarz, which occurs if
+  and only if the vectors $v_1$ and $v_2$
+  are colinear, which
+  is equivalent to the announced condition as $v_1$ is a non-zero constant vector.
 \end{proof}
 
 Then Proposition \ref{prop:norm_adjacency_leq_sup_degree} is a trivial consequence of the
@@ -404,6 +435,11 @@ following lemma, together with the definition of bounded operator and operator n
   $a f \in \ell^2(G)$ and
   \begin{equation}
     \|a f\| \leq \sup_{x \in V(G)} \deg(x) \times \|f\|.
+  \end{equation}
+  Furthermore, the equality occurs if and only if $G$ is regular
+  and, for any $x \in V(G)$, there exists $c \in \C$ such that
+    \begin{equation}
+    \forall e \in \incset(x), f(\incother(e,x)) = c.
   \end{equation}
 \end{lemma}
 
@@ -419,6 +455,9 @@ following lemma, together with the definition of bounded operator and operator n
     & = \sum_{x \in V(G)} \deg(x) |f(x)|^2 \\
     & \leq \sup_{x \in V(G)} \deg(x) \times \|f\|^2.
   \end{align*}
+  If the equality occurs, since all terms are non-negative, it means that
+  $\deg (x)$ is constant (i.e. the graph is regular), and that there is equality in
+  each term of  Lemma \ref{lem:bound_a_degree_x}, which is the conclusion.
 \end{proof}
 
 \subsection{Adjacency operator is self-adjoint}
@@ -427,14 +466,14 @@ Let $G$ be a locally bounded graph.
 
 \begin{proposition}
   \label{prop:adjacency_is_selfadjoint}
-  \uses{lem:scal_of_adjacency}
+  \uses{lem:scalar_of_adjacency}
   The adjacency operator is selfadjoint.
 \end{proposition}
 
 The following lemma will be very handy.
 
 \begin{lemma}
-  \label{lem:scal_of_adjacency}
+  \label{lem:scalar_of_adjacency}
   \uses{lem:bound_a_sup_degree}
   For any $f$, $g$ in $\ell^2(G)$,
   \begin{equation}
@@ -467,7 +506,7 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
 
 \begin{proof}
   Let $f$, $g$ be elements of $\ell^2(G)$.
-  We have by Lemma \ref{lem:scal_of_adjacency}
+  We have by Lemma \ref{lem:scalar_of_adjacency}
   \begin{equation*}
     \langle af, g \rangle
     = \sum_{\substack{e \in E(G)\\ e \text{ links } x,y}}
@@ -476,7 +515,7 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
     (g(x) \overline{f(y)} + g(y) \overline{f(x)})}
   \end{equation*}
   by complex conjugation, commutativity of addition and \mathlibok{isLink\_symm}.
-  Hence by Lemma \ref{lem:scal_of_adjacency}
+  Hence by Lemma \ref{lem:scalar_of_adjacency}
   \begin{equation*}
     \langle af, g \rangle
     = \overline{\langle ag, f \rangle} = \langle f, ag \rangle
@@ -494,6 +533,22 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
 \begin{proof}
   This follows from Proposition \ref{prop:adjacency_is_selfadjoint} with
   \mathlibok{selfAdjoint.mem\_spectrum\_eq\_re}.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:spectrum_in_segment}
+  \uses{cor:spectrum_is_real,prop:norm_adjacency_leq_sup_degree}
+  The spectrum of $a$ is included in the
+  segment $[-D,D]$ where $D = \sup_{x \in V(G)} \deg(x)$.
+\end{lemma}
+
+\begin{proof}
+  By Corollary \ref{cor:spectrum_is_real}, the spectrum of $a$ is real.
+  By \mathlibok{spectrum.subset\_closedBall\_norm},
+  it is included in the closed ball of center $0$ and
+  radius $\|a\|$.
+  We have $\|a\| \leq \sup_{x \in V(G)} \deg(x)$ by Proposition
+   \ref{prop:norm_adjacency_leq_sup_degree}.
 \end{proof}
 
 \subsection{The case of regular graphs}
@@ -527,17 +582,13 @@ Let $d$ be a non-negative integer.
 
 \begin{lemma}
   \label{lem:spectrum_regular_in_segment}
-  \uses{cor:spectrum_is_real,lem:norm_adjacency_regular_leq_degree}
+  \uses{cor:spectrum_is_real,prop:norm_adjacency_leq_sup_degree}
   If $G$ is regular of degree $d$, then the spectrum of $a$ is included in the
   segment $[-d,d]$.
 \end{lemma}
 
 \begin{proof}
-  By Corollary \ref{cor:spectrum_is_real}, the spectrum of $a$ is real.
-  By \mathlibok{spectrum.subset\_closedBall\_norm},
-  it is included in the closed ball of center $0$ and
-  radius $\|a\|$.
-  We have $\|a\| \leq d$ by Lemma \ref{lem:norm_adjacency_regular_leq_degree}.
+  This is simply Lemma \ref{lem:spectrum_in_segment}.
 \end{proof}
 
 \subsection{The case of finite graphs}
@@ -589,10 +640,9 @@ Let $d$ be a non-negative integer.
 
 \begin{proposition}
   \label{prop:regular_multiplicity_trivial_eigenvalue}
-  \uses{def:number_connected_components,thm:spectral_finite}
-  Let $G$ be a regular graph of degree $d$. Assume $G$ is finite with $n$ vertices.
-  Let $m$ be the number of connected components of $G$. Then $\lambda_i = d$ for
-  all $i \in \{1, \ldots, m\}$.
+  \uses{def:number_cc,thm:spectral_finite}
+  Assume $G$ is finite and regular of degree $d$. Then the multiplicity of the
+  eigenvalue $d$ is exactly the number of connected components of $G$.
 \end{proposition}
 
 \begin{proof}
@@ -602,8 +652,8 @@ Let $d$ be a non-negative integer.
 \begin{proposition}
   \label{prop:eigenvalue_regular_bipartite}
   \uses{thm:spectral_finite,def:bipartite}
-  Let $G$ be a regular graph of degree $d$. Assume $G$ is finite with $n$ vertices. Then
-  $\lambda_n = -d$ iff the graph is bipartite.
+  Assume $G$ is finite and regular of degree $d$. Then
+  $-d$ is an eigenvalue of $a$ if and only if $G$ is bipartite.
 \end{proposition}
 
 \begin{proof}
