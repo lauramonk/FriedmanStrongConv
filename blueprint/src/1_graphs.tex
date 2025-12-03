@@ -19,6 +19,7 @@ at a vertex $x$ if it links the vertex $x$ to itself.
 
 \section{Basic notions of graph theory}
 
+Let $G$ be a graph.
 Let us define a few basic notions from graph theory.
 We make definitions with minimal
 hypotheses as these are fundamental objects that should be added to Mathlib.
@@ -27,20 +28,26 @@ hypotheses as these are fundamental objects that should be added to Mathlib.
 
 \begin{definition}
 \label{def:empty}
-We say a graph $G$ is empty if $V(G) = \emptyset$.
+We say $G$ is empty if $V(G) = \emptyset$.
 \end{definition}
 
 \begin{definition}
   \label{def:bipartite}
-  A graph $G$ is \emph{bipartite} if there exists two disjoint subsets $U_1$,
+  The graph $G$ is \emph{bipartite} if there exists a partition $U_1$,
   $U_2$ of $V(G)$ such that, for all $e \in E(G)$, $e$ links an element of $U_1$
   and an element of $U_2$.
 \end{definition}
 
+We will be interested in the Hilbert space $\ell^2(G) := \ell^2(V(G))$, which is defined as the set of
+functions $f : V(G) \rightarrow \C$ which are square-summable, equipped with the inner product
+$$\langle f, g \rangle = \sum_{x \in V(G)} f(x) \overline{g(x)}.$$
+
+The space $\B(\ell^2(G))$ of bounded linear operators on $\ell^2(G)$ is a unital $\C^*$-algebra.
+Note that, in this context, $0$ is the constant function equal to $0$.
+
 \subsection{Walks}
 
 We define a notion of walk on the graph.
-Let $G$ be a graph.
 
 \begin{definition}
   \label{def:walk}
@@ -125,10 +132,22 @@ The following three lemmas together prove this is an equivalence relation.
   Then this is a walk from $x$ to $z$, hence $x \sim z$.
 \end{proof}
 
+The following will be useful.
+
+\begin{lemma}
+  \label{lem:adjacent_eq}
+  \uses{def:connected_rel}
+  Let $x$, $y$ in $V(G)$. If $x$ is adjacent to $y$ then $x \sim y$.
+\end{lemma}
+
+\begin{proof}
+  By definition of adjacency, there exists an edge $e \in E(G)$ linking $x$ and $y$.
+  Then the walk $(x, y)$ and $(e)$ is a walk from $x$ to $y$.
+\end{proof}
+
 \subsection{Connected components}
 
 We define the connected components of a graph.
-Let $G$ be a graph.
 
 \begin{definition}
   \label{def:connected}
@@ -170,21 +189,21 @@ Let $G$ be a graph.
 The following observation will allow to prove a few automatic properties directly.
 
 \begin{lemma}
-  \label{lem:connected_component_equivalence_class}
+  \label{lem:cc_equivalence_class}
   \uses{def:connected_component,prop:connected_rel_is_equivalence}
   The connected components of $G$ are exactly the equivalence classes of $\sim$.
 \end{lemma}
 
-Here is an immediate consequence.
+Here are several immediate consequences.
 
 \begin{proposition}
-  \label{prop:connected_components_partition}
-  \uses{lem:connected_component_equivalence_class}
+  \label{prop:cc_partition}
+  \uses{lem:cc_equivalence_class}
   The connected components of $G$ form a partition of $V(G)$ into non-empty sets.
 \end{proposition}
 
 \begin{proof}
-  This follows from Lemma \ref{lem:connected_component_equivalence_class}
+  This follows from Lemma \ref{lem:cc_equivalence_class}
   and properties of equivalence classes.
 \end{proof}
 
@@ -199,32 +218,40 @@ We have the following upper bound.
 
 \begin{lemma}
   \label{lem:bound_number_cc}
-  \uses{prop:connected_components_partition}
+  \uses{prop:cc_partition}
   If $V(G)$ is finite, then its number of connected components is finite and at most $\# V(G)$.
 \end{lemma}
 
 \begin{proof}
-  This follows from Proposition \ref{prop:connected_components_partition}
+  This follows from Proposition \ref{prop:cc_partition}
   and the fact that the number of elements in a partition of a finite set is at most its cardinal.
 \end{proof}
 
-The following observation is also useful.
-
 \begin{proposition}
-  \label{prop:connected_component_of_a_vertex}
-  \uses{lem:connected_component_equivalence_class}
+  \label{prop:cc_of_a_vertex}
+  \uses{lem:cc_equivalence_class}
   Let $x \in V(G)$. Then the set of $y \in V(G)$ such that there exists a
   walk from $x$ to $y$ is the unique connected component of $G$ containing $x$.
 \end{proposition}
 
 \begin{proof}
-  This follows from Lemma \ref{lem:connected_component_equivalence_class}
+  This follows from Lemma \ref{lem:cc_equivalence_class}
   and properties of equivalence classes.
 \end{proof}
 
-\subsection{Notions of finiteness}
+\begin{lemma}
+  \label{lem:adjacent_same_cc}
+  \uses{lem:cc_equivalence_class,lem:adjacent_eq}
+  For $x$, $y$ in $V(G)$, if $x$ is adjacent to $y$, then they belong to the same
+  connected component.
+\end{lemma}
 
-Let $G$ be a graph.
+\begin{proof}
+  This follows from Lemma \ref{lem:cc_equivalence_class} together with Lemma
+  \ref{lem:adjacent_eq}.
+\end{proof}
+
+\subsection{Notions of finiteness}
 
 \begin{definition}
   \label{def:locally_finite_at}
@@ -243,15 +270,13 @@ Let $G$ be a graph.
   We say $G$ is \emph{finite} if $V(G)$ and $E(G)$ are both finite.
 \end{definition}
 
-\begin{proposition}
-  \label{def:finite_vs_locally_finite}
-  \uses{def:finite,def:locally_finite}
-  $G$ is finite if and only if $V(G)$ is finite and $G$ is locally finite.
-\end{proposition}
+% \begin{proposition}
+%   \label{def:finite_vs_locally_finite}
+%   \uses{def:finite,def:locally_finite}
+%   $G$ is finite if and only if $V(G)$ is finite and $G$ is locally finite.
+% \end{proposition}
 
 \subsection{Degree and regularity}
-
-Let $G$ be a graph.
 
 \begin{definition}
   \label{def:degree}
@@ -279,16 +304,6 @@ Let $G$ be a graph.
   it is locally finite and there exists a constant $D$ such that,
   for all $x \in V(G)$, $\deg(x) \leq D$.
 \end{definition}
-
-\section{Adjacency operator}
-
-Let $G$ be a graph.
-We will be interested in the Hilbert space $\ell^2(G) := \ell^2(V(G))$, which is defined as the set of
-functions $f : V(G) \rightarrow \C$ which are square-summable, equipped with the inner product
-$$\langle f, g \rangle = \sum_{x \in V(G)} f(x) \overline{g(x)}.$$
-
-The space $\B(\ell^2(G))$ of bounded linear operators on $\ell^2(G)$ is a unital $\C^*$-algebra.
-Note that, in this context, $0$ is the constant function equal to $0$.
 
 \subsection{Constant fonctions}
 
@@ -326,6 +341,56 @@ Note that, in this context, $0$ is the constant function equal to $0$.
   This is simply the fact that
   the constant sequence is summable if and only if the set is finite.
 \end{proof}
+
+\begin{definition}
+  \label{def:locally_constant}
+  A function $f : V(G) \rightarrow \C$ is said to be \emph{locally constant}
+  if, for all $x,y \in V(G)$, if $x$ is adjacent to $y$, then $f(x)=f(y)$.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:locally_constant_walk}
+  \uses{def:connected_rel,def:locally_constant}
+  Let $f : V(G) \rightarrow \C$ be a locally constant function.
+  For any $x, y \in V(G)$, if $x \sim y$, then $f(x)=f(y)$.
+\end{lemma}
+
+\begin{proof}
+  Let $x, y \in V(G)$ such that $x \sim y$.
+  By Definition \ref{def:connected_rel}, there exists a walk $(v_i)_{0 \leq i \leq m}$,
+  $(e_i)_{1 \leq i \leq m}$ from $x$ to $y$.
+  Let $i \in \{1, \ldots, m\}$. The edge $e_i$ links $v_{i-1}$ to $v_i$
+  and hence $v_{i-1}$ is adjacent to $v_i$. By Definition \ref{def:locally_constant},
+  $f(v_{i-1})=f(v_i)$. As this is true for all $i \in \{1, \ldots, m\}$,
+  by transitivity of equality (and perhaps a tiny induction?),
+  $f(v_0)=f(v_m)$, i.e. $f(x)=f(y)$ since $v_0=x$ and $v_m=y$.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:locally_constant_cc}
+  \uses{lem:locally_constant_walk,prop:cc_of_a_vertex}
+  Let $f : V(G) \rightarrow \C$.
+  The function $f$ is locally constant if and only if,
+  for any connected component $U$ of $G$,
+  for all $x,y \in U, f(x)=f(y)$.
+\end{lemma}
+
+\begin{proof}
+  Assume $f$ is locally constant.
+  Let $U$ be a connected component of $G$. Let $x,y \in U$.
+  By Proposition \ref{prop:cc_of_a_vertex}, $y \sim x$.
+  By Lemma \ref{lem:locally_constant_cc}, $f(y)=f(x)$.
+
+  Assume that for any connected component $U$ of $G$,
+  for all $x,y \in U, f(x)=f(y)$.
+  Let $x$ and $y$ be adjacent elements of $V(G)$.
+  By Lemma \ref{lem:adjacent_same_cc}, $x$ and $y$ belong to the same connected component
+  $U$. By the assumption, $f(x)=f(y)$. So $f$ is locally constant.
+\end{proof}
+
+\section{Adjacency operator}
+
+Let $G$ be a graph.
 
 \subsection{Definition of the adjacency operator and action on constants}
 
@@ -582,7 +647,7 @@ Let $d$ be a non-negative integer.
 
 \begin{lemma}
   \label{lem:spectrum_regular_in_segment}
-  \uses{cor:spectrum_is_real,prop:norm_adjacency_leq_sup_degree}
+  \uses{lem:spectrum_in_segment}
   If $G$ is regular of degree $d$, then the spectrum of $a$ is included in the
   segment $[-d,d]$.
 \end{lemma}
@@ -651,11 +716,22 @@ Let $d$ be a non-negative integer.
 
 \begin{proposition}
   \label{prop:eigenvalue_regular_bipartite}
-  \uses{thm:spectral_finite,def:bipartite}
+  \uses{def:bipartite}
   Assume $G$ is finite and regular of degree $d$. Then
   $-d$ is an eigenvalue of $a$ if and only if $G$ is bipartite.
 \end{proposition}
 
 \begin{proof}
-  todo
+  Assume $G$ is bipartite. By Definition \ref{def:bipartite}, there exists a partition
+  $U_1$, $U_2$ of $V(G)$ such that any edge of $G$ links a vertex of $U_1$ and a
+  vertex of $U_2$.
+  We define a function $f : V(G) \mapsto \C$ by
+  \begin{equation}
+    f(x) :=
+    \begin{cases}
+        1 & \text{if } x \in U_1 \\
+        -1 & \text{otherwise}.
+      \end{cases}
+  \end{equation}
+
 \end{proof}
