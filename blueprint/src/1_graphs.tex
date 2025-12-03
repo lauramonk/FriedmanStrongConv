@@ -421,13 +421,31 @@ We have the following upper bound.
 \end{definition}
 
 \begin{lemma}
-  \label{lem:partition_unity_cc}
-  \uses{prop:cc_partition,def:indicator_function}
-  We have $\const = \sum_{U \text{ connected component}} \const_U$.
+  \label{lem:indicator_cc_loc_const}
+  \uses{def:locally_constant,def:indicator_function}
+  The indicator function of a connected component is locally constant.
 \end{lemma}
 
 \begin{proof}
-  todo
+  Let $U$ be a connected component of $G$.
+  Let $x,y \in V(G)$ be two adjacent vertices.
+  \begin{itemize}
+    \item If $x \in U$, then by Lemma \ref{lem:adjacent_same_cc}, $y \in U$
+    and hence $\const_U(x)=1=\const_U(y)$.
+    \item Otherwise, $y$ does not lie in $U$ (because $y \in U \Rightarrow x \in U$ by
+    Lemma \ref{lem:adjacent_same_cc}) and hence $\const_U(x)=0=\const_U(y)$.
+  \end{itemize}
+\end{proof}
+
+\begin{lemma}
+  \label{lem:partition_unity_cc}
+  \uses{prop:cc_partition,def:indicator_function}
+  We have $$\const = \sum_{U \text{ connected component}} \const_U.$$
+\end{lemma}
+
+\begin{proof}
+  Let $x \in V(G)$. By Lemma \ref{lem:partition_unity_cc}, there exists a unique
+  connected component of $G$ containing $x$. Hence, $\sum_{U \text{ cc}} \const_U(x)=1$.
 \end{proof}
 
 \begin{proposition}
@@ -438,7 +456,22 @@ We have the following upper bound.
 \end{proposition}
 
 \begin{proof}
-  todo
+  First,  for any connected component $U$, $\const_U$ is locally
+  constant by Lemma \ref{lem:indicator_cc_loc_const}.
+
+  Let $f$ be a locally supported function.
+  We have by Lemma \ref{lem:partition_unity_cc}, for any $x \in V(G)$,
+  \begin{equation*}
+    f(x) = \sum_{U \text{ cc}} f(x) \const_U(x).
+  \end{equation*}
+  By Lemma \ref{lem:locally_constant_cc}, for every connected component $U$,
+  there exists a constant $c_U$ such that, for all $x \in U$, $f(x)=c_U$
+  (take $c_U$ to be $f(y_U)$ for a $y_U \in U$, which exists as $U$ is not empty).
+  Then
+    \begin{equation*}
+    f(x) = \sum_{U \text{ cc}} c_U \const_U(x)
+  \end{equation*}
+  which means that $f = \sum_{U \text{ cc}} c_U \const_U$.
 \end{proof}
 
 \begin{corollary}
