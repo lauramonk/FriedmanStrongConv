@@ -66,25 +66,25 @@ We define a notion of walk on the graph.
 \end{definition}
 
 \begin{definition}
-  \label{def:connected_rel}
+  \label{def:reachable}
   \uses{def:walk}
   We define a binary relation on $V(G)$ by: $x \sim y$ if there exists a walk
-  from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{connected}.
+  from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{reachable}.
 \end{definition}
 
 The following three lemmas together prove this is an equivalence relation.
 
 \begin{proposition}
-  \label{prop:connected_rel_is_equivalence}
-  \uses{lem:connected_rel_reflexive,lem:connected_rel_symmetric,
-  lem:connected_rel_transitive}
-  $\sim$ is an equivalence relation.
+  \label{prop:reachable_is_equivalence}
+  \uses{lem:reachable_reflexive,lem:reachable_symmetric,
+  lem:reachable_transitive}
+  The reachability relation is an equivalence relation.
 \end{proposition}
 
 \begin{lemma}
-  \label{lem:connected_rel_reflexive}
-  \uses{def:connected_rel}
-  $\sim$ is reflexive: $x \sim x$ for any $x \in V(G)$.
+  \label{lem:reachable_reflexive}
+  \uses{def:reachable}
+  The reachability relation is reflexive: $x \sim x$ for any $x \in V(G)$.
 \end{lemma}
 
 \begin{proof}
@@ -93,9 +93,9 @@ The following three lemmas together prove this is an equivalence relation.
 \end{proof}
 
 \begin{lemma}
-  \label{lem:connected_rel_symmetric}
-  \uses{def:connected_rel}
-  $\sim$ is symmetric: if $x \sim y$ then  $y \sim x$.
+  \label{lem:reachable_symmetric}
+  \uses{def:reachable}
+  The reachability relation is symmetric: if $x \sim y$ then  $y \sim x$.
 \end{lemma}
 
 \begin{proof}
@@ -105,9 +105,9 @@ The following three lemmas together prove this is an equivalence relation.
 \end{proof}
 
 \begin{lemma}
-    \label{lem:connected_rel_transitive}
-  \uses{def:connected_rel}
-  $\sim$ is transitive: if $x \sim y$ and $y \sim z$ then
+    \label{lem:reachable_transitive}
+  \uses{def:reachable}
+  The reachability relation is transitive: if $x \sim y$ and $y \sim z$ then
   $x \sim z$.
 \end{lemma}
 
@@ -136,8 +136,8 @@ The following will be useful.
 
 \begin{lemma}
   \label{lem:adjacent_eq}
-  \uses{def:connected_rel}
-  Let $x$, $y$ in $V(G)$. If $x$ is adjacent to $y$ then $x \sim y$.
+  \uses{def:reachable}
+  Let $x$, $y$ in $V(G)$. If $x$ and $y$ are adjacent then $x$ and $y$ are reachable.
 \end{lemma}
 
 \begin{proof}
@@ -190,8 +190,9 @@ The following observation will allow to prove a few automatic properties directl
 
 \begin{lemma}
   \label{lem:cc_equivalence_class}
-  \uses{def:connected_component,prop:connected_rel_is_equivalence}
-  The connected components of $G$ are exactly the equivalence classes of $\sim$.
+  \uses{def:connected_component,prop:reachable_is_equivalence}
+  The connected components of $G$ are exactly the equivalence classes of
+  the reachability relation.
 \end{lemma}
 
 Here are several immediate consequences.
@@ -369,14 +370,14 @@ We have the following upper bound.
 
 \begin{lemma}
   \label{lem:locally_constant_walk}
-  \uses{def:connected_rel,def:locally_constant}
+  \uses{def:reachable,def:locally_constant}
   Let $f : V(G) \rightarrow \C$ be a locally constant function.
-  For any $x, y \in V(G)$, if $x \sim y$, then $f(x)=f(y)$.
+  For any $x, y \in V(G)$, if $x$ and $y$ are reachable, then $f(x)=f(y)$.
 \end{lemma}
 
 \begin{proof}
-  Let $x, y \in V(G)$ such that $x \sim y$.
-  By Definition \ref{def:connected_rel}, there exists a walk $(v_i)_{0 \leq i \leq m}$,
+  Let $x, y \in V(G)$ such that $x$ and $y$ are reachable.
+  By Definition \ref{def:reachable}, there exists a walk $(v_i)_{0 \leq i \leq m}$,
   $(e_i)_{1 \leq i \leq m}$ from $x$ to $y$.
   Let $i \in \{1, \ldots, m\}$. The edge $e_i$ links $v_{i-1}$ to $v_i$
   and hence $v_{i-1}$ is adjacent to $v_i$. By Definition \ref{def:locally_constant},
@@ -397,7 +398,7 @@ We have the following upper bound.
 \begin{proof}
   Assume $f$ is locally constant.
   Let $U$ be a connected component of $G$. Let $x,y \in U$.
-  By Proposition \ref{prop:cc_of_a_vertex}, $y \sim x$.
+  By Proposition \ref{prop:cc_of_a_vertex}, $y$ and $x$ are reachable.
   By Lemma \ref{lem:locally_constant_cc}, $f(y)=f(x)$.
 
   Assume that for any connected component $U$ of $G$,
