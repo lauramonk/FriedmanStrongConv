@@ -14,8 +14,8 @@ variable {G : Graph α β}
 
 /-- A walk is a sequence of adjacent vertices together with the edges connecting them.
 For vertices `x y : α`, the type `walk x y` consists of all walks starting at
-`x` and ending at `y`. We should probably adopt the convention that the empty walk is only defined
-for vertices of the graph (to implement)
+`x` and ending at `y`. We should perhaps adopt the convention that the empty walk is only defined
+for vertices of the graph (to implement).
 -/
 
 inductive Walk : α → α → Type _
@@ -25,5 +25,5 @@ inductive Walk : α → α → Type _
 
 /-- The one-edge walk associated to a pair of adjacent vertices. -/
 @[match_pattern, reducible]
-def IsLink.toWalk {G : Graph α β} {x y : α} (e : β) (h : G.IsLink e x y) : G.Walk x y :=
+def IsLink.toWalk {G : Graph α β} {x y : α} {e : β} (h : G.IsLink e x y) : G.Walk x y :=
   Walk.cons h Walk.nil
