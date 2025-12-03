@@ -342,11 +342,30 @@ We have the following upper bound.
   the constant sequence is summable if and only if the set is finite.
 \end{proof}
 
+\subsection{Locally constant functions}
+
 \begin{definition}
   \label{def:locally_constant}
   A function $f : V(G) \rightarrow \C$ is said to be \emph{locally constant}
   if, for all $x,y \in V(G)$, if $x$ is adjacent to $y$, then $f(x)=f(y)$.
 \end{definition}
+
+\begin{lemma}
+  \label{lem:locally_constant_vector_space}
+  \uses{def:locally_constant}
+  The space of locally constant functions is a vectorial subspace of
+  the space of functions $V(G) \rightarrow \C$.
+\end{lemma}
+
+\begin{proof}
+  We directly check that:
+  \begin{itemize}
+    \item the constant function equal to $0$ is locally constant;
+    \item for any locally constant functions $f_1$, $f_2$ and any $\lambda \in \C$,
+    the function $f_1+cf_2$ is also locally constant;
+  \end{itemize}
+  both by direct application of the definition.
+\end{proof}
 
 \begin{lemma}
   \label{lem:locally_constant_walk}
@@ -387,6 +406,47 @@ We have the following upper bound.
   By Lemma \ref{lem:adjacent_same_cc}, $x$ and $y$ belong to the same connected component
   $U$. By the assumption, $f(x)=f(y)$. So $f$ is locally constant.
 \end{proof}
+
+\begin{definition}
+  \label{def:indicator_function}
+  Let $U$ be a subset of $V(G)$. We define the \emph{indicator function}
+  $\const_U : V(G) \rightarrow \C$ by
+  \begin{equation}
+    \const_U (x) =
+    \begin{cases}
+      1 & \text{if } x \in U \\
+      0 & \text{otherwise}.
+    \end{cases}
+  \end{equation}
+\end{definition}
+
+\begin{lemma}
+  \label{lem:partition_unity_cc}
+  \uses{prop:cc_partition,def:indicator_function}
+  We have $\const = \sum_{U \text{ connected component}} \const_U$.
+\end{lemma}
+
+\begin{proof}
+  todo
+\end{proof}
+
+\begin{proposition}
+  \label{prop:basis_locally_constant}
+  \uses{lem:locally_constant_cc,lem:partition_unity_cc}
+  The family $\{\const_U, U \text{ connected component of }G\}$ is a basis
+  of the space of locally constant functions.
+\end{proposition}
+
+\begin{proof}
+  todo
+\end{proof}
+
+\begin{corollary}
+  \label{cor:dimension_locally_constant}
+  \uses{prop:basis_locally_constant}
+  The dimension of the space of locally constant functions is the number of
+  connected components of $G$.
+\end{corollary}
 
 \section{Adjacency operator}
 
