@@ -3,18 +3,18 @@
 In this chapter, we introduce the definitions related to regular graphs and their spectrum.
 We refer the reader to \cite{chung1992} for a more detailed introduction and motivations.
 
-As in \mathlibok{Graph}, a \emph{graph} is a pair $G = (V, E)$ where $V$ is a set of vertices, and
+As in Graph, a \emph{graph} is a pair $G = (V, E)$ where $V$ is a set of vertices, and
 $E$ a set of edges, and each edge links two unordered, possibly identical vertices.
 The notations $V(G)$ and $E(G)$ respectively denote the subsets of $V$ and $E$ corresponding to
 vertices or edges of $G$.
 
 Note that this definition allows for loops (i.e. edges going from one vertex to itself) and
 multi-edges (i.e. multiple edges connecting two vertices). This convention is essential to the proof
-we are aiming for, which is why we use \mathlibok{Graph} instead of the more developed
-\mathlibok{SimpleGraph}.
+we are aiming for, which is why we use Graph instead of the more developed
+SimpleGraph.
 
-Following \mathlibok{Inc}, we say an edge $e$ is \emph{incident} to a vertex $x$ if there exists a
-vertex $y$ such that $e$ links $x$ and $y$. As \mathlibok{IsLoopAt}, an edge is a \emph{loop} based
+Following Inc, we say an edge $e$ is \emph{incident} to a vertex $x$ if there exists a
+vertex $y$ such that $e$ links $x$ and $y$. As IsLoopAt, an edge is a \emph{loop} based
 at a vertex $x$ if it links the vertex $x$ to itself.
 
 \section{Basic notions of graph theory}
@@ -101,7 +101,7 @@ The following three lemmas together prove this is an equivalence relation.
 \begin{proof}
   Let $x$, $y$ be two vertices. We assume $x \sim y$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
   be a walk from $x$ to $y$. Then $(v_{m-i})_{0 \leq i \leq m}$ and $(e_{m+1-i})_{1 \leq i \leq m}$
-  is a walk from $y$ to $x$ by the \mathlibok{is\_link\_symm}. So $y \sim x$.
+  is a walk from $y$ to $x$ by the is\_link\_symm. So $y \sim x$.
 \end{proof}
 
 \begin{lemma}
@@ -524,7 +524,7 @@ Here is a key lemma.
     |af(x)|^2
     = \left| \sum_{e \in \incset(x)} 2^{\isloop(e)} f(\incother(e, x))\right|^2.
   \end{equation}
-  By the \mathlibok{Cauchy-Schwarz} inequality applied to the complex vectors
+  By the Cauchy-Schwarz inequality applied to the complex vectors
   \begin{equation}
     v_1 := (2^{\isloop(e)/2})_{e \in \incset(x)}
   \end{equation}
@@ -639,13 +639,13 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
     = \overline{\sum_{\substack{e \in E(G)\\ e \text{ links } x,y}}
     (g(x) \overline{f(y)} + g(y) \overline{f(x)})}
   \end{equation*}
-  by complex conjugation, commutativity of addition and \mathlibok{isLink\_symm}.
+  by complex conjugation, commutativity of addition and isLink\_symm.
   Hence by Lemma \ref{lem:scalar_of_adjacency}
   \begin{equation*}
     \langle af, g \rangle
     = \overline{\langle ag, f \rangle} = \langle f, ag \rangle
   \end{equation*}
-  by \mathlibok{inner\_conj\_symm}. This means that $a^*=a$ by definition of
+  by inner\_conj\_symm. This means that $a^*=a$ by definition of
   the adjoint, which means $a$ is self-adjoint by definition.
 \end{proof}
 
@@ -657,7 +657,7 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
 
 \begin{proof}
   This follows from Proposition \ref{prop:adjacency_is_selfadjoint} with
-  \mathlibok{selfAdjoint.mem\_spectrum\_eq\_re}.
+  selfAdjoint.mem\_spectrum\_eq\_re.
 \end{proof}
 
 \begin{lemma}
@@ -669,7 +669,7 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
 
 \begin{proof}
   By Corollary \ref{cor:spectrum_is_real}, the spectrum of $a$ is real.
-  By \mathlibok{spectrum.subset\_closedBall\_norm},
+  By spectrum.subset\_closedBall\_norm,
   it is included in the closed ball of center $0$ and
   radius $\|a\|$.
   We have $\|a\| \leq \sup_{x \in V(G)} \deg(x)$ by Proposition
