@@ -24,4 +24,6 @@ protected theorem Walk.reachable {G : Graph α β} {x y : α} (p : G.Walk x y) :
   G.Reachable x y := ⟨p⟩
 
 protected theorem Adj.reachable {x y : α} (h : G.Adj x y) : G.Reachable x y :=
-  sorry
+  h.toWalk.reachable
+
+#check Exists.choose
