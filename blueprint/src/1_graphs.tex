@@ -51,6 +51,7 @@ We define a notion of walk on the graph.
 
 \begin{definition}
   \label{def:walk}
+  \leanok
   Let $x, y \in V(G)$. A \emph{walk} from $x$ to $y$ on $G$ is given by:
   \begin{itemize}
     \item a non-negative integer $m$;
@@ -68,6 +69,7 @@ We define a notion of walk on the graph.
 \begin{definition}
   \label{def:reachable}
   \uses{def:walk}
+  \leanok
   We define a binary relation on $V(G)$ by: $x \sim y$ if there exists a walk
   from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{reachable}.
 \end{definition}
@@ -84,6 +86,7 @@ The following three lemmas together prove this is an equivalence relation.
 \begin{lemma}
   \label{lem:reachable_reflexive}
   \uses{def:reachable}
+  \leanok
   The reachability relation is reflexive: $x \sim x$ for any $x \in V(G)$.
 \end{lemma}
 
@@ -270,6 +273,11 @@ We have the following upper bound.
   \label{def:finite}
   We say $G$ is \emph{finite} if $V(G)$ and $E(G)$ are both finite.
 \end{definition}
+
+\begin{lemma}
+  \label{lem:all_l2_finite}
+  Assume $V(G)$ is finite. Then any function $V(G) \rightarrow \C$ is in $\ell^2(G)$.
+\end{lemma}
 
 % \begin{proposition}
 %   \label{def:finite_vs_locally_finite}
@@ -810,8 +818,8 @@ Let $d$ be a non-negative integer.
 
 \begin{proposition}
   \label{prop:eigenvalue_regular_bipartite}
-  \uses{def:bipartite}
-  Assume $G$ is finite and regular of degree $d$. Then
+  \uses{def:bipartite,def:indicator_function,lem:all_l2_finite}
+  Assume $G$ is finite, regular of degree $d \geq 1$ and connected. Then
   $-d$ is an eigenvalue of $a$ if and only if $G$ is bipartite.
 \end{proposition}
 
@@ -819,13 +827,34 @@ Let $d$ be a non-negative integer.
   Assume $G$ is bipartite. By Definition \ref{def:bipartite}, there exists a partition
   $U_1$, $U_2$ of $V(G)$ such that any edge of $G$ links a vertex of $U_1$ and a
   vertex of $U_2$.
-  We define a function $f : V(G) \mapsto \C$ by
+  Let $f := \const_{U_1} - \const_{U_2}$.
+  The set $U_1$ is non-empty as there exists a edge in the graph, and $U_1$ contains
+  one of its endpoints. Hence $f \neq 0$.
+  By Lemma \ref{lem:all_l2_finite}, $f$ is an element of $\ell^2(G)$.
+  Let $x \in V(G)$. Let $y$ be adjacent to $x$.
+  By definition of $U_1$ and $U_2$,
+  $x \in U_1 \Leftrightarrow y \in U_2$. Hence $f(x)=-f(y)$.
+  Hence summing over all adjacent vertices we find
   \begin{equation}
-    f(x) :=
-    \begin{cases}
-        1 & \text{if } x \in U_1 \\
-        -1 & \text{otherwise}.
-      \end{cases}
+    af(x) = \sum_{e \in \incset(x)} 2^{\isloop(e)} f(\incother(e,x))
+    = - \sum_{e \in \incset(x)} 2^{\isloop(e)} f(x) = - d f(x).
   \end{equation}
+  Hence $af=-df$ which means $-d$ is an eigenvalue of $a$.
 
+  Now assume $-d$ is an eigenvalue of $a$. Take $f$ an eigenvector.
+  We have $af = -d f$
+  by definition, and hence $\|af\| = d \|f\|$.
+  Let $x \in V(G)$.
+  We can apply the equality case of Lemma \ref{lem:bound_a_sup_degree}
+  and obtain a constant $c \in \C$ such that
+  \begin{equation}
+    \forall e \in \incset(x), f(\incother) = c.
+  \end{equation}
+  In particular,
+  \begin{equation}
+    -d f(x) = af(x) = \sum_{e \in \incset(x)} 2^{\isloop(e)} c = d c.
+  \end{equation}
+  Since $d \neq 0$, this implies $c=-1$. We have hence proved that
+  for any adjacent vertices $x, y$, $f(x)=-f(y)$.
+[finish]
 \end{proof}
