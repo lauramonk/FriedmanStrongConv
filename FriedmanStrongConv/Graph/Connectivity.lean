@@ -5,7 +5,8 @@ Authors: Laura Monk
 -/
 
 import Mathlib.Combinatorics.Graph.Basic
-import FriedmanStrongConv.Graph.Walk
+import FriedmanStrongConv.Graph.Walks.Basic
+import FriedmanStrongConv.Graph.Walks.Operations
 
 variable {α β : Type*} {x y z u v w : α} {e f : β}
 variable (G : Graph α β)
@@ -28,3 +29,8 @@ protected theorem Adj.reachable {x y : α} (h : G.Adj x y) : G.Reachable x y :=
 
 @[refl]
 protected theorem Reachable.refl (x : α) : G.Reachable x x := ⟨Walk.nil⟩
+
+@[trans]
+protected theorem Reachable.trans {x y z : α} (hxy : G.Reachable x y) (hyz : G.Reachable y z) :
+    G.Reachable x z :=
+  hxy.elim fun pxy => hyz.elim fun pyz => ⟨pxy.append pyz⟩
