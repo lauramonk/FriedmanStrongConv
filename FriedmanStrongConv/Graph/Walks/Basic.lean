@@ -39,7 +39,7 @@ variable {α : Type u} {β : Type v} {x y z u v w : α} {e f : β}
 
 namespace Graph
 
-variable {G : Graph α β}
+variable (G : Graph α β)
 
 /-- A walk is a sequence of adjacent vertices together with the edges connecting them.
 For vertices `x y : α`, the type `walk x y` consists of all walks starting at
@@ -68,6 +68,7 @@ noncomputable abbrev Adj.toWalk {G : Graph α β} {x y : α} (h : G.Adj x y) : G
   h.choose_spec.toWalk
 
 namespace Walk
+variable {G}
 
 /-- Pattern to get `Walk.nil` with the vertex as an explicit argument. -/
 @[match_pattern]

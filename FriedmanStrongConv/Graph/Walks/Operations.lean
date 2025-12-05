@@ -72,3 +72,43 @@ protected def reverseAux {x y z : α} : G.Walk x y → G.Walk x z → G.Walk y z
 /-- The walk in reverse. -/
 @[symm]
 def reverse {x y : α} (p : G.Walk x y) : G.Walk y x := p.reverseAux nil
+
+@[simp]
+theorem cons_append {x y z u : α} {e : β} (h : G.IsLink e x y) (p : G.Walk y z) (q : G.Walk z u) :
+    (cons h p).append q = cons h (p.append q) := rfl
+
+@[simp]
+theorem cons_nil_append {x y z : α} {e : β} (h : G.IsLink e x y) (p : G.Walk y z) :
+    (cons h nil).append p = cons h p := rfl
+
+@[simp]
+theorem nil_append {x y : α} (p : G.Walk x y) : nil.append p = p :=
+  rfl
+
+@[simp]
+theorem append_nil {x y : α} (p : G.Walk x y) : p.append nil = p := by
+  induction p <;> simp [*]
+
+theorem append_assoc {x y z u : α} (p : G.Walk x y) (q : G.Walk y z) (r : G.Walk z u) :
+    p.append (q.append r) = (p.append q).append r := by
+  induction p <;> simp [*]
+
+@[simp]
+theorem append_copy_copy {x y z x' y' z'} (p : G.Walk x y) (q : G.Walk y z)
+    (hx : x = x') (hy : y = y') (hz : z = z') :
+    (p.copy hx hy).append (q.copy hy hz) = (p.append q).copy hx hz := by
+  subst_vars
+  rfl
+
+theorem concat_nil {x y : α} {e : β} (h : G.IsLink e x y) : nil.concat h = cons h nil := rfl
+
+@[simp]
+theorem concat_cons {x y z u : α} {e f : β} (h : G.IsLink e x y) (p : G.Walk y z) (h' : G.IsLink f z u) :
+    (cons h p).concat h' = cons h (p.concat h') := rfl
+
+theorem append_concat {x y z u : α} {e : β} (p : G.Walk x y) (q : G.Walk y z) (h : G.IsLink e z u) :
+    p.append (q.concat h) = (p.append q).concat h := append_assoc _ _ _
+
+theorem concat_append {x y z u : α} {e : β} (p : G.Walk x y) (h : G.IsLink e y z) (q : G.Walk z u) :
+    (p.concat h).append q = p.append (cons h q) := by
+  rw [concat_eq_append, ← append_assoc, cons_nil_append]
