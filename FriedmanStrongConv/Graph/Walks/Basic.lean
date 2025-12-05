@@ -77,6 +77,11 @@ abbrev nil' (x : α) : G.Walk x x := Walk.nil
 @[match_pattern]
 abbrev cons' (x y z : α) (e : β) (h : G.IsLink e x y) (p : G.Walk y z) : G.Walk x z := Walk.cons h p
 
+theorem exists_eq_cons_of_ne {x y : α} (hne : x ≠ y) :
+    ∀ (p : G.Walk x y), ∃ (z : α) (e : β) (h : G.IsLink e x z) (p' : G.Walk z y), p = cons h p'
+  | nil => (hne rfl).elim
+  | cons' _ _ _ _ h p' => ⟨_, _, h, p', rfl⟩
+
 /-- The length of a walk is the number of edges along it. -/
 def length {x y : α} : G.Walk x y → ℕ
   | nil => 0
@@ -120,3 +125,52 @@ def support {x y : α} : G.Walk x y → List α
 def edges {x y : α} : G.Walk x y → List β
   | nil => []
   | cons' _ _ _ e _ p => e :: p.edges
+
+@[simp]
+theorem support_nil {x : α} : (nil : G.Walk x x).support = [x] := rfl
+
+@[simp]
+theorem support_cons {x y z : α} {e : β} (h : G.IsLink e x y) (p : G.Walk y z) :
+    (cons h p).support = x :: p.support := rfl
+
+@[simp]
+theorem support_ne_nil {x y : α} (p : G.Walk x y) : p.support ≠ [] := by cases p <;> simp
+
+@[simp]
+theorem head_support {G : Graph α β} {x y : α} (p : G.Walk x y) :
+    p.support.head (by simp) = x := by cases p <;> simp
+
+@[simp]
+theorem getLast_support {G : Graph α β} {x y : α} (p : G.Walk x y) :
+    p.support.getLast (by simp) = y := by
+  induction p <;> simp [*]
+
+theorem support_eq_cons {x y : α} (p : G.Walk x y) : p.support = x :: p.support.tail := by
+  cases p <;> simp
+
+@[simp]
+theorem start_mem_support {x y : α} (p : G.Walk x y) : x ∈ p.support := by cases p <;> simp
+
+@[simp]
+theorem end_mem_support {x y : α} (p : G.Walk x y) : y ∈ p.support := by induction p <;> simp [*]
+
+@[simp]
+theorem support_nonempty {x y : α} (p : G.Walk x y) : {z | z ∈ p.support}.Nonempty :=
+  ⟨x, by simp⟩
+
+theorem mem_support_iff {x y z : α} (p : G.Walk x y) :
+    z ∈ p.support ↔ z = x ∨ z ∈ p.support.tail := by cases p <;> simp
+
+theorem mem_support_nil_iff {x y : α} : x ∈ (nil : G.Walk y y).support ↔ x = y := by simp
+
+@[simp]
+theorem end_mem_tail_support_of_ne {x y : α} (h : x ≠ y) (p : G.Walk x y) : y ∈ p.support.tail := by
+  obtain ⟨_, _, _, _, rfl⟩ := exists_eq_cons_of_ne h p
+  simp
+
+theorem support_subset_support_cons {x y z : α} {e : β} (p : G.Walk y z) (h : G.IsLink e x y) :
+    p.support ⊆ (p.cons h).support := by
+  simp
+
+theorem coe_support {x y : α} (p : G.Walk x y) :
+  (p.support : Multiset α) = {x} + p.support.tail := by cases p <;> rfl
