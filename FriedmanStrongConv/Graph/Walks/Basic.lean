@@ -115,3 +115,8 @@ theorem length_eq_zero_iff {x : α} {p : G.Walk x x} : p.length = 0 ↔ p = nil 
 def support {x y : α} : G.Walk x y → List α
   | nil => [x]
   | cons _ p => x :: p.support
+
+/-- The `edges` of a walk is the list of edges it visits in order. -/
+def edges {x y : α} : G.Walk x y → List β
+  | nil => []
+  | cons' _ _ _ e _ p => e :: p.edges
