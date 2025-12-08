@@ -236,18 +236,100 @@ We define the notion of connectedness and the connected components of a graph.
   This comes from the description as an equivalence relation.
 \end{proof}
 
+\subsection{Darts}
+
+\begin{definition}
+  \label{def:dart}
+  We define a set $D(G)$ of \emph{darts} on $G$ with applications
+  \begin{itemize}
+  \item $\spt(d) : D(G) \rightarrow V(G)$;
+  \item $\ept(d) : D(G) \rightarrow V(G)$;
+  \item $\edge(d) : D(G) \rightarrow E(G)$;
+  \item $\symm(d) : D(G) \rightarrow D(G)$;
+  \end{itemize}
+  such that:
+  \begin{itemize}
+    \item for all $d \in D(G)$, $\edge(d)$ links $\spt(d)$ and $\ept(d)$;
+    \item $\edge \circ \symm = \edge$;
+    \item $\spt \circ \symm = \ept$ and $\ept \circ \symm = \spt$;
+    \item for $d \in D(G)$, $\spt(d) = \ept(d)$ if and only if $\edge(d)$ is
+    a loop;
+    \item $\edge$ is surjective;
+    \item for $d, d' \in D(G)$, $\edge(d) = \edge(d')$ iff $d=d'$ or $d=\symm(d')$;
+    \item for all $d \in D(G)$, $\symm(d) \neq d$.
+  \end{itemize}
+\end{definition}
+
+\begin{lemma}
+  \label{lem:dart_symm_involution}
+  \uses{def:dart}
+  For any $d \in D(G)$, $\symm(\symm(d))=d$.
+\end{lemma}
+
+\begin{proof}
+  We have $\edge(\symm(\symm(d))) = \edge(\symm(d)) = \edge(d)$ so
+  have $\symm(\symm(d))=d$ or $\symm(\symm(d))=\symm(d)$. The latter is impossible due to
+  $\symm$ having no fixed point.
+\end{proof}
+
+\begin{definition}
+  \label{def:dartset}
+  \uses{def:dart}
+  Let $x \in V(G)$. The \emph{dartset} of $x$ is the set
+  \begin{equation}
+    \dartset(x) := \{ d \in D(G) \, : \, \spt(d)=x\}.
+  \end{equation}
+\end{definition}
+
+\begin{lemma}
+  \label{lem:darts_of_edge}
+  \uses{def:dart}
+  For any $e \in E(G)$, there exists $d \in D(G)$ such that
+  $\edge^{-1}(\{e\}) = \{d, \symm(d)\}$.
+\end{lemma}
+
+\begin{proof}
+  Let $e \in E(G)$.
+  The map $\edge$ is surjective so there exists $d \in D(G)$ such that $\edge(d)=e$.
+  We have $\edge(\symm(d))=\edge(d)=e$. This proves $\{d, \symm(d)\} \subseteq \edge^{-1}(\{e\})$.
+  For the other direction, if $d' \in D(G)$ satisfies $\edge(d')=e$, then
+  $\edge(d)=\edge(d')$ which implies by definition that $d'=d$ or $d'=\symm(d)$, which is the
+  claim.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:darts_end_adj}
+  \uses{def:dartset}
+  Let $x \in V(G)$. Then, $y \in V(G)$ is adjacent to $x$ if and only if there exists
+  $d \in \dartset(x)$ such that $y = \ept(x)$.
+\end{lemma}
+
+\begin{proof}
+  Assume $y = \ept(d)$ for a $d \in D(G)$.
+  Then $\edge(d) \in E(G)$ links $x = \spt(d)$ and $y=\ept(d)$ so $y$ is adjacent to $x$.
+
+  Now assume $y$ is adjacent to $x$. Then there exists an edge $e \in E(G)$ linking $x$ and
+  $y$. Since $\edge$ is surjective, there exists $d \in D(G)$ such that $\edge(d)=e$.
+  Note that $e$ links $\spt(d)$ and $\ept(d)$, and also $x$ and $y$.
+  By properties of edges of Graph, this means that, either $x=\spt(d)$ and $y=\ept(d)$,
+  or $y = \spt(d)$ and $x=\ept(d)$. In the first scenario, we conclude directly.
+  Otherwise we conclude using the dart $d' = \symm(d)$, which satisfies $\spt(d')=x$ and
+  $\ept(d')=y$.
+\end{proof}
+
 \subsection{Notions of finiteness}
 
 \begin{definition}
   \label{def:locally_finite_at}
   Let $x$ be a vertex of $G$.
-  We say $G$ is \emph{locally finite at $x$} if $\incset (x)$ is finite.
+  We say $G$ is \emph{locally finite at $x$} if $\dartset (x)$ is finite.
 \end{definition}
 
 \begin{definition}
   \label{def:locally_finite}
   \uses{def:locally_finite_at}
-  $G$ is said to be \emph{locally finite} if, for all $x \in V(G)$, $G$ is locally finite at $x$.
+  $G$ is said to be \emph{locally finite} if, for all $x \in V(G)$,
+  $G$ is locally finite at $x$.
 \end{definition}
 
 \begin{definition}
@@ -277,27 +359,22 @@ We define the notion of connectedness and the connected components of a graph.
 %   $G$ is finite if and only if $V(G)$ is finite and $G$ is locally finite.
 % \end{proposition}
 
-\subsection{Degree and regularity}
 
-Not ready as will be refactored using darts!
+\subsection{Degree and regularity}
 
 \begin{definition}
   \label{def:degree}
   \uses{def:locally_finite_at}
   Let $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
-  The \emph{degree} of $x$ is the number of incident edges, counting loops twice:
-  \begin{equation*}
-    \mathrm{deg}(x) = \sum_{e \in \incset(x)}
-    2^{\isloop(e)}.
-  \end{equation*}
+  The \emph{degree} of $x$ is defined as $\mathrm{deg}(x) = \# \dartset(x)$.
 \end{definition}
 
 \begin{definition}
   \label{def:regular}
   \uses{def:locally_finite, def:degree}
   Let $d$ be a non-negative integer.
-  We say $G$ is \emph{regular of degree $d$} if it is not empty, locally finite and,
-  for every $x \in V(G)$, $\deg (x) = d$.
+  We say $G$ is \emph{regular of degree $\delta$} if it is not empty, locally finite and,
+  for every $x \in V(G)$, $\deg (x) = \delta$.
 \end{definition}
 
 \begin{definition}
@@ -379,6 +456,18 @@ Not ready as will be refactored using darts!
   A function $f : V(G) \rightarrow \C$ is said to be \emph{locally constant}
   if, for all $x,y \in V(G)$, if $x$ is adjacent to $y$, then $f(x)=f(y)$.
 \end{definition}
+
+\begin{lemma}
+  \label{lem:dart_locally_constant}
+  \uses{def:locally_constant,lem:darts_end_adj}
+  The function $f$ is locally constant $\Leftrightarrow$
+  for every $d \in D(G)$,
+  $f(\spt(d))=f(\ept(d))$
+  $\Leftrightarrow$
+  for every $x \in V(G)$,
+  for every $d \in \dartset(x)$,
+  $f(x)=f(\ept(d))$.
+\end{lemma}
 
 \begin{lemma}
   \label{lem:locally_constant_vector_space}
@@ -524,6 +613,8 @@ Not ready as will be refactored using darts!
 
 \subsection{Colorings and bipartiteness}
 
+Not ready, needs to be written in a compatible way with SimpleGraph.
+
 \begin{definition}
   \label{def:bipartite}
   The graph $G$ is \emph{bipartite} if there exists a partition $U_1$,
@@ -545,43 +636,47 @@ Assume $G$ is locally finite.
   We define the adjacency operator $a$ as the linear operator acting on the space of
   functions $f : V(G) \rightarrow \C$ by
   $$ a f (x) :=
-  \sum_{e \in \incset(x)}
-  2^{\isloop(e)} f(\incother(e,x)).$$
+  \sum_{d \in \dartset(d)}
+  f(\ept(x)).$$
 \end{definition}
 
 \begin{lemma}
-  \label{lem:adjacency_of_constant}
-  \uses{def:constant_function,def:adjacency_operator}
-  For any $x \in V(G)$, $a \const(x) = \deg(x)$.
+  \label{lem:adjacency_locally_constant}
+  \uses{def:locally_constant,def:adjacency_operator,lem:darts_end_adj,def:degree}
+  Let $f$ be a locally constant function. Then, for all $x \in V(G)$,
+  $af(x) = \deg(x) f(x)$.
 \end{lemma}
 
 \begin{proof}
-  Let $x \in V(G)$. We have
-  \begin{align*}
-    a \const(x)
-    & = \sum_{e \in \incset(x)}
-    2^{\isloop(e)}\const(\incother(e,x))
-    & \text{by Definition \ref{def:adjacency_operator}} \\
-    & = \sum_{e \in \incset(x)}
-    2^{\isloop(e)}
-    & \text{by Definition \ref{def:constant_function}} \\
-    & = \deg(x)
-    & \text{by Definition \ref{def:degree}}.
-  \end{align*}
+  Let $x \in V(G)$.
+  By definition,
+  \begin{equation*}
+    af(x) = \sum_{d \in \dartset(x)} f(\ept(d)).
+  \end{equation*}
+  By Lemma \ref{lem:darts_end_adj},
+  for all $d \in \dartset(x)$, $\ept(d)$ is adjacent to $x$
+  and in particular $f(\ept(d))=f(x)$. This leads to the conclusion by
+  Definition \ref{def:degree}.
 \end{proof}
+
+\begin{lemma}
+  \label{lem:adjacency_of_constant}
+  \uses{def:constant_one,def:adjacency_operator}
+  For any $x \in V(G)$, $a \const(x) = \deg(x)$.
+\end{lemma}
 
 \subsection{Norm of the adjacency operator}
 
 Let $G$ be a locally finite graph.
 The aim of this subsection is to prove the following.
 
-\begin{proposition}
-  \label{prop:norm_adjacency_leq_sup_degree}
+\begin{theorem}
+  \label{thm:norm_adjacency_leq_sup_degree}
   \uses{lem:bound_a_sup_degree}
   Assume $G$ is locally bounded.
   Then the adjacency operator is a bounded operator on $\ell^2(G)$ and
   its norm satisfies $\|a\| \leq \sup_{x \in V(G)} \deg(x)$.
-\end{proposition}
+\end{theorem}
 
 Here is a key lemma.
 
@@ -592,12 +687,10 @@ Here is a key lemma.
   \begin{equation}
     |af(x)|^2
     \leq \deg(x)
-    \sum_{e \in \incset(x)} 2^{\isloop(e)} |f(\incother(e,x))|^2.
+    \sum_{d \in \dartset(x)} |f(\ept(d))|^2.
   \end{equation}
-  Furthermore, this is an equality if and only if there exists $c \in \C$ such that
-  \begin{equation}
-    \forall e \in \incset(x), f(\incother(e,x)) = c.
-  \end{equation}
+  Furthermore, this is an equality if and only if
+  for any $y, z$ adjacent to $x$, $f(y) = f(z)$.
 \end{lemma}
 
 \begin{proof}
@@ -605,35 +698,30 @@ Here is a key lemma.
   By Definition \ref{def:adjacency_operator},
   \begin{equation}
     |af(x)|^2
-    = \left| \sum_{e \in \incset(x)} 2^{\isloop(e)} f(\incother(e, x))\right|^2.
+    = \left| \sum_{d \in \dartset(x)} f(\ept(d))\right|^2.
   \end{equation}
   By the Cauchy-Schwarz inequality applied to the complex vectors
-  \begin{equation}
-    v_1 := (2^{\isloop(e)/2})_{e \in \incset(x)}
-  \end{equation}
-  and
-  \begin{equation}
-    v_2 := (2^{\isloop(e)/2} f(\incother(e,x)))_{e \in \incset(x)}
-  \end{equation}
+  $v_1 := (1)_{d \in \dartset(x)}$ and $v_2 := (f(\ept(d)))_{d \in \dartset(x)}$
   we have
   \begin{align*}
     |af(x)|^2
     & = \left| v_1 \cdot v_2 \right|^2
     \leq \|v_1\|_2^2 \|v_2\|_2^2 \\
     &\leq
-    \left(\sum_{e \in \incset(x)} 2^{\isloop(e)}
+    \left( \sum_{d \in \dartset(x)} 1
     \right)
-    \left( \sum_{e \in \incset(x)} 2^{\isloop(e)} |f(\incother(e, x))|^2
+    \left( \sum_{d \in \dartset(x)} |f(\ept(d))|^2
     \right).
   \end{align*}
   This leads to the inequality by Definition \ref{def:degree}.
   The equality case comes from the equality case in Cauchy-Schwarz, which occurs if
   and only if the vectors $v_1$ and $v_2$
   are colinear, which
-  is equivalent to the announced condition as $v_1$ is a non-zero constant vector.
+  is equivalent to the announced condition as $v_1$ is a non-zero constant vector,
+  using Lemma \ref{lem:darts_end_adj}.
 \end{proof}
 
-Then Proposition \ref{prop:norm_adjacency_leq_sup_degree} is a trivial consequence of the
+Then Proposition \ref{thm:norm_adjacency_leq_sup_degree} is a trivial consequence of the
 following lemma, together with the definition of bounded operator and operator norm.
 
 \begin{lemma}
@@ -645,24 +733,37 @@ following lemma, together with the definition of bounded operator and operator n
     \|a f\| \leq \sup_{x \in V(G)} \deg(x) \times \|f\|.
   \end{equation}
   Furthermore, the equality occurs if and only if $G$ is regular
-  and, for any $x \in V(G)$, there exists $c \in \C$ such that
-    \begin{equation}
-    \forall e \in \incset(x), f(\incother(e,x)) = c.
-  \end{equation}
+  and, for any $x \in V(G)$, for any $y$ and $z$ adjacent to $x$, $f(y)=f(z)$.
 \end{lemma}
 
 \begin{proof}
-  To write, basically we need to sum Lemma \ref{lem:bound_a_degree_x} for $x \in V(G)$
-  (find the correct summation result), change the order of summation (same)
-  and observe that
-  \begin{align*}
-    \sum_{x \in V(G)}
-    \sum_{e \in \incset(x)}
-    2^{\isloop(e)}
-    |f(\incother(e,x))|^2
-    & = \sum_{x \in V(G)} \deg(x) |f(x)|^2 \\
-    & \leq \sup_{x \in V(G)} \deg(x) \times \|f\|^2.
-  \end{align*}
+Let us write $D := \sup_{x \in V(G)} \deg(x)$.
+By definition,
+\begin{equation*}
+  \|af\|^2
+  = \sum_{x \in V(G)} |af(x)|^2
+\end{equation*}
+and $af \in \ell^2(G)$ iff this sum is finite.
+We sum Lemma \ref{lem:bound_a_degree_x} for all vertices of $G$ and obtain that
+\begin{equation*}
+  \_
+  \leq  \sum_{x \in V(G)} \deg(x) \sum_{d \in \dartset(x)} |f(\ept(d))|^2
+  \leq D \sum_{d \in D(G)} |f(\ept(d))|^2.
+\end{equation*}
+We apply the involution $\symm$ to the sum, changing indices, to obtain
+\begin{equation*}
+  \_
+  = D \sum_{d \in D(G)} |f(\ept(\symm(d)))|^2
+  = D \sum_{d \in D(G)} |f(\spt(d))|^2.
+\end{equation*}
+Now by Definitions \ref{def:dartset} and \ref{def:degree}
+\begin{equation*}
+  \_ = D \sum_{x \in V(G)} \sum_{x \in \dartset(x)} |f(\spt(d))|^2
+  = D \sum_{x \in V(G)} \deg(x) |f(x)|^2
+\leq D^2 \sum_{x \in V(G)} |f(x)|^2
+  = D^2 \|f\|^2.
+\end{equation*}
+This means that $af \in \ell^2(G)$ and $\|af\| \leq D \|f\|$, which was our claim.
   If the equality occurs, since all terms are non-negative, it means that
   $\deg (x)$ is constant (i.e. the graph is regular), and that there is equality in
   each term of  Lemma \ref{lem:bound_a_degree_x}, which is the conclusion.
@@ -678,16 +779,14 @@ Let $G$ be a locally bounded graph.
   The adjacency operator is selfadjoint.
 \end{proposition}
 
-The following lemma will be very handy.
-
 \begin{lemma}
   \label{lem:scalar_of_adjacency}
   \uses{lem:bound_a_sup_degree}
   For any $f$, $g$ in $\ell^2(G)$,
   \begin{equation}
     \langle af, g \rangle
-    = \sum_{\substack{e \in E(G)\\ e \text{ links } x,y}}
-    (f(x) \overline{g(y)} + f(y) \overline{g(x)}).
+    = \sum_{d \in D(G)}
+    f(\ept(d)) \overline{g(\spt(d))}.
   \end{equation}
 \end{lemma}
 
@@ -702,12 +801,11 @@ The following lemma will be very handy.
   By Definition \ref{def:adjacency_operator},
   \begin{equation}
     \langle af, g \rangle
-    = \sum_{x \in V(G)} \sum_{e \in \incset(x)} 2^{\isloop(e)}
-    f(\incother(e,x)) \overline{g(x)}
+    = \sum_{x \in V(G)}
+    \sum_{d \in \dartset(x)}
+    f(\ept(d)) \overline{g(x)}
   \end{equation}
-  (todo: justify the change of order of summation, notably using Lemma
-  \ref{lem:bound_a_sup_degree} to have absolute convergence)
-  which we can reorder to the result.
+  which we can rewrite as the claim.
 \end{proof}
 
 We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
@@ -717,12 +815,13 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
   We have by Lemma \ref{lem:scalar_of_adjacency}
   \begin{equation*}
     \langle af, g \rangle
-    = \sum_{\substack{e \in E(G)\\ e \text{ links } x,y}}
-    (f(x) \overline{g(y)} + f(y) \overline{g(x)})
-    = \overline{\sum_{\substack{e \in E(G)\\ e \text{ links } x,y}}
-    (g(x) \overline{f(y)} + g(y) \overline{f(x)})}
+    = \sum_{d \in D(G)}
+    f(\ept(d)) \overline{g(\spt(d))}
+    = \overline{\sum_{d \in D(G)}
+    g(\ept(d)) \overline{f(\spt(d))}}
   \end{equation*}
-  by complex conjugation, commutativity of addition and isLink\_symm.
+  by complex conjugation and applying the involution $\symm$ to exchange the
+  start and end of each dart.
   Hence by Lemma \ref{lem:scalar_of_adjacency}
   \begin{equation*}
     \langle af, g \rangle
@@ -745,7 +844,7 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
 
 \begin{lemma}
   \label{lem:spectrum_in_segment}
-  \uses{cor:spectrum_is_real,prop:norm_adjacency_leq_sup_degree}
+  \uses{cor:spectrum_is_real,thm:norm_adjacency_leq_sup_degree}
   The spectrum of $a$ is included in the
   segment $[-D,D]$ where $D = \sup_{x \in V(G)} \deg(x)$.
 \end{lemma}
@@ -755,73 +854,59 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
   By spectrum.subset\_closedBall\_norm,
   it is included in the closed ball of center $0$ and
   radius $\|a\|$.
-  We have $\|a\| \leq \sup_{x \in V(G)} \deg(x)$ by Proposition
-   \ref{prop:norm_adjacency_leq_sup_degree}.
+  We have $\|a\| \leq D$ by Theorem \ref{thm:norm_adjacency_leq_sup_degree}.
 \end{proof}
 
 \subsection{The case of regular graphs}
 
-Let $d$ be a non-negative integer.
+Let $\delta$ be a non-negative integer.
 
 \begin{lemma}
   \label{lem:adjacency_of_constant_regular}
   \uses{lem:adjacency_of_constant,def:regular}
   Assume $G$ is not empty and locally finite. Then
-  $G$ is regular of degree $d$ iff $a \const = d \const$.
+  $G$ is regular of degree $\delta$ iff $a \const = \delta \const$.
 \end{lemma}
 
 \begin{proof}
   By Definition \ref{def:regular},
-  $G$ is regular of degree $d$ if and only if for all $x \in V(G)$, $\deg(x)=d$.
+  $G$ is regular of degree $\delta$ if and only if for all $x \in V(G)$,
+  $\deg(x)=\delta$.
   By Lemma \ref{lem:adjacency_of_constant}, this is equivalent to
-  having, for all $x \in V(G)$, $a \const (x) = d$, which is equivalent to
-  $a \const = d \const$ by Definition \ref{def:constant_function}.
+  having, for all $x \in V(G)$, $a \const (x) = \delta$, which is equivalent to
+  $a \const = \delta \const$ by Definition \ref{def:constant_one}.
 \end{proof}
 
 \begin{lemma}
   \label{lem:norm_adjacency_regular_leq_degree}
   \uses{lem:bound_a_sup_degree}
-  If $G$ is regular of degree $d$, then $\| a \| \leq d$.
+  If $G$ is regular of degree $\delta$, then $\| a \| \leq \delta$.
 \end{lemma}
 
 \begin{proof}
-  This is simply Proposition \ref{prop:norm_adjacency_leq_sup_degree}.
+  This is simply Proposition \ref{thm:norm_adjacency_leq_sup_degree}.
 \end{proof}
 
 \begin{lemma}
   \label{lem:spectrum_regular_in_segment}
   \uses{lem:spectrum_in_segment}
-  If $G$ is regular of degree $d$, then the spectrum of $a$ is included in the
-  segment $[-d,d]$.
+  If $G$ is regular of degree $\delta$, then the spectrum of $a$ is included in the
+  segment $[-\delta,\delta]$.
 \end{lemma}
 
 \begin{proof}
   This is simply Lemma \ref{lem:spectrum_in_segment}.
 \end{proof}
 
-\subsection{The case of finite graphs}
-
-\begin{theorem}
-  \label{thm:spectral_finite}
-  \uses{prop:adjacency_is_selfadjoint}
-  Assume $G$ is finite and let $n$ denote the cardinal of $V(G)$.
-  Then the spectrum of the adjacency operator is a family of $n$ real eigenvalues
-  $$\lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_n.$$
-\end{theorem}
-
-\begin{proof}
-  This is the spectral theorem in finite dimension.
-\end{proof}
-
 \subsection{The case of finite regular graphs}
 
-Let $d$ be a non-negative integer.
+Let $\delta$ be a non-negative integer.
 
 \begin{lemma}
   \label{lem:constant_eigenfunction_regular}
   \uses{lem:constant_is_l2,lem:constant_neq_zero,lem:adjacency_of_constant_regular}
-  Assume $G$ is regular of degree $d$ and finite. Then
-  $d$ is an eigenvalue of the adjacency
+  Assume $G$ is regular of degree $\delta$ and finite. Then
+  $\delta$ is an eigenvalue of the adjacency
   operator with associated eigenfunction the constant function $\const$.
 \end{lemma}
 
@@ -829,73 +914,117 @@ Let $d$ be a non-negative integer.
   Since $G$ is finite, $\const \in \ell^2(G)$ by Lemma \ref{lem:constant_is_l2}.
   Furthermore, $\const \neq 0$ by Lemma \ref{lem:constant_neq_zero}
   and since $G$ is not empty by Definition \ref{def:regular}.
-  By Lemma \ref{lem:adjacency_of_constant_regular}, if $G$ is regular of degree $d$,
-  then $a \const = d \const$.  We conclude by the definition of eigenvalue and eigenvector.
+  By Lemma \ref{lem:adjacency_of_constant_regular}, if $G$ is regular of degree $\delta$,
+  then $a \const = \delta \const$.  We conclude by the definition of eigenvalue and eigenvector.
 \end{proof}
 
 \begin{proposition}
   \label{prop:norm_adjacency_regular}
   \uses{lem:norm_adjacency_regular_leq_degree,lem:constant_eigenfunction_regular}
-  If $G$ is finite and regular of degree $d$, then $\|a\|=d$.
+  If $G$ is finite and regular of degree $\delta$, then $\|a\|=\delta$.
 \end{proposition}
 
 \begin{proof}
-  Since $G$ is regular of degree $d$, by
-  Lemma \ref{lem:norm_adjacency_regular_leq_degree}, $\|a \| \leq d$.
-  By Lemma \ref{lem:constant_eigenfunction_regular}, $d$ is an eigenvalue of $a$ and hence $\|a\| \geq d$,
+  Since $G$ is regular of degree $\delta$, by
+  Lemma \ref{lem:norm_adjacency_regular_leq_degree}, $\|a \| \leq \delta$.
+  By Lemma \ref{lem:constant_eigenfunction_regular}, $\delta$ is an eigenvalue of $a$
+  and hence $\|a\| \geq \delta$,
   which is enough to conclude.
 \end{proof}
 
 \begin{proposition}
   \label{prop:regular_multiplicity_trivial_eigenvalue}
-  \uses{def:number_cc,thm:spectral_finite}
-  Assume $G$ is finite and regular of degree $d$. Then the multiplicity of the
-  eigenvalue $d$ is exactly the number of connected components of $G$.
+  \uses{prop:basis_locally_constant,lem:adjacency_locally_constant}
+    Assume $G$ is finite and regular of degree $\delta$. Then the multiplicity of the
+  eigenvalue $\delta$ is exactly the number of connected components of $G$.
 \end{proposition}
 
 \begin{proof}
-  todo
+  We treat differently the case $\delta=0$, where $a$ is identically equal to $0$
+  and every function $V(G) \rightarrow \C$ is in the kernel of $a$, and
+  hence the result holds since the connected components of $G$ are all the
+  $\{x\}$ for $x \in V(G)$. Now assume $\delta \neq 0$.
+
+  Lemma \ref{lem:adjacency_locally_constant} implies that all locally constant
+  functions are included in the eigenspace associated to the eigenvalue $\delta$.
+  Let us show the other inclusion.
+  Assume $f$ is such that $af=\delta f$. In particular, $\|af\|=\delta\|f\|$ and hence
+  by the equality case in Lemma \ref{lem:bound_a_sup_degree},
+  \begin{equation*}
+    \forall x \in V(G), \forall y, z \text{ adjacent to } x,
+    f(y)=f(z).
+  \end{equation*}
+  In particular
+  \begin{equation*}
+    \delta f(x) = af(x) = \sum_{d \in D(G)} f(\ept(d)).
+  \end{equation*}
+  Note that this sum contains $\delta$ terms and,
+   for all $d,d' \in \dartset(x)$, $f(\ept(d))=f(\ept(d'))$
+  so all of its terms are equal.
+  Since $\delta \neq 0$, we obtain
+  that, for all $d, d' \in \dartset(G)$, $f(\ept(d'))=f(\ept(d))$,
+  i.e. $f$ is locally constant.
+
+  By Proposition \ref{prop:basis_locally_constant},
+  the dimension of the space of locally constant functions
+   is exactly the number of connected components of $G$,
+  which allows to conclude.
 \end{proof}
 
 \begin{proposition}
   \label{prop:eigenvalue_regular_bipartite}
   \uses{def:bipartite,def:indicator_function,lem:all_l2_finite}
-  Assume $G$ is finite, regular of degree $d \geq 1$ and connected. Then
-  $-d$ is an eigenvalue of $a$ if and only if $G$ is bipartite.
+  Assume $G$ is finite, regular of degree $\delta \geq 1$. Then
+  $-\delta$ is an eigenvalue of $a$ if and only if $G$ has a bipartite connected
+  component.
 \end{proposition}
 
 \begin{proof}
-  Assume $G$ is bipartite. By Definition \ref{def:bipartite}, there exists a partition
-  $U_1$, $U_2$ of $V(G)$ such that any edge of $G$ links a vertex of $U_1$ and a
-  vertex of $U_2$.
-  Let $f := \const_{U_1} - \const_{U_2}$.
-  The set $U_1$ is non-empty as there exists a edge in the graph, and $U_1$ contains
-  one of its endpoints. Hence $f \neq 0$.
-  By Lemma \ref{lem:all_l2_finite}, $f$ is an element of $\ell^2(G)$.
-  Let $x \in V(G)$. Let $y$ be adjacent to $x$.
-  By definition of $U_1$ and $U_2$,
-  $x \in U_1 \Leftrightarrow y \in U_2$. Hence $f(x)=-f(y)$.
-  Hence summing over all adjacent vertices we find
-  \begin{equation}
-    af(x) = \sum_{e \in \incset(x)} 2^{\isloop(e)} f(\incother(e,x))
-    = - \sum_{e \in \incset(x)} 2^{\isloop(e)} f(x) = - d f(x).
-  \end{equation}
-  Hence $af=-df$ which means $-d$ is an eigenvalue of $a$.
-
-  Now assume $-d$ is an eigenvalue of $a$. Take $f$ an eigenvector.
-  We have $af = -d f$
-  by definition, and hence $\|af\| = d \|f\|$.
-  Let $x \in V(G)$.
-  We can apply the equality case of Lemma \ref{lem:bound_a_sup_degree}
-  and obtain a constant $c \in \C$ such that
-  \begin{equation}
-    \forall e \in \incset(x), f(\incother) = c.
-  \end{equation}
-  In particular,
-  \begin{equation}
-    -d f(x) = af(x) = \sum_{e \in \incset(x)} 2^{\isloop(e)} c = d c.
-  \end{equation}
-  Since $d \neq 0$, this implies $c=-1$. We have hence proved that
-  for any adjacent vertices $x, y$, $f(x)=-f(y)$.
-[finish]
+ todo
 \end{proof}
+
+\subsection{Finite graphs}
+
+Let $G$ be a finite graph.
+Since $V(G)$ is finite, we can identify $\ell^2(G)$ with $\C^{V(G)}$
+by Lemma \ref{lem:all_l2_finite}.
+
+\begin{definition}
+  \label{def:adjacency_matrix}
+  \uses{def:finite,def:adjacency_operator}
+  The \emph{adjacency matrix} $A$ of $G$ is defined as the matrix of the adjacency operator
+  $a : \C^{V(G)} \rightarrow \C^{V(G)}$.
+\end{definition}
+
+\begin{theorem}
+  \label{thm:adjacency_coeffs}
+  \uses{def:adjacency_matrix}
+  Let $x, y \in V(G)$. Then, $A_{x,y} = \# \{d \in \dartset(x) : \ept(d)=y\}$.
+\end{theorem}
+
+\begin{proof}
+  We denote as $v_x = \const_{\{x\}}$ and $v_y = \const_{\{y\}}$ the vectors equal to $0$
+  everywhere except at $x$, $y$ respectively, where they are equal to $1$.
+  By definition,
+\begin{equation*}
+    A_{x,y} = a v_y(x) = \sum_{d \in \dartset(x)} v_y(\ept(d))
+\end{equation*}
+which leads to the conclusion.
+\end{proof}
+
+\begin{lemma}
+  \label{lemm:A_integer}
+  \uses{thm:adjacency_coeffs}
+  The coefficients of $A$ are non-negative integers, and the diagonal coefficients even.
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:adjacency_matrix_symmetric}
+  \uses{prop:adjacency_is_selfadjoint,def:adjacency_matrix}
+  The adjacency matrix is
+\end{lemma}
+
+
+\section{Random regular graphs}
+
+Let us define one model of random regular graphs, the permutation model.
