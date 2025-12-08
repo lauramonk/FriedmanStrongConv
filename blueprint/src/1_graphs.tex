@@ -43,6 +43,14 @@ The definition of subgraph is easier for Graph as the vertexset is just a subset
   \end{itemize}
 \end{definition}
 
+\begin{lemma}
+  \label{lem:subgraph_adj_graph}
+  \uses{def:subgraph}
+  Let $H$ be a subgraph of $G$.
+  For any $x$, $y$ in $V(H)$, if $x$ and $y$ are adjacent for $H$, then they are
+  adjacent for $G$.
+\end{lemma}
+
 \begin{definition}
   \label{def:max_subgraph,def:min_subgraph}
   We define the \emph{union}, resp. \emph{intersection} of two subgraphs by taking the union of
@@ -165,98 +173,60 @@ We define the notion of connectedness and the connected components of a graph.
   for all $y \in V(G)$, $x$ and $y$ are reachable.
 \end{lemma}
 
-\begin{proof}
-  todo
-\end{proof}
-
-% Let us list some simple monotony properties.
-
-% \begin{lemma}
-%   \label{lem:connected_is_decreasing}
-%   \uses{def:connected}
-%   Let $U_1$, $U_2$ be two subsets of $V(G)$ such that $U_1 \subseteq U_2$.
-%   If $U_2$ is connected, then $U_1$ is connected.
-% \end{lemma}
-
-% \begin{proof}
-%   Assume $U_2$ is connected. Then, for all $x, y \in U_2$, there exists a walk
-%   from $x$ to $y$ in $G$. Since $U_1 \subseteq U_2$, this implies that for all
-%   $x$ and $y$ in $U_1$, there exists a walk from $x$ to $y$ in $G$, and hence
-%   $U_1$ is connected.
-% \end{proof}
-
 \begin{definition}
   \label{def:connected_component}
-  \uses{def:connected,def:disconnected}
-  A \emph{connected component} of $G$ is a non-empty subset $U$ of $V(G)$
-  that is connected and maximal for inclusion, i.e. any subset $U'$ of
-  $V(G)$ containing $U$ is disconnected.
+  \uses{def:connected}
+  A \emph{connected component} of $G$ is an equivalence class of $V(G)$ for
+  the relation reachable.
 \end{definition}
-
-The following observation will allow to prove a few automatic properties directly.
-
-\begin{lemma}
-  \label{lem:cc_equivalence_class}
-  \uses{def:connected_component,prop:reachable_is_equivalence}
-  The connected components of $G$ are exactly the equivalence classes of
-  the reachability relation.
-\end{lemma}
-
-Here are several immediate consequences.
-
-\begin{proposition}
-  \label{prop:cc_partition}
-  \uses{lem:cc_equivalence_class}
-  The connected components of $G$ form a partition of $V(G)$ into non-empty sets.
-\end{proposition}
-
-\begin{proof}
-  This follows from Lemma \ref{lem:cc_equivalence_class}
-  and properties of equivalence classes.
-\end{proof}
 
 \begin{definition}
-  \label{def:number_cc}
+  \label{def:connected_component_Mk}
   \uses{def:connected_component}
-  The \emph{number of connected components} of a graph is the number of its
-  connected components, as an element of $\N \cup \{ \infty\}$.
+  For any vertex $x$, we define $\ccm(x)$ to be the unique connected component
+  of $G$ containing $x$.
 \end{definition}
 
-We have the following upper bound.
+\begin{theorem}
+  \label{thm:cc_eq}
+  \uses{def:connected_component_Mk}
+  Let $x, y \in V(G)$. Then $\ccm(x) = \ccm(y)$ iff $x$ and $y$ are reachable.
+\end{theorem}
+
+\begin{definition}
+  \label{def:subgraph_cc}
+  \uses{def:connected_component,def:subgraph}
+  Let $C$ be a  connected component of $G$.
+  We define a subgraph associated to $C$ by taking $C$ as the vertexset,
+  and $\{e \in E(G) \, : \, e \text{ incident to a } x \in C\}$ as edgeset.
+\end{definition}
 
 \begin{lemma}
-  \label{lem:bound_number_cc}
-  \uses{prop:cc_partition}
-  If $V(G)$ is finite, then its number of connected components is finite and at most $\# V(G)$.
+  \label{lem:subgraph_cc_is_induced}
+  \uses{def:isinduced,def:subgraph_cc}
+  The subgraph associated to a connected component is induced.
 \end{lemma}
 
-\begin{proof}
-  This follows from Proposition \ref{prop:cc_partition}
-  and the fact that the number of elements in a partition of a finite set is at most its cardinal.
-\end{proof}
+\begin{theorem}
+  \label{thm:cc_is_connected}
+  \uses{def:subgraph_cc,def:connected}
+  Let $C$ be a connected component of $G$. Then the associated subgraph is connected.
+\end{theorem}
+
+\begin{definition}
+  \label{def:set_cc}
+  \uses{def:connected_component}
+  We denote as $\cc(G)$ the set of connected components of $G$.
+\end{definition}
 
 \begin{proposition}
-  \label{prop:cc_of_a_vertex}
-  \uses{lem:cc_equivalence_class}
-  Let $x \in V(G)$. Then the set of $y \in V(G)$ such that there exists a
-  walk from $x$ to $y$ is the unique connected component of $G$ containing $x$.
+  \label{prop:cc_is_partition}
+  \uses{def:set_cc}
+  $\cc(G)$ is a partition of $V(G)$.
 \end{proposition}
 
 \begin{proof}
-  This follows from Lemma \ref{lem:cc_equivalence_class}
-  and properties of equivalence classes.
-\end{proof}
-
-\begin{lemma}
-  \label{lem:adjacent_same_cc}
-  \uses{lem:cc_equivalence_class,lem:adj_towalk}
-  For $x$, $y$ in $V(G)$, if $x$ is adjacent to $y$, then they belong to the same
-  connected component.
-\end{lemma}
-
-\begin{proof}
-  This follows from Lemma \ref{lem:cc_equivalence_class} together with Lemma
-  \ref{lem:adj_towalk}.
+  This comes from the description as an equivalence relation.
 \end{proof}
 
 \subsection{Notions of finiteness}
@@ -283,6 +253,17 @@ We have the following upper bound.
   Assume $V(G)$ is finite. Then any function $V(G) \rightarrow \C$ is in $\ell^2(G)$.
 \end{lemma}
 
+\begin{lemma}
+  \label{lem:bound_number_cc}
+  \uses{prop:cc_is_partition}
+  If $V(G)$ is finite, then its number of connected components is finite and at most $\# V(G)$.
+\end{lemma}
+
+\begin{proof}
+  This follows from Proposition \ref{prop:cc_is_partition}
+  and the fact that the number of elements in a partition of a finite set is at most its cardinal.
+\end{proof}
+
 % \begin{proposition}
 %   \label{def:finite_vs_locally_finite}
 %   \uses{def:finite,def:locally_finite}
@@ -290,6 +271,8 @@ We have the following upper bound.
 % \end{proposition}
 
 \subsection{Degree and regularity}
+
+Not ready as will be refactored using darts!
 
 \begin{definition}
   \label{def:degree}
@@ -322,6 +305,12 @@ We have the following upper bound.
 
 \begin{definition}
   \label{def:constant_function}
+  A function $V(G) \rightarrow \C$ is \emph{constant} if, for all $x, y \in V(G)$,
+  $f(x)=f(y)$.
+\end{definition}
+
+\begin{definition}
+  \label{def:constant_one}
   The constant function equal to $1$ is defined by
   \begin{equation}
     \const :
@@ -343,16 +332,36 @@ We have the following upper bound.
   Then $\const (x) = 1 \neq 0$, and hence $\const$ is not equal to the constant function $0$.
 \end{proof}
 
+\begin{theorem}
+  \label{thm:space_constant}
+  Assume $G$ is not empty. Then the space of constant functions is
+  a vectorial space of dimension $1$, generated by $\const$.
+\end{theorem}
+
+\begin{proof}
+  We directly check that:
+  \begin{itemize}
+    \item the constant function equal to $0$ is locally constant;
+    \item for any locally constant functions $f_1$, $f_2$ and any $\lambda \in \C$,
+    the function $f_1+cf_2$ is also locally constant;
+  \end{itemize}
+  both by direct application of the definition.
+  This space contains the function $\const$.
+  Let $f : V(G) \rightarrow \C$ be a constant function. Since $V(G)$ is not
+  empty there exists $x \in V(G)$. Then for all $y \in V(G), f(y) = f(x) \const(y)$,
+  so $f = f(x) \const$, which allows to conclude.
+\end{proof}
+
 \begin{lemma}
   \label{lem:constant_is_l2}
   \uses{def:constant_function}
-  The constant function $\const$ belongs in $\ell^2(G)$
+  The space of constant functions is included in $\ell^2(G)$
   if and only if $V(G)$ is finite.
 \end{lemma}
 
 \begin{proof}
   This is simply the fact that
-  the constant sequence is summable if and only if the set is finite.
+  non-zero constant sequences are summable if and only if the set is finite.
 \end{proof}
 
 \subsection{Locally constant functions}
@@ -388,36 +397,56 @@ We have the following upper bound.
 \end{lemma}
 
 \begin{proof}
-  Let $x, y \in V(G)$ such that $x$ and $y$ are reachable.
-  By Definition \ref{def:reachable}, there exists a walk $(v_i)_{0 \leq i \leq m}$,
-  $(e_i)_{1 \leq i \leq m}$ from $x$ to $y$.
-  Let $i \in \{1, \ldots, m\}$. The edge $e_i$ links $v_{i-1}$ to $v_i$
-  and hence $v_{i-1}$ is adjacent to $v_i$. By Definition \ref{def:locally_constant},
-  $f(v_{i-1})=f(v_i)$. As this is true for all $i \in \{1, \ldots, m\}$,
-  by transitivity of equality (and perhaps a tiny induction?),
-  $f(v_0)=f(v_m)$, i.e. $f(x)=f(y)$ since $v_0=x$ and $v_m=y$.
+  By induction.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:locally_constant_preconnected}
+  \uses{lem:locally_constant_walk,def:preconnected,def:constant_function}
+  A locally constant function on a preconnected graph is constant.
+\end{lemma}
+
+\begin{proof}
+  Let $G$ be a preconnected graph and $f : V(G) \rightarrow \C$ be a locally
+  constant function.
+  For any $x$, $y$ in $V(G)$, by Definition \ref{def:preconnected}, there
+  exists a walk from $x$ to $y$. Lemma \ref{lem:locally_constant_walk}
+  this implies $f(x)=f(y)$. Hence by Definition \ref{def:constant_function},
+  $f$ is constant.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:locally_constant_subgraph}
+  \uses{lem:subgraph_adj_graph,def:locally_constant}
+  The restriction of a locally constant function
+  to a subgraph is locally constant on that subgraph.
+\end{lemma}
+
+\begin{proof}
+  Let $f$ be a locally constant function on $G$, and $H$ be a subgraph of $G$.
+  Let $x, y$ be adjacent vertices in $H$. By Lemma \ref{lem:subgraph_adj_graph},
+  $x$ and $y$ are also adjacent in $G$. Then $f(x)=f(y)$.
 \end{proof}
 
 \begin{lemma}
   \label{lem:locally_constant_cc}
-  \uses{lem:locally_constant_walk,prop:cc_of_a_vertex}
-  Let $f : V(G) \rightarrow \C$.
-  The function $f$ is locally constant if and only if,
-  for any connected component $U$ of $G$,
-  for all $x,y \in U, f(x)=f(y)$.
+  \uses{lem:locally_constant_subgraph,thm:cc_is_connected,
+  lem:locally_constant_preconnected,thm:cc_eq}
+  A function $f$ is locally constant if and only if its restriction to each
+  connected component is a constant function.
 \end{lemma}
 
 \begin{proof}
-  Assume $f$ is locally constant.
-  Let $U$ be a connected component of $G$. Let $x,y \in U$.
-  By Proposition \ref{prop:cc_of_a_vertex}, $y$ and $x$ are reachable.
-  By Lemma \ref{lem:locally_constant_cc}, $f(y)=f(x)$.
+  Assume $f$ is locally constant. Let $C$ be a connected component of $G$.
+  By Lemma \ref{lem:locally_constant_subgraph}, the restriction of $f$ to $C$
+  is locally constant.
+  By Theorem \ref{thm:cc_is_connected}, $C$ is preconnected.
+  So by Lemma \ref{lem:locally_constant_preconnected}, it is constant.
 
-  Assume that for any connected component $U$ of $G$,
-  for all $x,y \in U, f(x)=f(y)$.
-  Let $x$ and $y$ be adjacent elements of $V(G)$.
-  By Lemma \ref{lem:adjacent_same_cc}, $x$ and $y$ belong to the same connected component
-  $U$. By the assumption, $f(x)=f(y)$. So $f$ is locally constant.
+  Assume the restriction of $f$ to each connected component is constant.
+  Let $x$, $y$ be adjacent vertices. Then by Theorem \ref{thm:cc_eq},
+  $\ccm(x) = \ccm(y)$ which allows to conclude since $f$ is constant on $\ccm(x)$
+  by hypothesis and Theorem \ref{thm:cc_is_connected}.
 \end{proof}
 
 \begin{definition}
@@ -439,52 +468,43 @@ We have the following upper bound.
   The indicator function of a connected component is locally constant.
 \end{lemma}
 
-\begin{proof}
-  Let $U$ be a connected component of $G$.
-  Let $x,y \in V(G)$ be two adjacent vertices.
-  \begin{itemize}
-    \item If $x \in U$, then by Lemma \ref{lem:adjacent_same_cc}, $y \in U$
-    and hence $\const_U(x)=1=\const_U(y)$.
-    \item Otherwise, $y$ does not lie in $U$ (because $y \in U \Rightarrow x \in U$ by
-    Lemma \ref{lem:adjacent_same_cc}) and hence $\const_U(x)=0=\const_U(y)$.
-  \end{itemize}
-\end{proof}
-
 \begin{lemma}
   \label{lem:partition_unity_cc}
-  \uses{prop:cc_partition,def:indicator_function}
-  We have $$\const = \sum_{U \text{ connected component}} \const_U.$$
+  \uses{prop:cc_is_partition,def:indicator_function}
+  We have $$\const = \sum_{C \in \cc(G)} \const_C.$$
 \end{lemma}
 
 \begin{proof}
-  Let $x \in V(G)$. By Lemma \ref{lem:partition_unity_cc}, there exists a unique
-  connected component of $G$ containing $x$. Hence, $\sum_{U \text{ cc}} \const_U(x)=1$.
+  Let $x \in V(G)$.
+  By Lemma \ref{lem:partition_unity_cc}, there exists a unique
+  connected component of $G$ containing $x$.
+  Hence, $\sum_{C \in \cc(G)} \const_C(x)=1$.
 \end{proof}
 
 \begin{proposition}
   \label{prop:basis_locally_constant}
   \uses{lem:locally_constant_cc,lem:partition_unity_cc}
-  The family $\{\const_U, U \text{ connected component of }G\}$ is a basis
+  The family $\{\const_C, C \in \cc(G)\}$ is a basis
   of the space of locally constant functions.
 \end{proposition}
 
 \begin{proof}
-  First,  for any connected component $U$, $\const_U$ is locally
+  First,  for any connected component $C$, $\const_C$ is locally
   constant by Lemma \ref{lem:indicator_cc_loc_const}.
 
-  Let $f$ be a locally supported function.
+  Let $f$ be a locally constant function.
   We have by Lemma \ref{lem:partition_unity_cc}, for any $x \in V(G)$,
   \begin{equation*}
-    f(x) = \sum_{U \text{ cc}} f(x) \const_U(x).
+    f(x) = \sum_{C \in \cc(G)} f(x) \const_C(x).
   \end{equation*}
-  By Lemma \ref{lem:locally_constant_cc}, for every connected component $U$,
-  there exists a constant $c_U$ such that, for all $x \in U$, $f(x)=c_U$
-  (take $c_U$ to be $f(y_U)$ for a $y_U \in U$, which exists as $U$ is not empty).
+  By Lemma \ref{lem:locally_constant_cc}, for every connected component $C$,
+  there exists a constant $c_C$ such that, for all $x \in C$, $f(x)=c_C$
+  (take $c_C$ to be $f(y_C)$ for a $y_C \in C$, which exists as $C$ is not empty).
   Then
     \begin{equation*}
-    f(x) = \sum_{U \text{ cc}} c_U \const_U(x)
+    f(x) = \sum_{C \in \cc(G)} c_C \const_C(x)
   \end{equation*}
-  which means that $f = \sum_{U \text{ cc}} c_U \const_U$.
+  which means that $f = \sum_{C \in \cc(G)} c_C \const_C$.
 \end{proof}
 
 \begin{corollary}
