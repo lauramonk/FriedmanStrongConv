@@ -1,0 +1,232 @@
+\chapter{Spectral theory of regular graphs}
+
+We shall here present the basic results in the spectral theory of regular graphs, and
+state the main results this project aims to formalise.
+
+\section{Basic properties}
+
+Let $\delta$ be a non-negative integer.
+
+\begin{lemma}
+  \label{lem:adjacency_of_constant_regular}
+  \uses{lem:adjacency_of_constant,def:regular}
+  Assume $G$ is not empty and locally finite. Then
+  $G$ is regular of degree $\delta$ iff $a \const = \delta \const$.
+\end{lemma}
+
+\begin{proof}
+  By Definition \ref{def:regular},
+  $G$ is regular of degree $\delta$ if and only if for all $x \in V(G)$,
+  $\deg(x)=\delta$.
+  By Lemma \ref{lem:adjacency_of_constant}, this is equivalent to
+  having, for all $x \in V(G)$, $a \const (x) = \delta$, which is equivalent to
+  $a \const = \delta \const$ by Definition \ref{def:constant_one}.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:norm_adjacency_regular_leq_degree}
+  \uses{lem:bound_a_sup_degree}
+  If $G$ is regular of degree $\delta$, then $\| a \| \leq \delta$.
+\end{lemma}
+
+\begin{proof}
+  This is simply Proposition \ref{thm:norm_adjacency_leq_sup_degree}.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:spectrum_regular_in_segment}
+  \uses{lem:spectrum_in_segment}
+  If $G$ is regular of degree $\delta$, then the spectrum of $a$ is included in the
+  segment $[-\delta,\delta]$.
+\end{lemma}
+
+\begin{proof}
+  This is simply Lemma \ref{lem:spectrum_in_segment}.
+\end{proof}
+
+\subsection{The case of finite regular graphs}
+
+Let $\delta$ be a non-negative integer.
+
+\begin{lemma}
+  \label{lem:constant_eigenfunction_regular}
+  \uses{lem:constant_is_l2,lem:constant_neq_zero,lem:adjacency_of_constant_regular}
+  Assume $G$ is regular of degree $\delta$ and finite. Then
+  $\delta$ is an eigenvalue of the adjacency
+  operator with associated eigenfunction the constant function $\const$.
+\end{lemma}
+
+\begin{proof}
+  Since $G$ is finite, $\const \in \ell^2(G)$ by Lemma \ref{lem:constant_is_l2}.
+  Furthermore, $\const \neq 0$ by Lemma \ref{lem:constant_neq_zero}
+  and since $G$ is not empty by Definition \ref{def:regular}.
+  By Lemma \ref{lem:adjacency_of_constant_regular}, if $G$ is regular of degree $\delta$,
+  then $a \const = \delta \const$.  We conclude by the definition of eigenvalue and eigenvector.
+\end{proof}
+
+\begin{proposition}
+  \label{prop:norm_adjacency_regular}
+  \uses{lem:norm_adjacency_regular_leq_degree,lem:constant_eigenfunction_regular}
+  If $G$ is finite and regular of degree $\delta$, then $\|a\|=\delta$.
+\end{proposition}
+
+\begin{proof}
+  Since $G$ is regular of degree $\delta$, by
+  Lemma \ref{lem:norm_adjacency_regular_leq_degree}, $\|a \| \leq \delta$.
+  By Lemma \ref{lem:constant_eigenfunction_regular}, $\delta$ is an eigenvalue of $a$
+  and hence $\|a\| \geq \delta$,
+  which is enough to conclude.
+\end{proof}
+
+\begin{proposition}
+  \label{prop:regular_multiplicity_trivial_eigenvalue}
+  \uses{prop:basis_locally_constant,lem:adjacency_locally_constant}
+    Assume $G$ is finite and regular of degree $\delta$. Then the multiplicity of the
+  eigenvalue $\delta$ is exactly the number of connected components of $G$.
+\end{proposition}
+
+\begin{proof}
+  We treat differently the case $\delta=0$, where $a$ is identically equal to $0$
+  and every function $V(G) \rightarrow \C$ is in the kernel of $a$, and
+  hence the result holds since the connected components of $G$ are all the
+  $\{x\}$ for $x \in V(G)$. Now assume $\delta \neq 0$.
+
+  Lemma \ref{lem:adjacency_locally_constant} implies that all locally constant
+  functions are included in the eigenspace associated to the eigenvalue $\delta$.
+  Let us show the other inclusion.
+  Assume $f$ is such that $af=\delta f$. In particular, $\|af\|=\delta\|f\|$ and hence
+  by the equality case in Lemma \ref{lem:bound_a_sup_degree},
+  \begin{equation*}
+    \forall x \in V(G), \forall y, z \text{ adjacent to } x,
+    f(y)=f(z).
+  \end{equation*}
+  In particular
+  \begin{equation*}
+    \delta f(x) = af(x) = \sum_{d \in D(G)} f(\ept(d)).
+  \end{equation*}
+  Note that this sum contains $\delta$ terms and,
+   for all $d,d' \in \dartset(x)$, $f(\ept(d))=f(\ept(d'))$
+  so all of its terms are equal.
+  Since $\delta \neq 0$, we obtain
+  that, for all $d, d' \in \dartset(G)$, $f(\ept(d'))=f(\ept(d))$,
+  i.e. $f$ is locally constant.
+
+  By Proposition \ref{prop:basis_locally_constant},
+  the dimension of the space of locally constant functions
+   is exactly the number of connected components of $G$,
+  which allows to conclude.
+\end{proof}
+
+\begin{proposition}
+  \label{prop:eigenvalue_regular_bipartite}
+  \uses{def:bipartite,def:indicator_function,lem:all_l2_finite}
+  Assume $G$ is finite, regular of degree $\delta \geq 1$. Then
+  $-\delta$ is an eigenvalue of $a$ if and only if $G$ has a bipartite connected
+  component.
+\end{proposition}
+
+\begin{proof}
+ todo
+\end{proof}
+
+\subsection{Finite graphs}
+
+Let $G$ be a finite graph.
+Since $V(G)$ is finite, we can identify $\ell^2(G)$ with $\C^{V(G)}$
+by Lemma \ref{lem:all_l2_finite}.
+
+\begin{definition}
+  \label{def:adjacency_matrix}
+  \uses{def:finite,def:adjacency_operator}
+  The \emph{adjacency matrix} $A$ of $G$ is defined as the matrix of the adjacency operator
+  $a : \C^{V(G)} \rightarrow \C^{V(G)}$.
+\end{definition}
+
+\begin{theorem}
+  \label{thm:adjacency_coeffs}
+  \uses{def:adjacency_matrix,def:dartset_pair}
+  Let $x, y \in V(G)$. Then, $A_{x,y} = \# \dartset(x,y)$.
+\end{theorem}
+
+\begin{proof}
+  We denote as $v_x = \const_{\{x\}}$ and $v_y = \const_{\{y\}}$ the vectors equal to $0$
+  everywhere except at $x$, $y$ respectively, where they are equal to $1$.
+  By definition,
+\begin{equation*}
+    A_{x,y} = a v_y(x) = \sum_{d \in \dartset(x)} v_y(\ept(d))
+\end{equation*}
+which leads to the conclusion.
+\end{proof}
+
+\begin{lemma}
+  \label{lemm:A_integer}
+  \uses{thm:adjacency_coeffs,lem:edge_range_of_darset}
+  The coefficients of $A$ are non-negative integers, and the diagonal coefficients even.
+\end{lemma}
+
+\begin{proof}
+  The fact that they are non-negative integer comes from their description as
+  the cardinal of a set.
+  For $x \in V(G)$, by Lemma \ref{lem:edge_range_of_darset},
+  $A_{x,x} = 2 \# \loopset(x)$ and in particular it is even.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:A_symmetric}
+  \uses{prop:adjacency_is_selfadjoint,def:adjacency_matrix}
+  The adjacency matrix is symmetric: ${}^t A = A$.
+\end{lemma}
+
+\begin{proof}
+  It is real valued by Lemma \ref{lemm:A_integer} and self-adjoint by Proposition
+  \ref{prop:adjacency_is_selfadjoint}, hence symmetric.
+\end{proof}
+
+\begin{definition}
+  \label{def:space_adj_matrix}
+  We define the space of adjacency matrices on $V(G)$ as the space of matrices
+  $A \in \mathcal{M}_{V(G)}(\C)$ such that:
+  \begin{itemize}
+    \item all coefficients of $A$ are non-negative integers;
+    \item the diagonal coefficients are even;
+    \item $A$ is symmetric.
+  \end{itemize}
+\end{definition}
+
+\begin{lemma}
+  \label{lem:space_adj_matrix}
+  \uses{def:space_adj_matrix}
+  The space of adjacency matrices on $V(G)$ is a subset
+  of $\mathcal{M}_{V(G)}(\C)$ stable by addition.
+\end{lemma}
+
+\begin{proof}
+  The sum of two non-negative integers is a non-negative integer,
+  the sum of two even integers is even, and the sum of two symmetric
+  matrices is symmetric.
+\end{proof}
+
+\begin{definition}
+  \label{def:graph_of_matrix}
+  \uses{def:space_adj_matrix}
+  Let $A$ be a matrix as in Definition \ref{def:space_adj_matrix}.
+  We associate a graph $G$ to $A$ by taking:
+  \begin{itemize}
+    \item $V(G)$ as the vertex set;
+    \item $E(G)$ to be the set of symmetric pairs
+    $(x,y) \in \mathrm{Sym2}(V(G))$ and integers $i \geq 0$ with
+    $0 \leq i < A_{x,y}$ if $x \neq y$ and $0 \leq i < A_{x,x}/2$ otherwise;
+    \item so that the edge $e = ((x,y),i)$ links $x$ and $y$.
+  \end{itemize}
+\end{definition}
+
+\begin{lemma}
+  \label{lem:matrix_of_graph_of_matrix}
+  \uses{def:graph_of_matrix}
+  The object constructed in Definition \ref{def:graph_of_matrix} is a graph,
+  and its adjacency matrix is $A$.
+\end{lemma}
+
+\section{Random regular graphs}
+
+Let us define one model of random regular graphs, the permutation model.

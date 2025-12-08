@@ -1,252 +1,35 @@
-\chapter{Spectral theory of regular graphs}
+\chapter{Graphs: introduction and basic spectral theory}
 
-In this chapter, we introduce the definitions related to regular graphs and their spectrum.
+In this chapter, we introduce basic definitions and properties
+related to (multi)graphs and their spectrum.
 We refer the reader to \cite{chung1992} for a more detailed introduction and motivations.
 
-As in Graph, a \emph{graph} is a pair $G = (V, E)$ where $V$ is a set of vertices, and
-$E$ a set of edges, and each edge links two unordered, possibly identical vertices.
-The notations $V(G)$ and $E(G)$ respectively denote the subsets of $V$ and $E$ corresponding to
-vertices or edges of $G$.
-
+As in Graph, a \emph{graph} $G$ is a set of vertices $V(G)$, and
+a set of edges $E(G)$, such that each edge links two unordered, possibly identical vertices.
 Note that this definition allows for loops (i.e. edges going from one vertex to itself) and
 multi-edges (i.e. multiple edges connecting two vertices). This convention is essential to the proof
 we are aiming for, which is why we use Graph instead of the more developed
 SimpleGraph.
 
-Following Inc, we say an edge $e$ is \emph{incident} to a vertex $x$ if there exists a
-vertex $y$ such that $e$ links $x$ and $y$. As IsLoopAt, an edge is a \emph{loop} based
-at a vertex $x$ if it links the vertex $x$ to itself.
+\section{Basic graph theory}
 
-\section{Basic notions of graph theory}
-
-Let $G$ be a graph.
-Let us define a few basic notions from graph theory.
-We make definitions with minimal
-hypotheses as these are fundamental objects that should be added to Mathlib.
-
-\subsection{General definitions}
-
-\begin{definition}
-\label{def:empty}
-We say $G$ is empty if $V(G) = \emptyset$.
-\end{definition}
-
-The definition of subgraph is easier for Graph as the vertexset is just a subset.
-
-\begin{definition}
-  \label{def:subgraph}
-  A \emph{subgraph} $H$ of $G$ is a graph of type $\alpha$ $\beta$ defined by:
-  \begin{itemize}
-    \item a vertexset included in the vextex set of $G$
-    \item an edgeset included in the edge set of $H$
-    \item the same $\islink$ relation.
-  \end{itemize}
-\end{definition}
-
-\begin{lemma}
-  \label{lem:subgraph_adj_graph}
-  \uses{def:subgraph}
-  Let $H$ be a subgraph of $G$.
-  For any $x$, $y$ in $V(H)$, if $x$ and $y$ are adjacent for $H$, then they are
-  adjacent for $G$.
-\end{lemma}
-
-\begin{definition}
-  \label{def:max_subgraph,def:min_subgraph}
-  \uses{def:subgraph}
-  We define the \emph{union}, resp. \emph{intersection} of two subgraphs by taking the union of
-  their respective vertexsets and edgesets.
-\end{definition}
-
-\begin{definition}
-  \label{def:isinduced}
-  A subgraph $H$ of $G$ is \emph{induced} if, for any vertex of $H$, any edge of $G$ incident
-  to $x$ is an edge of $H$.
-\end{definition}
-
-We will be interested in the Hilbert space $\ell^2(G) := \ell^2(V(G))$, which is defined as the set of
-functions $f : V(G) \rightarrow \C$ which are square-summable, equipped with the inner product
-$$\langle f, g \rangle = \sum_{x \in V(G)} f(x) \overline{g(x)}.$$
-
-The space $\B(\ell^2(G))$ of bounded linear operators on $\ell^2(G)$ is a unital $\C^*$-algebra.
-Note that, in this context, $0$ is the constant function equal to $0$.
-
-\subsection{Walks}
-
-We define a notion of walk on the graph.
-
-\begin{definition}
-  \label{def:walk}
-  \leanok
-  Let $x, y \in V(G)$. A \emph{walk} from $x$ to $y$ on $G$ is given by two finite lists:
-  \begin{itemize}
-    \item a list $(v_i)_{0 \leq i \leq m}$ of vertices in $V(G)$;
-    \item a list $(e_i)_{1 \leq i \leq m}$ of edges in $E(G)$;
-  \end{itemize}
-  satisfying the following:
-    \begin{itemize}
-      \item $v_0=x$ and $v_m=y$;
-      \item for any $i \in \{1, \ldots, m\}$, $e_i$ links $v_{i-1}$ and $v_i$.
-    \end{itemize}
-\end{definition}
-
-\begin{definition}
-  \label{def:length}
-  \uses{def:walk}
-  \leanok
-  The \emph{length} of a walk is its number of edges.
-\end{definition}
-
-\begin{definition}
-  \label{def:reachable}
-  \uses{def:walk}
-  \leanok
-  We define a binary relation on $V(G)$ by: $x \sim y$ if there exists a walk
-  from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{reachable}.
-\end{definition}
-
-This is an equivalence relation.
-
-\begin{proposition}
-  \label{prop:reachable_is_equivalence}
-  \uses{def:reachable}
-  The reachability relation is an equivalence relation on $V(G)$.
-\end{proposition}
-
-\begin{proof}
-  The reachability relation is reflexive: $x \sim x$ for any $x \in V(G)$.
-  Indeed, let $x \in V(G)$. We take $m=0$ and set $v_0=x$. Then this is a walk from
-  $x$ to $x$ on $G$.
-
-  The reachability relation is symmetric: if $x \sim y$ then  $y \sim x$.
-  Let $x$, $y$ be two vertices. We assume $x \sim y$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
-  be a walk from $x$ to $y$. Then $(v_{m-i})_{0 \leq i \leq m}$ and $(e_{m+1-i})_{1 \leq i \leq m}$
-  is a walk from $y$ to $x$ by the is\_link\_symm. So $y \sim x$.
-
-  The reachability relation is transitive: if $x \sim y$ and $y \sim z$ then
-  $x \sim z$.
-  Assume $x \sim y$ and $y \sim z$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
-  be a walk from $x$ to $y$ and $(v_i')_{0 \leq i \leq m'}$, $(e_i')_{1 \leq i \leq m'}$
-  be a walk from $y$ to $z$.
-  We let $m''=m+m'$ and define for $i \in \{0, \ldots, m'\}$
-  \begin{equation}
-    v_i'' := \begin{cases}
-      v_i & \text{if } i \leq m \\
-      v_{i-m-1}' & \text{otherwise}
-    \end{cases}
-  \end{equation}
- and for $i \in \{1, \ldots, m'\}$
-   \begin{equation}
-    e_i'' := \begin{cases}
-      e_i & \text{if } i \leq m \\
-      e_{i-m}' & \text{otherwise}.
-    \end{cases}
-  \end{equation}
-  Then this is a walk from $x$ to $z$, hence $x \sim z$.
-\end{proof}
-
-The following will be useful.
-
-\begin{lemma}
-  \label{lem:adj_towalk}
-  \uses{def:reachable}
-  Let $x$, $y$ in $V(G)$. If $x$ and $y$ are adjacent then $x$ and $y$ are reachable.
-\end{lemma}
-
-\begin{proof}
-  By definition of adjacency, there exists an edge $e \in E(G)$ linking $x$ and $y$.
-  Then the walk $(x, y)$ and $(e)$ is a walk from $x$ to $y$.
-\end{proof}
-
-\subsection{Connectedness}
-
-We define the notion of connectedness and the connected components of a graph.
-
-\begin{definition}
-  \label{def:preconnected}
-  \uses{def:reachable}
-  A graph is \emph{preconnected} if any pair of vertices is reachable.
-\end{definition}
-
-\begin{definition}
-  \label{def:connected}
-    \uses{def:preconnected,def:empty}
-  The graph $G$ is \emph{connected} if it is preconnected and not empty.
-\end{definition}
-
-\begin{lemma}
-  \label{lem:connected_iff_exists_forall_reachable}
-  \uses{def:connected}
-  The graph $G$ is connected if and only if there exists $x \in V(G)$ such that,
-  for all $y \in V(G)$, $x$ and $y$ are reachable.
-\end{lemma}
-
-\begin{definition}
-  \label{def:connected_component}
-  \uses{prop:reachable_is_equivalence}
-  A \emph{connected component} of $G$ is an equivalence class of $V(G)$ for
-  the relation reachable.
-\end{definition}
-
-\begin{definition}
-  \label{def:connected_component_Mk}
-  \uses{def:connected_component}
-  For any vertex $x$, we define $\ccm(x)$ to be the unique connected component
-  of $G$ containing $x$.
-\end{definition}
-
-\begin{theorem}
-  \label{thm:cc_eq}
-  \uses{def:connected_component_Mk}
-  Let $x, y \in V(G)$. Then $\ccm(x) = \ccm(y)$ iff $x$ and $y$ are reachable.
-\end{theorem}
-
-\begin{definition}
-  \label{def:subgraph_cc}
-  \uses{def:connected_component,def:subgraph}
-  Let $C$ be a  connected component of $G$.
-  We define a subgraph associated to $C$ by taking $C$ as the vertexset,
-  and $\{e \in E(G) \, : \, e \text{ incident to a } x \in C\}$ as edgeset.
-\end{definition}
-
-\begin{lemma}
-  \label{lem:subgraph_cc_is_induced}
-  \uses{def:isinduced,def:subgraph_cc}
-  The subgraph associated to a connected component is induced.
-\end{lemma}
-
-\begin{theorem}
-  \label{thm:cc_is_connected}
-  \uses{def:subgraph_cc,def:connected}
-  Let $C$ be a connected component of $G$. Then the associated subgraph is connected.
-\end{theorem}
-
-\begin{definition}
-  \label{def:set_cc}
-  \uses{def:connected_component}
-  We denote as $\cc(G)$ the set of connected components of $G$.
-\end{definition}
-
-\begin{proposition}
-  \label{prop:cc_is_partition}
-  \uses{def:set_cc}
-  $\cc(G)$ is a partition of $V(G)$.
-\end{proposition}
-
-\begin{proof}
-  This comes from the description as an equivalence relation.
-\end{proof}
+We here introduce a few basic notions which will be useful to the project.
+These definitions should probably be added to Mathlib and hence written carefully,
+with good API and following the naming conventions, in particular of SimpleGraph.
 
 \subsection{Darts}
+
+We define a notion of darts, which are oriented edges on the graph.
+As opposed to the case of SimpleGraph, I could not think of a natural explicit description of
+darts. However they are defined by the following structure.
 
 \begin{definition}
   \label{def:dart}
   We define a set $D(G)$ of \emph{darts} on $G$ with applications
   \begin{itemize}
-  \item $\spt(d) : D(G) \rightarrow V(G)$;
-  \item $\ept(d) : D(G) \rightarrow V(G)$;
-  \item $\edge(d) : D(G) \rightarrow E(G)$;
-  \item $\symm(d) : D(G) \rightarrow D(G)$;
+  \item $\spt, \ept : D(G) \rightarrow V(G)$;
+  \item $\edge : D(G) \rightarrow E(G)$;
+  \item $\symm : D(G) \rightarrow D(G)$;
   \end{itemize}
   such that:
   \begin{itemize}
@@ -282,8 +65,50 @@ We define the notion of connectedness and the connected components of a graph.
   \end{equation}
 \end{definition}
 
+\begin{definition}
+  \label{def:dartset_pair}
+  \uses{def:dart}
+  Let $x$, $y \in V(G)$.
+  We define the dartset of $(x,y)$ as
+  \begin{equation*}
+    \dartset(x,y)
+    = \{ d \in D(G) : \spt(d) = x, \ept(d) = y\}.
+  \end{equation*}
+\end{definition}
+
 \begin{lemma}
-  \label{lem:darts_of_edge}
+  \label{lem:adjacent_vs_dart}
+  \uses{def:dartset,def:dartset_pair}
+  Let $x, y \in V(G)$.
+  The following are equivalent:
+  \begin{enumerate}
+    \item $x$ and $y$ are adjacent;
+    \item there exists $d \in \dartset(x)$ such that $\ept(d)=y$;
+    \item $\dartset(x,y)$ is not empty.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  We start by proving (1) $\Rightarrow$ (2).
+  Assume $x$ and $y$ are adjacent.
+  Then there exists an edge $e$ linking $x$ and $y$.
+  The function $\edge$ is surjective so there exists $d \in D(G)$ such that $\edge(d)=e$.
+  $e$ links $x$ and $y$ but also $\spt(d)$ and $\ept(d)$ so:
+  \begin{itemize}
+    \item either $x=\spt(d)$ and $y=\ept(d)$, in which case $d \in \dartset(x)$
+    satisfies the claim;
+    \item otherwise $x = \ept(d) = \spt(\symm(d))$ and $y = \spt(d) = \ept(\symm(d))$ and
+    hence $\symm(d) \in \dartset(x)$ satisfies the claim.
+  \end{itemize}
+
+  The implication (2) $\Rightarrow$ (3) is immediate by definition of $\dartset(x,y)$.
+
+  To conclude, (3) $\Rightarrow$ (1) because, if $d \in \dartset(x,y)$, then $\edge(d)$
+  links $x$ and $y$ and hence they are adjacent.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:edge_preimage}
   \uses{def:dart}
   For any $e \in E(G)$, there exists $d \in D(G)$ such that
   $\edge^{-1}(\{e\}) = \{d, \symm(d)\}$.
@@ -299,57 +124,232 @@ We define the notion of connectedness and the connected components of a graph.
 \end{proof}
 
 \begin{lemma}
-  \label{lem:darts_end_adj}
-  \uses{def:dartset}
-  Let $x \in V(G)$. Then, $y \in V(G)$ is adjacent to $x$ if and only if there exists
-  $d \in \dartset(x)$ such that $y = \ept(x)$.
-\end{lemma}
-
-\begin{proof}
-  Assume $y = \ept(d)$ for a $d \in D(G)$.
-  Then $\edge(d) \in E(G)$ links $x = \spt(d)$ and $y=\ept(d)$ so $y$ is adjacent to $x$.
-
-  Now assume $y$ is adjacent to $x$. Then there exists an edge $e \in E(G)$ linking $x$ and
-  $y$. Since $\edge$ is surjective, there exists $d \in D(G)$ such that $\edge(d)=e$.
-  Note that $e$ links $\spt(d)$ and $\ept(d)$, and also $x$ and $y$.
-  By properties of edges of Graph, this means that, either $x=\spt(d)$ and $y=\ept(d)$,
-  or $y = \spt(d)$ and $x=\ept(d)$. In the first scenario, we conclude directly.
-  Otherwise we conclude using the dart $d' = \symm(d)$, which satisfies $\spt(d')=x$ and
-  $\ept(d')=y$.
-\end{proof}
-
-\begin{definition}
-  \label{def:dartset_pair}
-  Let $x$, $y$ be vertices.
-  We define the dartset of $(x,y)$ as
-  \begin{equation*}
-    \dartset(x,y)
-    = \{ d \in D(G) : \spt(d) = x, \ept(d) = y\}.
-  \end{equation*}
-\end{definition}
-
-\begin{lemma}
-  \label{lem:edge_map_darset}
+  \label{lem:edge_range_of_darset}
+  \uses{lem:edge_preimage,def:dartset_pair}
   Let $x,y \in V(G)$.
-  The image of the restriction of $\edge$ to $\dartset(x,y)$
-  is the set $\{e \in E(G) : e \text{ links } x, y\}$.
+  The range of the restriction of the function $\edge$
+  to $\dartset(x,y)$
+  is exactly the set $\{e \in E(G) : e \text{ links } x, y\}$.
   Furthermore, this map is $1$-to-$1$ if $x \neq y$ and $2$-to-$1$ if $x=y$.
 \end{lemma}
 
 \begin{proof}
   Let $d \in \dartset(x,y)$. Then, $\edge(d) \in E(G)$ links $\spt(d)=x$
-  and $\ept(d)=y$ by definition of darts. So $\edge(d)$ belongs in the claimed set.
+  and $\ept(d)=y$. So $\edge(d)$ belongs in the claimed set.
 
-  Now take $e \in E(G)$ linking $x$ and $y$. By Lemma \ref{lem:darts_of_edge},
+  Now take $e \in E(G)$ linking $x$ and $y$. By Lemma \ref{lem:edge_preimage},
   there exists $d \in D(G)$ such that $\edge^{-1}(\{e\}) = \{d, \symm(d)\}$.
   We check that $d$ or $\symm(d)$ belongs in $\dartset(x,y)$, and that
   both of them do iff $x=y$, which leads to the claim.
 \end{proof}
 
-\subsection{Notions of finiteness}
+\subsection{Subgraphs}
+
+The definition of subgraph is easier for Graph as the vertexset is just a subset.
+
+\begin{definition}
+  \label{def:subgraph}
+  A \emph{subgraph} $H$ of $G$ is a graph (ofthe same type as $G$) defined by:
+  \begin{itemize}
+    \item a vertex set $V(H)$ included in the vextex set of $G$
+    \item an edge set $E(H)$ included in the edge set of $H$
+    \item the same $\islink$ relation, i.e. if $e$ links $x$ and $y$ in $H$ then it
+    also links $x$ and $y$ in $G$.
+  \end{itemize}
+\end{definition}
+
+\begin{lemma}
+  \label{lem:subgraph_adj_graph}
+  \uses{def:subgraph}
+  Let $H$ be a subgraph of $G$.
+  For any $x$, $y$ in $V(H)$, if $x$ and $y$ are adjacent for $H$, then they are
+  adjacent for $G$.
+\end{lemma}
+
+\begin{definition}
+  \label{def:max_subgraph,def:min_subgraph}
+  \uses{def:subgraph}
+  We define the \emph{union}, resp. \emph{intersection} of two subgraphs by taking the union of
+  their respective vertex sets and edge sets.
+\end{definition}
+
+\begin{definition}
+  \label{def:isinduced}
+  \uses{def:subgraph}
+  A subgraph $H$ of $G$ is \emph{induced} if, for any $x, y \in V(H)$, for any $e \in E(G)$,
+  if $e$ links $x$ and $y$ in $G$, then $e \in E(H)$.
+\end{definition}
+
+\begin{definition}
+  \label{def:induced_subgraph}
+  \uses{def:subgraph}
+  Let $U$ be a subset of $V(G)$. Then we define a subgraph $H$ induced by $U$ by letting:
+  \begin{itemize}
+    \item $V(H) := U$;
+    \item $E(H) := \{ e \in E(G) : \text{ both endpoints of }e \text{ lie in } U\}$.
+  \end{itemize}
+\end{definition}
+
+\begin{lemma}
+  \label{lem:induced_iff_isinduced}
+  \uses{def:isinduced,def:induced_subgraph}
+  A subgraph is induced iff it is induced from as subset of $V(G)$.
+\end{lemma}
+
+\subsection{Walks and reachability}
+
+We define a notion of walk on the graph.
+
+\begin{definition}
+  \label{def:walk}
+  Let $x, y \in V(G)$. A \emph{walk} from $x$ to $y$ on $G$ is given by two finite lists:
+  \begin{itemize}
+    \item a list $(v_i)_{0 \leq i \leq m}$ of vertices in $V(G)$;
+    \item a list $(e_i)_{1 \leq i \leq m}$ of edges in $E(G)$;
+  \end{itemize}
+  satisfying the following:
+    \begin{itemize}
+      \item $v_0=x$ and $v_m=y$;
+      \item for any $i \in \{1, \ldots, m\}$, $e_i$ links $v_{i-1}$ and $v_i$.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}
+  \label{def:length}
+  \uses{def:walk}
+  The \emph{length} of a walk is its number of edges.
+\end{definition}
+
+\begin{definition}
+  \label{def:reachable}
+  \uses{def:walk}
+  We define a binary relation on $V(G)$ by: $x \sim y$ if there exists a walk
+  from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{reachable}.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:reachable_is_equivalence}
+  \uses{def:reachable}
+  The reachability relation is an equivalence relation on $V(G)$.
+\end{proposition}
+
+\begin{proof}
+  The reachability relation is reflexive: $x \sim x$ for any $x \in V(G)$.
+  Indeed, let $x \in V(G)$. We take $m=0$ and set $v_0=x$. Then this is a walk from
+  $x$ to $x$ on $G$.
+
+  The reachability relation is symmetric: if $x \sim y$ then  $y \sim x$.
+  Let $x$, $y$ be two vertices. We assume $x \sim y$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
+  be a walk from $x$ to $y$. Then $(v_{m-i})_{0 \leq i \leq m}$ and $(e_{m+1-i})_{1 \leq i \leq m}$
+  is a walk from $y$ to $x$. So $y \sim x$.
+
+  The reachability relation is transitive: if $x \sim y$ and $y \sim z$ then
+  $x \sim z$.
+  Assume $x \sim y$ and $y \sim z$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
+  be a walk from $x$ to $y$ and $(v_i')_{0 \leq i \leq m'}$, $(e_i')_{1 \leq i \leq m'}$
+  be a walk from $y$ to $z$.
+  We let $m''=m+m'$ and define for $i \in \{0, \ldots, m'\}$
+  \begin{equation}
+    v_i'' := \begin{cases}
+      v_i & \text{if } i \leq m \\
+      v_{i-m-1}' & \text{otherwise}
+    \end{cases}
+  \end{equation}
+ and for $i \in \{1, \ldots, m'\}$
+   \begin{equation}
+    e_i'' := \begin{cases}
+      e_i & \text{if } i \leq m \\
+      e_{i-m}' & \text{otherwise}.
+    \end{cases}
+  \end{equation}
+  Then this is a walk from $x$ to $z$, hence $x \sim z$.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:adj_towalk}
+  \uses{def:reachable}
+  Let $x$, $y$ in $V(G)$. If $x$ and $y$ are adjacent then $x$ and $y$ are reachable.
+\end{lemma}
+
+\begin{proof}
+  By definition of adjacency, there exists an edge $e \in E(G)$ linking $x$ and $y$.
+  Then the walk $(x, y)$ and $(e)$ is a walk from $x$ to $y$.
+\end{proof}
+
+
+\subsection{Connectedness}
+
+We define the notion of connectedness and the connected components of a graph.
+
+\begin{definition}
+  \label{def:preconnected}
+  \uses{def:reachable}
+  A graph is \emph{preconnected} if any pair of vertices is reachable.
+\end{definition}
+
+\begin{definition}
+  \label{def:connected}
+    \uses{def:preconnected}
+  The graph $G$ is \emph{connected} if it is preconnected and $V(G)$ is not empty.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:connected_iff_exists_forall_reachable}
+  \uses{def:connected}
+  The graph $G$ is connected if and only if there exists $x \in V(G)$ such that,
+  for all $y \in V(G)$, $x$ and $y$ are reachable.
+\end{lemma}
+
+\begin{definition}
+  \label{def:connected_component}
+  \uses{prop:reachable_is_equivalence}
+  A \emph{connected component} of $G$ is an equivalence class of $V(G)$ for
+  the relation reachable.
+\end{definition}
+
+\begin{definition}
+  \label{def:connected_component_Mk}
+  \uses{def:connected_component}
+  For any vertex $x$, we define $\ccm(x)$ to be the unique connected component
+  of $G$ containing $x$.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:cc_eq}
+  \uses{def:connected_component_Mk}
+  Let $x, y \in V(G)$. Then $\ccm(x) = \ccm(y)$ iff $x$ and $y$ are reachable.
+\end{lemma}
+
+\begin{theorem}
+  \label{thm:cc_is_connected}
+  \uses{def:induced_subgraph,def:connected,def:connected_component}
+  Let $C$ be a connected component of $G$. Then the subgraph induced by $C$ is connected.
+\end{theorem}
+
+\begin{definition}
+  \label{def:set_cc}
+  \uses{def:connected_component}
+  We denote as $\cc(G)$ the set of connected components of $G$.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:cc_is_partition}
+  \uses{def:set_cc}
+  $\cc(G)$ is a partition of $V(G)$.
+\end{proposition}
+
+\begin{lemma}
+  \label{lem:bound_cc}
+  \uses{prop:cc_is_partition}
+  If $V(G)$ is finite, then $\cc(G)$ is finite and $\#V(G) \leq \# \cc(G)$.
+\end{lemma}
+
+
+\subsection{Locally finite graph, degree and regularity}
 
 \begin{definition}
   \label{def:locally_finite_at}
+  \uses{def:dartset}
   Let $x$ be a vertex of $G$.
   We say $G$ is \emph{locally finite at $x$} if $\dartset (x)$ is finite.
 \end{definition}
@@ -362,36 +362,6 @@ We define the notion of connectedness and the connected components of a graph.
 \end{definition}
 
 \begin{definition}
-  \label{def:finite}
-  We say $G$ is \emph{finite} if $V(G)$ and $E(G)$ are both finite.
-\end{definition}
-
-\begin{lemma}
-  \label{lem:all_l2_finite}
-  Assume $V(G)$ is finite. Then any function $V(G) \rightarrow \C$ is in $\ell^2(G)$.
-\end{lemma}
-
-\begin{lemma}
-  \label{lem:bound_number_cc}
-  \uses{prop:cc_is_partition}
-  If $V(G)$ is finite, then its number of connected components is finite and at most $\# V(G)$.
-\end{lemma}
-
-\begin{proof}
-  This follows from Proposition \ref{prop:cc_is_partition}
-  and the fact that the number of elements in a partition of a finite set is at most its cardinal.
-\end{proof}
-
-% \begin{proposition}
-%   \label{def:finite_vs_locally_finite}
-%   \uses{def:finite,def:locally_finite}
-%   $G$ is finite if and only if $V(G)$ is finite and $G$ is locally finite.
-% \end{proposition}
-
-
-\subsection{Degree and regularity}
-
-\begin{definition}
   \label{def:degree}
   \uses{def:locally_finite_at}
   Let $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
@@ -400,7 +370,7 @@ We define the notion of connectedness and the connected components of a graph.
 
 \begin{lemma}
   \label{lem:degree_inc_loop}
-  \uses{def:degree,lem:edge_map_darset}
+  \uses{def:degree,lem:edge_range_of_darset}
   Let $x \in V(G)$.
   $G$ is locally finite at $x$ iff $\incset(x)$ is finite, and in this case,
   \begin{equation*}
@@ -409,7 +379,7 @@ We define the notion of connectedness and the connected components of a graph.
 \end{lemma}
 
 \begin{proof}
-  Using Lemma \ref{lem:edge_map_darset},
+  Using Lemma \ref{lem:edge_range_of_darset},
   \begin{align*}
     \deg(x)
     & = \sum_{y \in V(G)} \# \dartset(x,y) \\
@@ -425,10 +395,16 @@ We define the notion of connectedness and the connected components of a graph.
 \begin{definition}
   \label{def:regular}
   \uses{def:locally_finite, def:degree}
-  Let $d$ be a non-negative integer.
+  Let $\delta$ be a non-negative integer.
   We say $G$ is \emph{regular of degree $\delta$} if it is not empty, locally finite and,
   for every $x \in V(G)$, $\deg (x) = \delta$.
 \end{definition}
+
+\begin{lemma}
+  \label{lem:regular_zero}
+  \uses{def:regular}
+  The graph $G$ is regular of degree $0$ iff $E(G)=\emptyset$.
+\end{lemma}
 
 \begin{definition}
   \label{def:locally_bounded}
@@ -437,6 +413,36 @@ We define the notion of connectedness and the connected components of a graph.
   it is locally finite and there exists a constant $D$ such that,
   for all $x \in V(G)$, $\deg(x) \leq D$.
 \end{definition}
+
+
+\subsection{Colorings and bipartiteness}
+
+Not ready, needs to be written in a compatible way with SimpleGraph.
+
+\begin{definition}
+  \label{def:bipartite}
+  The graph $G$ is \emph{bipartite} if there exists a partition $U_1$,
+  $U_2$ of $V(G)$ such that, for all $e \in E(G)$, $e$ links an element of $U_1$
+  and an element of $U_2$.
+\end{definition}
+
+\section{Space of functions on a graph}
+
+Let $G$ be a graph.
+
+Throughout this blueprint, we will be interested in the space $\C^{V(G)}$
+of functions $V(G) \rightarrow \C$. This space is a $\C$ vectorial space. Note that, in this
+context, $0$ is the constant function equal to~$0$.
+
+For the purpose of analysis, we will be interested in the Hilbert space $\ell^2(G) := \ell^2(V(G))$,
+which is defined as the set of functions $f : V(G) \rightarrow \C$ which are square-summable,
+equipped with the inner product
+$$\langle f, g \rangle = \sum_{x \in V(G)} f(x) \overline{g(x)}.$$
+Note that, whenever $V(G)$ is finite, $\ell^2(G) = \C^{V(G)}$ as any finite sequence is
+square-summable.
+The space $\B(\ell^2(G))$ of bounded linear operators on $\ell^2(G)$ is a unital $\C^*$-algebra.
+
+Let us introduce several useful families of functions.
 
 \subsection{Constant fonctions}
 
@@ -459,32 +465,33 @@ We define the notion of connectedness and the connected components of a graph.
 \end{definition}
 
 \begin{lemma}
-  \label{lem:constant_neq_zero}
-  \uses{def:empty,def:constant_one}
-  Assume $G$ is not empty. Then the constant function $\const$ is not equal to $0$.
+  \label{lem:one_neq_zero}
+  \uses{def:constant_one}
+  Assume $V(G)$ is not empty. Then $\const \neq 0$.
 \end{lemma}
 
 \begin{proof}
-  If $G$ is not empty, then by Definition \ref{def:empty}, there exists $x \in V(G)$.
-  Then $\const (x) = 1 \neq 0$, and hence $\const$ is not equal to the constant function $0$.
+  If $V(G)$ is not empty, then there exists $x \in V(G)$.
+  Then $\const (x) = 1 \neq 0$, and hence $\const \neq 0$.
 \end{proof}
 
 \begin{theorem}
   \label{thm:space_constant}
   \uses{def:constant_function,def:constant_one}
-  Assume $G$ is not empty. Then the space of constant functions is
-  a vectorial space of dimension $1$, generated by $\const$.
+  Assume $V(G)$ is not empty. Then the space of constant functions is
+  a vectorial subspace of $\C^{V(G)}$, of dimension $1$, generated by $\const$.
 \end{theorem}
 
 \begin{proof}
   We directly check that:
   \begin{itemize}
-    \item the constant function equal to $0$ is locally constant;
-    \item for any locally constant functions $f_1$, $f_2$ and any $\lambda \in \C$,
-    the function $f_1+cf_2$ is also locally constant;
+    \item the constant function equal to $0$ is constant;
+    \item for any constant functions $f_1$, $f_2$ and any $c \in \C$,
+    the function $f_1+cf_2$ is also constant;
   \end{itemize}
   both by direct application of the definition.
-  This space contains the function $\const$.
+  We also check that the function $\const$ is constant.
+
   Let $f : V(G) \rightarrow \C$ be a constant function. Since $V(G)$ is not
   empty there exists $x \in V(G)$. Then for all $y \in V(G), f(y) = f(x) \const(y)$,
   so $f = f(x) \const$, which allows to conclude.
@@ -497,10 +504,32 @@ We define the notion of connectedness and the connected components of a graph.
   if and only if $V(G)$ is finite.
 \end{lemma}
 
-\begin{proof}
-  This is simply the fact that
-  non-zero constant sequences are summable if and only if the set is finite.
-\end{proof}
+\subsection{Indicator functions}
+
+\begin{definition}
+  \label{def:indicator_function}
+  Let $U$ be a subset of $V(G)$. We define the \emph{indicator function}
+  $\const_U : V(G) \rightarrow \C$ by
+  \begin{equation}
+    \const_U (x) =
+    \begin{cases}
+      1 & \text{if } x \in U \\
+      0 & \text{otherwise}.
+    \end{cases}
+  \end{equation}
+\end{definition}
+
+\begin{lemma}
+  \label{lem:indicator_ell2}
+  \uses{def:indicator_function}
+  The indicator function of a set $U$ is in $\ell^2(G)$ iff $U$ is finite.
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:partition_unity}
+  \uses{def:indicator_function}
+  Let $(\pi_U)_{U \in I}$ be a partition of $V(G)$. Then $\const = \sum_{U \in I} \const_U$.
+\end{lemma}
 
 \subsection{Locally constant functions}
 
@@ -510,34 +539,19 @@ We define the notion of connectedness and the connected components of a graph.
   if, for all $x,y \in V(G)$, if $x$ is adjacent to $y$, then $f(x)=f(y)$.
 \end{definition}
 
+We have the following dart versions of the definition.
+
 \begin{lemma}
   \label{lem:dart_locally_constant}
-  \uses{def:locally_constant,lem:darts_end_adj}
-  The function $f$ is locally constant $\Leftrightarrow$
-  for every $d \in D(G)$,
-  $f(\spt(d))=f(\ept(d))$
-  $\Leftrightarrow$
-  for every $x \in V(G)$,
-  for every $d \in \dartset(x)$,
-  $f(x)=f(\ept(d))$.
+  \uses{def:locally_constant,lem:adjacent_vs_dart}
+  Let $f : V(G) \rightarrow \C$. The following are equivalent:
+  \begin{enumerate}
+    \item  $f$ is locally constant;
+    \item for every $x \in V(G)$, for every $d \in \dartset(x)$,
+    $f(x)=f(\ept(d))$.
+    \item for every $d \in D(G)$, $f(\spt(d))=f(\ept(d))$.
+  \end{enumerate}
 \end{lemma}
-
-\begin{lemma}
-  \label{lem:locally_constant_vector_space}
-  \uses{def:locally_constant}
-  The space of locally constant functions is a vectorial subspace of
-  the space of functions $V(G) \rightarrow \C$.
-\end{lemma}
-
-\begin{proof}
-  We directly check that:
-  \begin{itemize}
-    \item the constant function equal to $0$ is locally constant;
-    \item for any locally constant functions $f_1$, $f_2$ and any $\lambda \in \C$,
-    the function $f_1+cf_2$ is also locally constant;
-  \end{itemize}
-  both by direct application of the definition.
-\end{proof}
 
 \begin{lemma}
   \label{lem:locally_constant_walk}
@@ -578,102 +592,76 @@ We define the notion of connectedness and the connected components of a graph.
   $x$ and $y$ are also adjacent in $G$. Then $f(x)=f(y)$.
 \end{proof}
 
-\begin{lemma}
-  \label{lem:locally_constant_cc}
+\begin{theorem}
+  \label{thm:locally_constant_cc}
   \uses{lem:locally_constant_subgraph,thm:cc_is_connected,
-  lem:locally_constant_preconnected,thm:cc_eq}
+  lem:locally_constant_preconnected,lem:cc_eq}
   A function $f$ is locally constant if and only if its restriction to each
   connected component is a constant function.
-\end{lemma}
+\end{theorem}
 
 \begin{proof}
   Assume $f$ is locally constant. Let $C$ be a connected component of $G$.
   By Lemma \ref{lem:locally_constant_subgraph}, the restriction of $f$ to $C$
   is locally constant.
   By Theorem \ref{thm:cc_is_connected}, $C$ is preconnected.
-  So by Lemma \ref{lem:locally_constant_preconnected}, it is constant.
+  So by Lemma \ref{lem:locally_constant_preconnected}, the restriction of $f$ to $C$
+  is constant.
 
   Assume the restriction of $f$ to each connected component is constant.
-  Let $x$, $y$ be adjacent vertices. Then by Theorem \ref{thm:cc_eq},
-  $\ccm(x) = \ccm(y)$ which allows to conclude since $f$ is constant on $\ccm(x)$
+  Let $x$, $y$ be adjacent vertices. Then by Lemma \ref{lem:cc_eq},
+  $\ccm(x) = \ccm(y)$ which implies that $y \in \ccm(x)$. This allows to conclude
+  since $f$ is constant on $\ccm(x)$
   by hypothesis and Theorem \ref{thm:cc_is_connected}.
 \end{proof}
 
-\begin{definition}
-  \label{def:indicator_function}
-  Let $U$ be a subset of $V(G)$. We define the \emph{indicator function}
-  $\const_U : V(G) \rightarrow \C$ by
-  \begin{equation}
-    \const_U (x) =
-    \begin{cases}
-      1 & \text{if } x \in U \\
-      0 & \text{otherwise}.
-    \end{cases}
-  \end{equation}
-\end{definition}
-
 \begin{lemma}
   \label{lem:indicator_cc_loc_const}
-  \uses{def:locally_constant,def:indicator_function}
+  \uses{thm:locally_constant_cc,def:indicator_function}
   The indicator function of a connected component is locally constant.
 \end{lemma}
 
 \begin{lemma}
-  \label{lem:partition_unity_cc}
-  \uses{prop:cc_is_partition,def:indicator_function}
-  We have $$\const = \sum_{C \in \cc(G)} \const_C.$$
+  \label{thm:locally_constant_vector_space,thm:locally_constant_basis}
+  \uses{lem:indicator_cc_loc_const}
+  The space of locally constant functions is a vectorial subspace of
+  the space of functions $V(G) \rightarrow \C$, and the $\{\const_C, C \in \cc(G)\}$
+  are a basis of this space.
 \end{lemma}
 
 \begin{proof}
-  Let $x \in V(G)$.
-  By Lemma \ref{lem:partition_unity_cc}, there exists a unique
-  connected component of $G$ containing $x$.
-  Hence, $\sum_{C \in \cc(G)} \const_C(x)=1$.
-\end{proof}
+  We directly check that:
+  \begin{itemize}
+    \item the constant function equal to $0$ is locally constant;
+    \item for any locally constant functions $f_1$, $f_2$ and any $c \in \C$,
+    the function $f_1+cf_2$ is also locally constant;
+  \end{itemize}
+  both by direct application of the definition.
 
-\begin{proposition}
-  \label{prop:basis_locally_constant}
-  \uses{lem:locally_constant_cc,lem:partition_unity_cc}
-  The family $\{\const_C, C \in \cc(G)\}$ is a basis
-  of the space of locally constant functions.
-\end{proposition}
-
-\begin{proof}
-  First,  for any connected component $C$, $\const_C$ is locally
+  Now, for any connected component $C$, $\const_C$ is locally
   constant by Lemma \ref{lem:indicator_cc_loc_const}.
 
-  Let $f$ be a locally constant function.
-  We have by Lemma \ref{lem:partition_unity_cc}, for any $x \in V(G)$,
+  We prove these functions form a basis using the fact that, by
+  Proposition \ref{prop:cc_is_partition} and Lemma \ref{lem:partition_unity},
   \begin{equation*}
+    \const = \sum_{C \in \cc(G)} \const_C
+  \end{equation*}
+  and hence if $f$ is locally constant,
+    \begin{equation*}
+      \forall x \in V(G),
     f(x) = \sum_{C \in \cc(G)} f(x) \const_C(x).
   \end{equation*}
-  By Lemma \ref{lem:locally_constant_cc}, for every connected component $C$,
-  there exists a constant $c_C$ such that, for all $x \in C$, $f(x)=c_C$
-  (take $c_C$ to be $f(y_C)$ for a $y_C \in C$, which exists as $C$ is not empty).
-  Then
-    \begin{equation*}
-    f(x) = \sum_{C \in \cc(G)} c_C \const_C(x)
-  \end{equation*}
-  which means that $f = \sum_{C \in \cc(G)} c_C \const_C$.
+  The function $f$ is constant on each connected component so this is a decomposition
+  in the desired basis. The decomposition is unique as for all $x \in V(G)$, the coefficient
+  associated to $\ccm(x)$ must be $f(x)$ since $\const_C(x)=0$ for all other connected component.
 \end{proof}
 
 \begin{corollary}
   \label{cor:dimension_locally_constant}
-  \uses{prop:basis_locally_constant}
+  \uses{thm:locally_constant_basis}
   The dimension of the space of locally constant functions is the number of
   connected components of $G$.
 \end{corollary}
-
-\subsection{Colorings and bipartiteness}
-
-Not ready, needs to be written in a compatible way with SimpleGraph.
-
-\begin{definition}
-  \label{def:bipartite}
-  The graph $G$ is \emph{bipartite} if there exists a partition $U_1$,
-  $U_2$ of $V(G)$ such that, for all $e \in E(G)$, $e$ links an element of $U_1$
-  and an element of $U_2$.
-\end{definition}
 
 \section{Adjacency operator}
 
@@ -685,7 +673,7 @@ Assume $G$ is locally finite.
 
 \begin{definition}
   \label{def:adjacency_operator}
-  \uses{def:locally_finite}
+  \uses{def:locally_finite,def:dartset}
   We define the adjacency operator $a$ as the linear operator acting on the space of
   functions $f : V(G) \rightarrow \C$ by
   $$ a f (x) :=
@@ -695,7 +683,7 @@ Assume $G$ is locally finite.
 
 \begin{lemma}
   \label{lem:adjacency_locally_constant}
-  \uses{def:locally_constant,def:adjacency_operator,lem:darts_end_adj,def:degree}
+  \uses{def:locally_constant,def:adjacency_operator,lem:adjacent_vs_dart,def:degree}
   Let $f$ be a locally constant function. Then, for all $x \in V(G)$,
   $af(x) = \deg(x) f(x)$.
 \end{lemma}
@@ -706,7 +694,7 @@ Assume $G$ is locally finite.
   \begin{equation*}
     af(x) = \sum_{d \in \dartset(x)} f(\ept(d)).
   \end{equation*}
-  By Lemma \ref{lem:darts_end_adj},
+  By Lemma \ref{lem:adjacent_vs_dart},
   for all $d \in \dartset(x)$, $\ept(d)$ is adjacent to $x$
   and in particular $f(\ept(d))=f(x)$. This leads to the conclusion by
   Definition \ref{def:degree}.
@@ -751,7 +739,7 @@ Here is a key lemma.
   By Definition \ref{def:adjacency_operator},
   \begin{equation}
     |af(x)|^2
-    = \left| \sum_{d \in \dartset(x)} f(\ept(d))\right|^2.
+    = \Big| \sum_{d \in \dartset(x)} f(\ept(d))\Big|^2.
   \end{equation}
   By the Cauchy-Schwarz inequality applied to the complex vectors
   $v_1 := (1)_{d \in \dartset(x)}$ and $v_2 := (f(\ept(d)))_{d \in \dartset(x)}$
@@ -771,7 +759,7 @@ Here is a key lemma.
   and only if the vectors $v_1$ and $v_2$
   are colinear, which
   is equivalent to the announced condition as $v_1$ is a non-zero constant vector,
-  using Lemma \ref{lem:darts_end_adj}.
+  using Lemma \ref{lem:adjacent_vs_dart}.
 \end{proof}
 
 Then Proposition \ref{thm:norm_adjacency_leq_sup_degree} is a trivial consequence of the
@@ -785,7 +773,8 @@ following lemma, together with the definition of bounded operator and operator n
   \begin{equation}
     \|a f\| \leq \sup_{x \in V(G)} \deg(x) \times \|f\|.
   \end{equation}
-  Furthermore, the equality occurs if and only if $G$ is regular
+  Furthermore, the equality occurs if and only if $G$ is regular of degree $\delta$ for some
+  non-negative integer $\delta$
   and, for any $x \in V(G)$, for any $y$ and $z$ adjacent to $x$, $f(y)=f(z)$.
 \end{lemma}
 
@@ -831,6 +820,8 @@ Let $G$ be a locally bounded graph.
   \uses{lem:scalar_of_adjacency}
   The adjacency operator is selfadjoint.
 \end{proposition}
+
+Here is the key lemma.
 
 \begin{lemma}
   \label{lem:scalar_of_adjacency}
@@ -878,9 +869,9 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
   Hence by Lemma \ref{lem:scalar_of_adjacency}
   \begin{equation*}
     \langle af, g \rangle
-    = \overline{\langle ag, f \rangle} = \langle f, ag \rangle
+    = \overline{\langle ag, f \rangle} = \langle f, ag \rangle.
   \end{equation*}
-  by inner\_conj\_symm. This means that $a^*=a$ by definition of
+  This means that $a^*=a$ by definition of
   the adjoint, which means $a$ is self-adjoint by definition.
 \end{proof}
 
@@ -909,231 +900,3 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
   radius $\|a\|$.
   We have $\|a\| \leq D$ by Theorem \ref{thm:norm_adjacency_leq_sup_degree}.
 \end{proof}
-
-\subsection{The case of regular graphs}
-
-Let $\delta$ be a non-negative integer.
-
-\begin{lemma}
-  \label{lem:adjacency_of_constant_regular}
-  \uses{lem:adjacency_of_constant,def:regular}
-  Assume $G$ is not empty and locally finite. Then
-  $G$ is regular of degree $\delta$ iff $a \const = \delta \const$.
-\end{lemma}
-
-\begin{proof}
-  By Definition \ref{def:regular},
-  $G$ is regular of degree $\delta$ if and only if for all $x \in V(G)$,
-  $\deg(x)=\delta$.
-  By Lemma \ref{lem:adjacency_of_constant}, this is equivalent to
-  having, for all $x \in V(G)$, $a \const (x) = \delta$, which is equivalent to
-  $a \const = \delta \const$ by Definition \ref{def:constant_one}.
-\end{proof}
-
-\begin{lemma}
-  \label{lem:norm_adjacency_regular_leq_degree}
-  \uses{lem:bound_a_sup_degree}
-  If $G$ is regular of degree $\delta$, then $\| a \| \leq \delta$.
-\end{lemma}
-
-\begin{proof}
-  This is simply Proposition \ref{thm:norm_adjacency_leq_sup_degree}.
-\end{proof}
-
-\begin{lemma}
-  \label{lem:spectrum_regular_in_segment}
-  \uses{lem:spectrum_in_segment}
-  If $G$ is regular of degree $\delta$, then the spectrum of $a$ is included in the
-  segment $[-\delta,\delta]$.
-\end{lemma}
-
-\begin{proof}
-  This is simply Lemma \ref{lem:spectrum_in_segment}.
-\end{proof}
-
-\subsection{The case of finite regular graphs}
-
-Let $\delta$ be a non-negative integer.
-
-\begin{lemma}
-  \label{lem:constant_eigenfunction_regular}
-  \uses{lem:constant_is_l2,lem:constant_neq_zero,lem:adjacency_of_constant_regular}
-  Assume $G$ is regular of degree $\delta$ and finite. Then
-  $\delta$ is an eigenvalue of the adjacency
-  operator with associated eigenfunction the constant function $\const$.
-\end{lemma}
-
-\begin{proof}
-  Since $G$ is finite, $\const \in \ell^2(G)$ by Lemma \ref{lem:constant_is_l2}.
-  Furthermore, $\const \neq 0$ by Lemma \ref{lem:constant_neq_zero}
-  and since $G$ is not empty by Definition \ref{def:regular}.
-  By Lemma \ref{lem:adjacency_of_constant_regular}, if $G$ is regular of degree $\delta$,
-  then $a \const = \delta \const$.  We conclude by the definition of eigenvalue and eigenvector.
-\end{proof}
-
-\begin{proposition}
-  \label{prop:norm_adjacency_regular}
-  \uses{lem:norm_adjacency_regular_leq_degree,lem:constant_eigenfunction_regular}
-  If $G$ is finite and regular of degree $\delta$, then $\|a\|=\delta$.
-\end{proposition}
-
-\begin{proof}
-  Since $G$ is regular of degree $\delta$, by
-  Lemma \ref{lem:norm_adjacency_regular_leq_degree}, $\|a \| \leq \delta$.
-  By Lemma \ref{lem:constant_eigenfunction_regular}, $\delta$ is an eigenvalue of $a$
-  and hence $\|a\| \geq \delta$,
-  which is enough to conclude.
-\end{proof}
-
-\begin{proposition}
-  \label{prop:regular_multiplicity_trivial_eigenvalue}
-  \uses{prop:basis_locally_constant,lem:adjacency_locally_constant}
-    Assume $G$ is finite and regular of degree $\delta$. Then the multiplicity of the
-  eigenvalue $\delta$ is exactly the number of connected components of $G$.
-\end{proposition}
-
-\begin{proof}
-  We treat differently the case $\delta=0$, where $a$ is identically equal to $0$
-  and every function $V(G) \rightarrow \C$ is in the kernel of $a$, and
-  hence the result holds since the connected components of $G$ are all the
-  $\{x\}$ for $x \in V(G)$. Now assume $\delta \neq 0$.
-
-  Lemma \ref{lem:adjacency_locally_constant} implies that all locally constant
-  functions are included in the eigenspace associated to the eigenvalue $\delta$.
-  Let us show the other inclusion.
-  Assume $f$ is such that $af=\delta f$. In particular, $\|af\|=\delta\|f\|$ and hence
-  by the equality case in Lemma \ref{lem:bound_a_sup_degree},
-  \begin{equation*}
-    \forall x \in V(G), \forall y, z \text{ adjacent to } x,
-    f(y)=f(z).
-  \end{equation*}
-  In particular
-  \begin{equation*}
-    \delta f(x) = af(x) = \sum_{d \in D(G)} f(\ept(d)).
-  \end{equation*}
-  Note that this sum contains $\delta$ terms and,
-   for all $d,d' \in \dartset(x)$, $f(\ept(d))=f(\ept(d'))$
-  so all of its terms are equal.
-  Since $\delta \neq 0$, we obtain
-  that, for all $d, d' \in \dartset(G)$, $f(\ept(d'))=f(\ept(d))$,
-  i.e. $f$ is locally constant.
-
-  By Proposition \ref{prop:basis_locally_constant},
-  the dimension of the space of locally constant functions
-   is exactly the number of connected components of $G$,
-  which allows to conclude.
-\end{proof}
-
-\begin{proposition}
-  \label{prop:eigenvalue_regular_bipartite}
-  \uses{def:bipartite,def:indicator_function,lem:all_l2_finite}
-  Assume $G$ is finite, regular of degree $\delta \geq 1$. Then
-  $-\delta$ is an eigenvalue of $a$ if and only if $G$ has a bipartite connected
-  component.
-\end{proposition}
-
-\begin{proof}
- todo
-\end{proof}
-
-\subsection{Finite graphs}
-
-Let $G$ be a finite graph.
-Since $V(G)$ is finite, we can identify $\ell^2(G)$ with $\C^{V(G)}$
-by Lemma \ref{lem:all_l2_finite}.
-
-\begin{definition}
-  \label{def:adjacency_matrix}
-  \uses{def:finite,def:adjacency_operator}
-  The \emph{adjacency matrix} $A$ of $G$ is defined as the matrix of the adjacency operator
-  $a : \C^{V(G)} \rightarrow \C^{V(G)}$.
-\end{definition}
-
-\begin{theorem}
-  \label{thm:adjacency_coeffs}
-  \uses{def:adjacency_matrix,def:dartset_pair}
-  Let $x, y \in V(G)$. Then, $A_{x,y} = \# \dartset(x,y)$.
-\end{theorem}
-
-\begin{proof}
-  We denote as $v_x = \const_{\{x\}}$ and $v_y = \const_{\{y\}}$ the vectors equal to $0$
-  everywhere except at $x$, $y$ respectively, where they are equal to $1$.
-  By definition,
-\begin{equation*}
-    A_{x,y} = a v_y(x) = \sum_{d \in \dartset(x)} v_y(\ept(d))
-\end{equation*}
-which leads to the conclusion.
-\end{proof}
-
-\begin{lemma}
-  \label{lemm:A_integer}
-  \uses{thm:adjacency_coeffs,lem:edge_map_darset}
-  The coefficients of $A$ are non-negative integers, and the diagonal coefficients even.
-\end{lemma}
-
-\begin{proof}
-  The fact that they are non-negative integer comes from their description as
-  the cardinal of a set.
-  For $x \in V(G)$, by Lemma \ref{lem:edge_map_darset},
-  $A_{x,x} = 2 \# \loopset(x)$ and in particular it is even.
-\end{proof}
-
-\begin{lemma}
-  \label{lem:A_symmetric}
-  \uses{prop:adjacency_is_selfadjoint,def:adjacency_matrix}
-  The adjacency matrix is symmetric: ${}^t A = A$.
-\end{lemma}
-
-\begin{proof}
-  It is real valued by Lemma \ref{lemm:A_integer} and self-adjoint by Proposition
-  \ref{prop:adjacency_is_selfadjoint}, hence symmetric.
-\end{proof}
-
-\begin{definition}
-  \label{def:space_adj_matrix}
-  We define the space of adjacency matrices on $V(G)$ as the space of matrices
-  $A \in \mathcal{M}_{V(G)}(\C)$ such that:
-  \begin{itemize}
-    \item all coefficients of $A$ are non-negative integers;
-    \item the diagonal coefficients are even;
-    \item $A$ is symmetric.
-  \end{itemize}
-\end{definition}
-
-\begin{lemma}
-  \label{lem:space_adj_matrix}
-  \uses{def:space_adj_matrix}
-  The space of adjacency matrices on $V(G)$ is a subset
-  of $\mathcal{M}_{V(G)}(\C)$ stable by addition.
-\end{lemma}
-
-\begin{proof}
-  The sum of two non-negative integers is a non-negative integer,
-  the sum of two even integers is even, and the sum of two symmetric
-  matrices is symmetric.
-\end{proof}
-
-\begin{definition}
-  \label{def:graph_of_matrix}
-  \uses{def:space_adj_matrix}
-  Let $A$ be a matrix as in Definition \ref{def:space_adj_matrix}.
-  We associate a graph $G$ to $A$ by taking:
-  \begin{itemize}
-    \item $V(G)$ as the vertex set;
-    \item $E(G)$ to be the set of symmetric pairs
-    $(x,y) \in \mathrm{Sym2}(V(G))$ and integers $i \geq 0$ with
-    $0 \leq i < A_{x,y}$ if $x \neq y$ and $0 \leq i < A_{x,x}/2$ otherwise;
-    \item so that the edge $e = ((x,y),i)$ links $x$ and $y$.
-  \end{itemize}
-\end{definition}
-
-\begin{lemma}
-  \label{lem:matrix_of_graph_of_matrix}
-  \uses{def:graph_of_matrix}
-  The object constructed in Definition \ref{def:graph_of_matrix} is a graph,
-  and its adjacency matrix is $A$.
-\end{lemma}
-
-\section{Random regular graphs}
-
-Let us define one model of random regular graphs, the permutation model.
