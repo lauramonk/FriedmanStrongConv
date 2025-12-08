@@ -31,11 +31,28 @@ hypotheses as these are fundamental objects that should be added to Mathlib.
 We say $G$ is empty if $V(G) = \emptyset$.
 \end{definition}
 
+The definition of subgraph is easier for Graph as the vertexset is just a subset.
+
 \begin{definition}
-  \label{def:bipartite}
-  The graph $G$ is \emph{bipartite} if there exists a partition $U_1$,
-  $U_2$ of $V(G)$ such that, for all $e \in E(G)$, $e$ links an element of $U_1$
-  and an element of $U_2$.
+  \label{def:subgraph}
+  A \emph{subgraph} $H$ of $G$ is a graph of type $\alpha$ $\beta$ defined by:
+  \begin{itemize}
+    \item a vertexset included in the vextex set of $G$
+    \item an edgeset included in the edge set of $H$
+    \item the same edge links the same vertices.
+  \end{itemize}
+\end{definition}
+
+\begin{definition}
+  \label{def:max_subgraph,def:min_subgraph}
+  We define the \emph{union}, resp. \emph{intersection} of two subgraphs by taking the union of
+  their respective vertexsets and edgesets.
+\end{definition}
+
+\begin{definition}
+  \label{def:isinduced}
+  A subgraph $H$ of $G$ is \emph{induced} if, for any vertex of $H$, any edge of $G$ incident
+  to $x$ is an edge of $H$.
 \end{definition}
 
 We will be interested in the Hilbert space $\ell^2(G) := \ell^2(V(G))$, which is defined as the set of
@@ -491,6 +508,15 @@ We have the following upper bound.
   The dimension of the space of locally constant functions is the number of
   connected components of $G$.
 \end{corollary}
+
+\subsection{Colorings and bipartiteness}
+
+\begin{definition}
+  \label{def:bipartite}
+  The graph $G$ is \emph{bipartite} if there exists a partition $U_1$,
+  $U_2$ of $V(G)$ such that, for all $e \in E(G)$, $e$ links an element of $U_1$
+  and an element of $U_2$.
+\end{definition}
 
 \section{Adjacency operator}
 
