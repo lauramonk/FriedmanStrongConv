@@ -56,6 +56,19 @@ protected theorem Reachable.trans {x y z : α} (hxy : G.Reachable x y) (hyz : G.
 
 variable (G)
 
-/-theorem reachable_is_equivalence : Equivalence G.Reachable :=
-  Equivalence.mk (@Reachable.refl _ G) (@Reachable.symm _ G) (@Reachable.trans _ G)
--/
+theorem reachable_is_equivalence : Equivalence G.Reachable :=
+  Equivalence.mk (@Reachable.refl (G := G)) (@Reachable.symm (G := G)) (@Reachable.trans (G := G))
+
+/-- The equivalence relation on vertices given by `Graph.Reachable`. -/
+def reachableSetoid : Setoid α := Setoid.mk _ G.reachable_is_equivalence
+
+/-- A graph is preconnected if every pair of vertices is reachable from one another. -/
+def Preconnected : Prop := ∀ x y : V(G), G.Reachable x y
+
+/-- A graph is connected if it's preconnected and contains at least one vertex.
+This follows the convention observed by mathlib that something is connected iff it has
+exactly one connected component. -/
+@[mk_iff]
+structure Connected : Prop where
+  protected preconnected : G.Preconnected
+  protected [nonempty : Nonempty V(G)]

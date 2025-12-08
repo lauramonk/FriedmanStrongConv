@@ -48,31 +48,35 @@ Question: should the empty walk be defined for any `x : α` or only if `x ∈ V(
 -/
 
 inductive Walk : α → α → Type (max u v)
-  | nil {x : α} : Walk x x
+  | nil {x : α} (h : x ∈ V(G)) : Walk x x
   | cons {x y z : α} {e : β} (h : G.IsLink e x y) (p : Walk y z) : Walk x z
   deriving DecidableEq
 
 attribute [refl] Walk.nil
 
 @[simps]
-instance Walk.instInhabited (x : α) : Inhabited (G.Walk x x) := ⟨Walk.nil⟩
+instance Walk.instInhabited {x : α} (h : x ∈ V(G)) : Inhabited (G.Walk x x) := ⟨Walk.nil h⟩
 
 /-- The one-edge walk associated to a edge. -/
 @[match_pattern]
 abbrev IsLink.toWalk {G : Graph α β} {x y : α} {e : β} (h : G.IsLink e x y) : G.Walk x y :=
-  Walk.cons h Walk.nil
+  Walk.cons h (Walk.nil h.right_mem)
 
 /-- A one-edge walk associated to a pair of adjacent vertices. -/
 @[match_pattern]
 noncomputable abbrev Adj.toWalk {G : Graph α β} {x y : α} (h : G.Adj x y) : G.Walk x y :=
   h.choose_spec.toWalk
 
+lemma Walk.left_mem {x y : α} (p : G.Walk x y) : x ∈ V(G) := sorry
+
+lemma Walk.right_mem {x y : α} (p : G.Walk x y) : y ∈ V(G) := sorry
+
 namespace Walk
 variable {G}
 
 /-- Pattern to get `Walk.nil` with the vertex as an explicit argument. -/
 @[match_pattern]
-abbrev nil' (x : α) : G.Walk x x := Walk.nil
+abbrev nil' (x : α) (h : x ∈ V(G)) : G.Walk x x := Walk.nil h
 
 /-- Pattern to get `Walk.cons` with the vertices and edge as explicit arguments. -/
 @[match_pattern]
@@ -80,30 +84,26 @@ abbrev cons' (x y z : α) (e : β) (h : G.IsLink e x y) (p : G.Walk y z) : G.Wal
 
 theorem exists_eq_cons_of_ne {x y : α} (hne : x ≠ y) :
     ∀ (p : G.Walk x y), ∃ (z : α) (e : β) (h : G.IsLink e x z) (p' : G.Walk z y), p = cons h p'
-  | nil => (hne rfl).elim
+  | nil _ => (hne rfl).elim
   | cons' _ _ _ _ h p' => ⟨_, _, h, p', rfl⟩
 
 /-- The length of a walk is the number of edges along it. -/
 def length {x y : α} : G.Walk x y → ℕ
-  | nil => 0
+  | nil _ => 0
   | cons _ q => q.length.succ
 
 @[simp]
-theorem length_nil {x : α} : (nil : G.Walk x x).length = 0 := rfl
+theorem length_nil {x : α} (h : x ∈ V(G)) : (nil h : G.Walk x x).length = 0 := rfl
 
 @[simp]
 theorem length_cons {x y z : α} {e : β} (h : G.IsLink e x y) (p : G.Walk y z) :
     (cons h p).length = p.length + 1 := rfl
 
 theorem eq_of_length_eq_zero {x y : α} : ∀ {p : G.Walk x y}, p.length = 0 → x = y
-  | nil, _ => rfl
+  | nil _, _ => rfl
 
 theorem adj_of_length_eq_one {x y : α} : ∀ {p : G.Walk x y}, p.length = 1 → G.Adj x y
-  | cons h nil, _ => h.adj
-
-@[simp]
-theorem exists_length_eq_zero_iff {x y : α} : (∃ p : G.Walk x y, p.length = 0) ↔ x = y :=
-  ⟨fun ⟨_, h⟩ ↦ (eq_of_length_eq_zero h), (· ▸ ⟨nil, rfl⟩)⟩
+  | cons h (nil _), _ => h.adj
 
 @[simp]
 lemma exists_length_eq_one_iff {x y : α} : (∃ (p : G.Walk x y), p.length = 1) ↔ G.Adj x y := by
@@ -115,20 +115,21 @@ lemma exists_length_eq_one_iff {x y : α} : (∃ (p : G.Walk x y), p.length = 1)
     exact (p'.eq_of_length_eq_zero hp) ▸ h.adj
 
 @[simp]
-theorem length_eq_zero_iff {x : α} {p : G.Walk x x} : p.length = 0 ↔ p = nil := by cases p <;> simp
+theorem length_eq_zero_iff {x : α} {p : G.Walk x x} (h : x ∈ V(G)) : p.length = 0 ↔ p = nil h
+:= by cases p <;> simp
 
 /-- The `support` of a walk is the list of vertices it visits in order. -/
 def support {x y : α} : G.Walk x y → List α
-  | nil => [x]
+  | nil _ => [x]
   | cons _ p => x :: p.support
 
 /-- The `edges` of a walk is the list of edges it visits in order. -/
 def edges {x y : α} : G.Walk x y → List β
-  | nil => []
+  | nil _ => []
   | cons' _ _ _ e _ p => e :: p.edges
 
 @[simp]
-theorem support_nil {x : α} : (nil : G.Walk x x).support = [x] := rfl
+theorem support_nil {x : α} (h : x ∈ V(G)) : (nil h : G.Walk x x).support = [x] := rfl
 
 @[simp]
 theorem support_cons {x y z : α} {e : β} (h : G.IsLink e x y) (p : G.Walk y z) :
@@ -162,7 +163,8 @@ theorem support_nonempty {x y : α} (p : G.Walk x y) : {z | z ∈ p.support}.Non
 theorem mem_support_iff {x y z : α} (p : G.Walk x y) :
     z ∈ p.support ↔ z = x ∨ z ∈ p.support.tail := by cases p <;> simp
 
-theorem mem_support_nil_iff {x y : α} : x ∈ (nil : G.Walk y y).support ↔ x = y := by simp
+theorem mem_support_nil_iff {x y : α} (h : y ∈ V(G)): x ∈ (nil h : G.Walk y y).support ↔ x = y
+:= by simp
 
 @[simp]
 theorem end_mem_tail_support_of_ne {x y : α} (h : x ≠ y) (p : G.Walk x y) : y ∈ p.support.tail := by
@@ -179,10 +181,10 @@ theorem coe_support {x y : α} (p : G.Walk x y) :
 theorem isChain_adj_cons_support {x y z : α} (hxy : G.Adj x y) (p : G.Walk y z) : List.Chain G.Adj x
  (support p) :=
   match p with
-  | nil => List.Chain.cons hxy List.Chain.nil
+  | nil _ => List.Chain.cons hxy List.Chain.nil
   | cons h p' => List.Chain.cons hxy (isChain_adj_cons_support (IsLink.adj h) p')
 
 theorem isChain_adj_support {x y : α} (p : G.Walk x y) : List.Chain' G.Adj (support p) :=
   match p with
-  | nil => List.chain'_singleton x
+  | nil _ => List.chain'_singleton x
   | cons h p' => isChain_adj_cons_support (IsLink.adj h) p'
