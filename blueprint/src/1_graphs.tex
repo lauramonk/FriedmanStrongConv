@@ -109,6 +109,7 @@ This is an equivalence relation.
 
 \begin{proposition}
   \label{prop:reachable_is_equivalence}
+  \uses{def:reachable}
   The reachability relation is an equivalence relation on $V(G)$.
 \end{proposition}
 
@@ -182,7 +183,7 @@ We define the notion of connectedness and the connected components of a graph.
 
 \begin{definition}
   \label{def:connected_component}
-  \uses{def:connected}
+  \uses{prop:reachable_is_equivalence}
   A \emph{connected component} of $G$ is an equivalence class of $V(G)$ for
   the relation reachable.
 \end{definition}
