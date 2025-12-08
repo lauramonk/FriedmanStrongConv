@@ -39,7 +39,7 @@ The definition of subgraph is easier for Graph as the vertexset is just a subset
   \begin{itemize}
     \item a vertexset included in the vextex set of $G$
     \item an edgeset included in the edge set of $H$
-    \item the same edge links the same vertices.
+    \item the same $\islink$ relation.
   \end{itemize}
 \end{definition}
 
@@ -67,13 +67,12 @@ Note that, in this context, $0$ is the constant function equal to $0$.
 We define a notion of walk on the graph.
 
 \begin{definition}
-  \label{def:walk}
+  \label{def:walk,def:length}
   \leanok
-  Let $x, y \in V(G)$. A \emph{walk} from $x$ to $y$ on $G$ is given by:
+  Let $x, y \in V(G)$. A \emph{walk} from $x$ to $y$ on $G$ is given by two finite lists:
   \begin{itemize}
-    \item a non-negative integer $m$;
-    \item a family $(v_i)_{0 \leq i \leq m}$ of vertices in $V(G)$;
-    \item a family $(e_i)_{1 \leq i \leq m}$ of edges in $E(G)$;
+    \item a list $(v_i)_{0 \leq i \leq m}$ of vertices in $V(G)$;
+    \item a list $(e_i)_{1 \leq i \leq m}$ of edges in $E(G)$;
   \end{itemize}
   satisfying the following:
     \begin{itemize}
@@ -91,49 +90,26 @@ We define a notion of walk on the graph.
   from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{reachable}.
 \end{definition}
 
-The following three lemmas together prove this is an equivalence relation.
+This is an equivalence relation.
 
 \begin{proposition}
-  \label{prop:reachable_is_equivalence}
-  \uses{lem:reachable_reflexive,lem:reachable_symmetric,
+  \label{prop:reachable_is_equivalence,lem:reachable_reflexive,lem:reachable_symmetric,
   lem:reachable_transitive}
-  The reachability relation is an equivalence relation.
+  The reachability relation is an equivalence relation on $V(G)$.
 \end{proposition}
 
-\begin{lemma}
-  \label{lem:reachable_reflexive}
-  \uses{def:reachable}
-  \leanok
+\begin{proof}
   The reachability relation is reflexive: $x \sim x$ for any $x \in V(G)$.
-\end{lemma}
-
-\begin{proof}
-  Let $x \in V(G)$. We take $m=0$ and set $v_0=x$. Then this is a walk from
+  Indeed, let $x \in V(G)$. We take $m=0$ and set $v_0=x$. Then this is a walk from
   $x$ to $x$ on $G$.
-\end{proof}
 
-\begin{lemma}
-  \label{lem:reachable_symmetric}
-  \uses{def:reachable}
-  \leanok
   The reachability relation is symmetric: if $x \sim y$ then  $y \sim x$.
-\end{lemma}
-
-\begin{proof}
   Let $x$, $y$ be two vertices. We assume $x \sim y$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
   be a walk from $x$ to $y$. Then $(v_{m-i})_{0 \leq i \leq m}$ and $(e_{m+1-i})_{1 \leq i \leq m}$
   is a walk from $y$ to $x$ by the is\_link\_symm. So $y \sim x$.
-\end{proof}
 
-\begin{lemma}
-    \label{lem:reachable_transitive}
-  \uses{def:reachable}
-  \leanok
   The reachability relation is transitive: if $x \sim y$ and $y \sim z$ then
   $x \sim z$.
-\end{lemma}
-
-\begin{proof}
   Assume $x \sim y$ and $y \sim z$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
   be a walk from $x$ to $y$ and $(v_i')_{0 \leq i \leq m'}$, $(e_i')_{1 \leq i \leq m'}$
   be a walk from $y$ to $z$.
@@ -157,7 +133,7 @@ The following three lemmas together prove this is an equivalence relation.
 The following will be useful.
 
 \begin{lemma}
-  \label{lem:adjacent_eq}
+  \label{lem:adj_towalk}
   \uses{def:reachable}
   Let $x$, $y$ in $V(G)$. If $x$ and $y$ are adjacent then $x$ and $y$ are reachable.
 \end{lemma}
@@ -167,22 +143,31 @@ The following will be useful.
   Then the walk $(x, y)$ and $(e)$ is a walk from $x$ to $y$.
 \end{proof}
 
-\subsection{Connected components}
+\subsection{Connectedness}
 
-We define the connected components of a graph.
+We define the notion of connectedness and the connected components of a graph.
+
+\begin{definition}
+  \label{def:preconnected}
+  \uses{def:reachable}
+  A graph is \emph{preconnected} if any pair of vertices is reachable.
+\end{definition}
 
 \begin{definition}
   \label{def:connected}
-    \uses{def:walk}
-  A subset $U$ of $V(G)$ is \emph{connected} if,
-  for all $x$, $y \in U$, there exists a walk from $x$ to $y$ in $G$.
+    \uses{def:preconnected,def:empty}
+  The graph $G$ is \emph{connected} if it is preconnected and not empty.
 \end{definition}
 
-\begin{definition}
-  \label{def:disconnected}
-  \uses{def:connected}
-  A subset of $V(G)$ is \emph{disconnected} if it is not connected.
-\end{definition}
+\begin{lemma}
+  \label{lem:connected_iff_exists_forall_reachable}
+  The graph $G$ is connected if and only if there exists $x \in V(G)$ such that,
+  for all $y \in V(G)$, $x$ and $y$ are reachable.
+\end{lemma}
+
+\begin{proof}
+  todo
+\end{proof}
 
 % Let us list some simple monotony properties.
 
@@ -264,14 +249,14 @@ We have the following upper bound.
 
 \begin{lemma}
   \label{lem:adjacent_same_cc}
-  \uses{lem:cc_equivalence_class,lem:adjacent_eq}
+  \uses{lem:cc_equivalence_class,lem:adj_towalk}
   For $x$, $y$ in $V(G)$, if $x$ is adjacent to $y$, then they belong to the same
   connected component.
 \end{lemma}
 
 \begin{proof}
   This follows from Lemma \ref{lem:cc_equivalence_class} together with Lemma
-  \ref{lem:adjacent_eq}.
+  \ref{lem:adj_towalk}.
 \end{proof}
 
 \subsection{Notions of finiteness}
