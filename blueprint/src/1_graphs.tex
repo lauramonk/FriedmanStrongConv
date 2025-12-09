@@ -143,6 +143,67 @@ darts. However they are defined by the following structure.
   both of them do iff $x=y$, which leads to the claim.
 \end{proof}
 
+We can alternatively define a graph from its darts in the following fashion.
+
+\begin{definition}
+  \label{def:dartlike}
+  Let $V$ be a set. A \emph{dart-like structure} on $V$ is the data of a set of darts $D$,
+  together with maps $\spt, \ept : D \rightarrow V$ and
+  $\symm : D \rightarrow D$ satisfying the following:
+  \begin{itemize}
+    \item $\spt \circ \symm = \ept$ and $\ept \circ \symm = \spt$;
+    \item $\symm$ is an involution with no fixed point.
+  \end{itemize}
+\end{definition}
+
+\begin{definition}
+  \label{def:dart_eq_rel}
+  \uses{def:dartlike}
+  Let $V$ be a set and $D$, $\spt, \ept, \symm$ be a dart-like structure.
+  We define a relation on $D$ by:
+  \begin{equation*}
+    \forall d, d' \in D,
+    \quad d \sim d' \Leftrightarrow (d=d' \text{ or } d = \symm(d')).
+  \end{equation*}
+\end{definition}
+
+\begin{lemma}
+  \label{lem:dart_eq_rel}
+  \uses{def:dart_eq_rel}
+  The relation $\sim$ on $D$ is an equivalence relation, and all of its equivalence
+  classes are of the form $\{d, \symm(d)\}$ (the two of which are distinct).
+\end{lemma}
+
+\begin{proof}
+  This is a classic fact for involutions with no fixed points.
+\end{proof}
+
+\begin{definition}
+  \label{def:graph_of_dart}
+  Let $V$ be a set and $D$, $\spt, \ept, \symm$ be a dart-like structure.
+  We define a graph $G$ associated to this structure by taking:
+  \begin{itemize}
+    \item $V(G) := V$ as the vertex set;
+    \item $E(G) := D(G) \diagup \sim$ as the edge set;
+    \item for $e \in E(G)$, if $d \in D(G)$ is a representant of $e$,
+    then $e$ links $\spt(d)$ and $\ept(d)$.
+  \end{itemize}
+\end{definition}
+
+\begin{proof}
+  The only thing to check is that the definition of the links does not depend on the
+  choice of a representative, which is true since
+  $\spt \circ \symm = \ept$ and $\ept \circ \symm = \spt$.
+\end{proof}
+
+\begin{theorem}
+  \label{thm:dart_of_graph_of_dart}
+  \uses{def:graph_of_dart,def:dart}
+  The graph constructed in Definition \ref{def:graph_of_dart} is a graph,
+  and $D(G) := D$, $\spt$, $\ept$, $\symm$ are darts of this graph, with the projection
+  edge map $\edge : D(G) \rightarrow E(G)$.
+\end{theorem}
+
 \subsection{Subgraphs}
 
 The definition of subgraph is easier for Graph as the vertexset is just a subset.
@@ -367,6 +428,13 @@ We define the notion of connectedness and the connected components of a graph.
   Let $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
   The \emph{degree} of $x$ is defined as $\mathrm{deg}(x) = \# \dartset(x)$.
 \end{definition}
+
+\begin{lemma}
+  \label{lem:darset_loop_even}
+  \uses{lem:edge_range_of_darset}
+  If $G$ is locally finite at $x \in V(G)$, then
+   $\# \dartset(x,x)$ is an even number.
+\end{lemma}
 
 \begin{lemma}
   \label{lem:degree_inc_loop}
@@ -900,3 +968,106 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
   radius $\|a\|$.
   We have $\|a\| \leq D$ by Theorem \ref{thm:norm_adjacency_leq_sup_degree}.
 \end{proof}
+
+\subsection{From adjacency operator to graph}
+
+We now introduce a construction allowing to go from adjacency operator to graph,
+which will be useful to define random graphs.
+
+We first make a few observations as to the properties of adjacency operators on locally
+finite graphs.
+
+\begin{lemma}
+  \label{lem:coefficients_adjacency_expression}
+  \uses{def:dartset_pair,lem:scalar_of_adjacency,def:indicator_function}
+  Let $x, y \in V(G)$. Then
+  \begin{equation*}
+    \langle a \const_{\{x\}}, \const_{\{y\}} \rangle
+    = \# \dartset(x,y).
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  The functions $\const_{\{x\}}$ and $\const_{\{y\}}$ are trivially in $\ell^2(G)$.
+  By Lemma \ref{lem:scalar_of_adjacency},
+  \begin{equation*}
+    \langle a \const_{\{x\}}, \const_{\{y\}} \rangle
+    = \sum_{d \in D(G)} \const_{\{x\}}(\spt(d)) \overline{\const_{\{y\}}(\ept(d))}
+  \end{equation*}
+  which is exactly the claim by Definition \ref{def:dartset_pair} and Definition
+  \ref{def:indicator_function}.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:coefficients_adjacency_properties}
+  \uses{lem:coefficients_adjacency_expression,lem:darset_loop_even}
+  For any $x, y \in V(G)$,
+  $\langle a \const_{\{x\}}, \const_{\{y\}} \rangle$ is a non-negative integer,
+  which is even as soon as $x=y$.
+\end{lemma}
+
+\begin{proof}
+  By Lemma \ref{lem:coefficients_adjacency_expression}, this quantity is a cardinal
+  of a set, and hence a non-negative integer. The parity when $x=y$ comes from Lemma
+  \ref{lem:darset_loop_even}.
+\end{proof}
+
+\begin{definition}
+  \label{def:adjacency_like}
+  Let $V$ be a set.
+  An operator $a \in \mathcal{B}(\ell^2(G))$ is \emph{adjacent-like} if it satisfies the following
+  properties:
+  \begin{itemize}
+    \item $a$ is self-adjoint;
+    \item for all $x, y \in V$, $\langle a \const_{\{x\}}, \const_{\{y\}} \rangle$ is a non-negative
+    integer;
+    \item for all $x \in V$, $\langle a \const_{\{x\}}, \const_{\{x\}} \rangle$ is even.
+  \end{itemize}
+\end{definition}
+
+We then associate to any adjacent-like operator a dart-like structure.
+
+\begin{definition}
+  \label{def:dartlike_of_adjlike}
+  \uses{def:adjacency_like,def:dartlike}
+  Let $V$ be a set and $a$ be an adjacent-like operator on $V$.
+  We define a dart-like structure on $V$ by taking:
+  \begin{itemize}
+    \item $D$ is the set of $(x,y,i)$ where $x \in V$, $y \in V$, and $i$ is an integer such that
+    \begin{itemize}
+      \item if $x \neq y$ then $1 \leq i \leq \langle a \const_{\{x\}}, \const_{\{y\}} \rangle$;
+      \item if $x=y$ then $1 \leq |i| \leq \langle a \const_{\{x\}}, \const_{\{y\}} \rangle$.
+    \end{itemize}
+    \item the map $\spt$ is defined by $\spt(x,y,i)=x$;
+    \item the map $\ept$ is defined by $\ept(x,y,i)=y$;
+    \item the map $\symm$ is defined by
+    \begin{equation*}
+      \symm(x,y,i) := \begin{cases}
+        \symm(y,x,i) & \text{if } x \neq y \\
+        \symm(x,y,-i) & \text{if } x = y.
+      \end{cases}
+    \end{equation*}
+  \end{itemize}
+\end{definition}
+
+\begin{definition}
+  \label{def:graph_of_adjlike}
+  \uses{def:graph_of_dart,def:dartlike_of_adjlike}
+  Let $a$ be a adjacency-like operator on $V$.
+  We define the graph associated to $a$ by taking the graph associated to the dartlike structure
+  associated to $a$.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:adjacency_of_graph_of_adjacency}
+  \uses{def:graph_of_adjlike}
+  Let $a$ be a adjacency-like operator on $V$.
+  Then the graph $G$ associated to $a$ is a graph, of vertex set $V$, and adjacency operator $a$.
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:adjlike_addition}
+  \uses{def:adjacency_like}
+  Let $V$ be a set. The space of adjacency-like operators on $V$ is stable by addition, i.e.
+  if $a$, $a'$ are adjacency-like, so is $a+a'$.
+\end{lemma}
