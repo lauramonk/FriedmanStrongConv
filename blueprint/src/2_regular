@@ -3,98 +3,76 @@
 We shall here present the basic results in the spectral theory of regular graphs, and
 state the main results this project aims to formalise.
 
-\section{Basic properties}
+\section{Trivial eigenvalues}
 
-Let $\delta$ be a non-negative integer.
+Let $\de$ be a non-negative integer.
+We know the spectrum of any regular graph is included in $[-\de,\de]$ by
+Lemma \ref{lem:spectrum_in_segment}.
+Let us first talk about the edges of this interval, $\pm \de$.
 
 \begin{lemma}
   \label{lem:adjacency_of_constant_regular}
   \uses{lem:adjacency_of_constant,def:regular}
   Assume $G$ is not empty and locally finite. Then
-  $G$ is regular of degree $\delta$ iff $a \const = \delta \const$.
+  $G$ is regular of degree $\de$ iff $a \const = \de \const$.
 \end{lemma}
 
 \begin{proof}
   By Definition \ref{def:regular},
-  $G$ is regular of degree $\delta$ if and only if for all $x \in V(G)$,
-  $\deg(x)=\delta$.
+  $G$ is regular of degree $\de$ if and only if for all $x \in V(G)$,
+  $\deg(x)=\de$.
   By Lemma \ref{lem:adjacency_of_constant}, this is equivalent to
-  having, for all $x \in V(G)$, $a \const (x) = \delta$, which is equivalent to
-  $a \const = \delta \const$ by Definition \ref{def:constant_one}.
+  having, for all $x \in V(G)$, $a \const (x) = \de$, which is equivalent to
+  $a \const = \de \const$ by Definition \ref{def:constant_one}.
 \end{proof}
-
-\begin{lemma}
-  \label{lem:norm_adjacency_regular_leq_degree}
-  \uses{lem:bound_a_sup_degree}
-  If $G$ is regular of degree $\delta$, then $\| a \| \leq \delta$.
-\end{lemma}
-
-\begin{proof}
-  This is simply Proposition \ref{thm:norm_adjacency_leq_sup_degree}.
-\end{proof}
-
-\begin{lemma}
-  \label{lem:spectrum_regular_in_segment}
-  \uses{lem:spectrum_in_segment}
-  If $G$ is regular of degree $\delta$, then the spectrum of $a$ is included in the
-  segment $[-\delta,\delta]$.
-\end{lemma}
-
-\begin{proof}
-  This is simply Lemma \ref{lem:spectrum_in_segment}.
-\end{proof}
-
-\subsection{The case of finite regular graphs}
-
-Let $\delta$ be a non-negative integer.
 
 \begin{lemma}
   \label{lem:constant_eigenfunction_regular}
-  \uses{lem:constant_is_l2,lem:constant_neq_zero,lem:adjacency_of_constant_regular}
-  Assume $G$ is regular of degree $\delta$ and finite. Then
-  $\delta$ is an eigenvalue of the adjacency
+  \uses{lem:constant_is_l2,lem:adjacency_of_constant_regular,lem:one_neq_zero}
+  Assume $G$ is regular of degree $\de$ and $V(G)$ is finite. Then
+  $\de$ is an eigenvalue of the adjacency
   operator with associated eigenfunction the constant function $\const$.
 \end{lemma}
 
 \begin{proof}
   Since $G$ is finite, $\const \in \ell^2(G)$ by Lemma \ref{lem:constant_is_l2}.
-  Furthermore, $\const \neq 0$ by Lemma \ref{lem:constant_neq_zero}
-  and since $G$ is not empty by Definition \ref{def:regular}.
-  By Lemma \ref{lem:adjacency_of_constant_regular}, if $G$ is regular of degree $\delta$,
-  then $a \const = \delta \const$.  We conclude by the definition of eigenvalue and eigenvector.
+  Furthermore, $\const \neq 0$ by Lemma \ref{lem:one_neq_zero}.
+  By Lemma \ref{lem:adjacency_of_constant_regular}, if $G$ is regular of degree $\de$,
+  then $a \const = \de \const$.  We conclude by the definition of eigenvalue and eigenvector.
 \end{proof}
 
 \begin{proposition}
   \label{prop:norm_adjacency_regular}
-  \uses{lem:norm_adjacency_regular_leq_degree,lem:constant_eigenfunction_regular}
-  If $G$ is finite and regular of degree $\delta$, then $\|a\|=\delta$.
+  \uses{thm:norm_adjacency_leq_sup_degree,lem:constant_eigenfunction_regular}
+  If $G$ is regular of degree $\de$ and $V(G)$ is finite, then $\|a\|=\de$.
 \end{proposition}
 
 \begin{proof}
-  Since $G$ is regular of degree $\delta$, by
-  Lemma \ref{lem:norm_adjacency_regular_leq_degree}, $\|a \| \leq \delta$.
-  By Lemma \ref{lem:constant_eigenfunction_regular}, $\delta$ is an eigenvalue of $a$
-  and hence $\|a\| \geq \delta$,
+  Since $G$ is regular of degree $\de$, by
+  Theorem \ref{thm:norm_adjacency_leq_sup_degree}, $\|a \| \leq \de$.
+  By Lemma \ref{lem:constant_eigenfunction_regular}, $\de$ is an eigenvalue of $a$
+  and hence $\|a\| \geq \de$,
   which is enough to conclude.
 \end{proof}
 
 \begin{proposition}
   \label{prop:regular_multiplicity_trivial_eigenvalue}
-  \uses{prop:basis_locally_constant,lem:adjacency_locally_constant}
-    Assume $G$ is finite and regular of degree $\delta$. Then the multiplicity of the
-  eigenvalue $\delta$ is exactly the number of connected components of $G$.
+  \uses{thm:locally_constant_basis,lem:adjacency_locally_constant,lem:bound_a_sup_degree}
+  Assume $G$ is regular of degree $\de$ and $V(G)$ is finite.
+  Then the multiplicity of the
+  eigenvalue $\de$ is exactly the number of connected components of $G$.
 \end{proposition}
 
 \begin{proof}
-  We treat differently the case $\delta=0$, where $a$ is identically equal to $0$
+  We treat differently the case $\de=0$, where $a$ is identically equal to $0$
   and every function $V(G) \rightarrow \C$ is in the kernel of $a$, and
   hence the result holds since the connected components of $G$ are all the
-  $\{x\}$ for $x \in V(G)$. Now assume $\delta \neq 0$.
+  $\{x\}$ for $x \in V(G)$. Now assume $\de \neq 0$.
 
   Lemma \ref{lem:adjacency_locally_constant} implies that all locally constant
-  functions are included in the eigenspace associated to the eigenvalue $\delta$.
+  functions are included in the eigenspace associated to the eigenvalue $\de$.
   Let us show the other inclusion.
-  Assume $f$ is such that $af=\delta f$. In particular, $\|af\|=\delta\|f\|$ and hence
+  Assume $f$ is such that $af=\de f$. In particular, $\|af\|=\de\|f\|$ and hence
   by the equality case in Lemma \ref{lem:bound_a_sup_degree},
   \begin{equation*}
     \forall x \in V(G), \forall y, z \text{ adjacent to } x,
@@ -102,16 +80,16 @@ Let $\delta$ be a non-negative integer.
   \end{equation*}
   In particular
   \begin{equation*}
-    \delta f(x) = af(x) = \sum_{d \in D(G)} f(\ept(d)).
+    \de f(x) = af(x) = \sum_{d \in \dartset(x)} f(\ept(d)).
   \end{equation*}
-  Note that this sum contains $\delta$ terms and,
+  Note that this sum contains $\de$ terms and,
    for all $d,d' \in \dartset(x)$, $f(\ept(d))=f(\ept(d'))$
   so all of its terms are equal.
-  Since $\delta \neq 0$, we obtain
-  that, for all $d, d' \in \dartset(G)$, $f(\ept(d'))=f(\ept(d))$,
+  Since $\de \neq 0$, we obtain
+  that, for all $d, d' \in \dartset(G)$, $f(\ept(d))=f(\ept(d'))$,
   i.e. $f$ is locally constant.
 
-  By Proposition \ref{prop:basis_locally_constant},
+  By Theorem \ref{thm:locally_constant_basis},
   the dimension of the space of locally constant functions
    is exactly the number of connected components of $G$,
   which allows to conclude.
@@ -119,114 +97,89 @@ Let $\delta$ be a non-negative integer.
 
 \begin{proposition}
   \label{prop:eigenvalue_regular_bipartite}
-  \uses{def:bipartite,def:indicator_function,lem:all_l2_finite}
-  Assume $G$ is finite, regular of degree $\delta \geq 1$. Then
-  $-\delta$ is an eigenvalue of $a$ if and only if $G$ has a bipartite connected
+  \uses{lem:bipartite_odd_function,lem:bound_a_sup_degree}
+  Assume $G$ regular of degree $\de \geq 1$ and $V(G)$ is finite. Then
+  $-\de$ is an eigenvalue of $a$ if and only if $G$ has a bipartite connected
   component.
 \end{proposition}
 
-\begin{proof}
- todo
-\end{proof}
-
-\subsection{Finite graphs}
-
-Let $G$ be a finite graph.
-Since $V(G)$ is finite, we can identify $\ell^2(G)$ with $\C^{V(G)}$
-by Lemma \ref{lem:all_l2_finite}.
-
-\begin{definition}
-  \label{def:adjacency_matrix}
-  \uses{def:finite,def:adjacency_operator}
-  The \emph{adjacency matrix} $A$ of $G$ is defined as the matrix of the adjacency operator
-  $a : \C^{V(G)} \rightarrow \C^{V(G)}$.
-\end{definition}
-
-\begin{theorem}
-  \label{thm:adjacency_coeffs}
-  \uses{def:adjacency_matrix,def:dartset_pair}
-  Let $x, y \in V(G)$. Then, $A_{x,y} = \# \dartset(x,y)$.
-\end{theorem}
-
-\begin{proof}
-  We denote as $v_x = \const_{\{x\}}$ and $v_y = \const_{\{y\}}$ the vectors equal to $0$
-  everywhere except at $x$, $y$ respectively, where they are equal to $1$.
-  By definition,
-\begin{equation*}
-    A_{x,y} = a v_y(x) = \sum_{d \in \dartset(x)} v_y(\ept(d))
-\end{equation*}
-which leads to the conclusion.
-\end{proof}
+The following lemma will be useful.
 
 \begin{lemma}
-  \label{lemm:A_integer}
-  \uses{thm:adjacency_coeffs,lem:edge_range_of_darset}
-  The coefficients of $A$ are non-negative integers, and the diagonal coefficients even.
+  \label{lem:bipartite_odd_function}
+  \uses{def:bipartite,def:preconnected}
+  Assume $G$ is preconnected and $E(G)$ is non-empty. Then
+  $G$ is bipartite iff there exists a non-zero function
+  $f : V(G) \rightarrow \C$
+  such that, for all $x, y \in V(G)$,
+  if $x$ and $y$ are adjacent, then $f(x)=-f(y)$.
 \end{lemma}
 
-\begin{proof}
-  The fact that they are non-negative integer comes from their description as
-  the cardinal of a set.
-  For $x \in V(G)$, by Lemma \ref{lem:edge_range_of_darset},
-  $A_{x,x} = 2 \# \loopset(x)$ and in particular it is even.
-\end{proof}
-
-\begin{lemma}
-  \label{lem:A_symmetric}
-  \uses{prop:adjacency_is_selfadjoint,def:adjacency_matrix}
-  The adjacency matrix is symmetric: ${}^t A = A$.
-\end{lemma}
+We first prove Lemma \ref{lem:bipartite_odd_function}.
 
 \begin{proof}
-  It is real valued by Lemma \ref{lemm:A_integer} and self-adjoint by Proposition
-  \ref{prop:adjacency_is_selfadjoint}, hence symmetric.
-\end{proof}
-
-\begin{definition}
-  \label{def:space_adj_matrix}
-  We define the space of adjacency matrices on $V(G)$ as the space of matrices
-  $A \in \mathcal{M}_{V(G)}(\C)$ such that:
+  Assume $G$ is bipartite. Then there exists a partition $U_1, U_2$ of $V(G)$
+  such that any edge of $G$ has one end in $U_1$ and the other in $U_2$.
+  Take $f = \const_{U_1}-\const_{U_2}$.
+  The function $f$ is not equal to $0$, since $U_1$ is not empty,
+  and for $x \in U_1$, $f(x)=1 \neq 0$.
+  For any $x, y \in V(G)$ adjacent, one of the following occurs:
   \begin{itemize}
-    \item all coefficients of $A$ are non-negative integers;
-    \item the diagonal coefficients are even;
-    \item $A$ is symmetric.
+    \item either $x \in U_1$ and $y \in U_2$, and hence $f(x)=1=-f(y)$;
+    \item or $x \in U_2$ and $y \in U_1$, and hence $f(x)=-1=-f(y)$.
   \end{itemize}
-\end{definition}
 
-\begin{lemma}
-  \label{lem:space_adj_matrix}
-  \uses{def:space_adj_matrix}
-  The space of adjacency matrices on $V(G)$ is a subset
-  of $\mathcal{M}_{V(G)}(\C)$ stable by addition.
-\end{lemma}
-
-\begin{proof}
-  The sum of two non-negative integers is a non-negative integer,
-  the sum of two even integers is even, and the sum of two symmetric
-  matrices is symmetric.
+  Now assume there exists a non-zero function $f : V(G) \rightarrow \C$
+  such that, for any $x, y \in V(G)$ adjacent, $f(x)=-f(y)$.
+  By assumption, $E(G)$ is not empty, so there exists $x \in V(G)$ with
+  at least an adjacent vertex.
+  For any $y \in V(G)$, since $G$ is preconnected, there exists
+  a walk $w$ from $x$ to $y$. We check by induction that the hypothesis on $f$
+  implies $f(y) = (-1)^{\length(w)}f(x)$. Since $f \neq 0$, there exists $y \in V(G)$
+  such that $f(y) \neq 0$, from which we deduce $f(x) \neq 0$.
+  We define $U_1=\{y \in V(G) : f(y)=f(x)\}$ and $U_2=\{y \in V(G) : f(y)=-f(x)\}$.
+\begin{itemize}
+  \item By the previous computation, $V(G) = U_1 \cup U_2$.
+  \item Since $f(x) \neq 0$, $U_1 \cap U_2 = \emptyset$.
+  \item $U_1$ contains $x$ and is hence not empty. We picked $x$ so that it has
+  at least one adjacent edge, which will be an element of $U_2$, and hence $U_2$ is
+  not empty.
+  \item For any edge $e \in E(G)$ linking two vertices $y, z$,
+  we check that $y \in U_1 \Rightarrow x \in U_2$
+  and $y \in U_2 \Rightarrow z \in U_1$ thanks to the fact that $f(y)=-f(z)$.
+\end{itemize}
+So, $G$ is bipartite.
 \end{proof}
 
-\begin{definition}
-  \label{def:graph_of_matrix}
-  \uses{def:space_adj_matrix}
-  Let $A$ be a matrix as in Definition \ref{def:space_adj_matrix}.
-  We associate a graph $G$ to $A$ by taking:
-  \begin{itemize}
-    \item $V(G)$ as the vertex set;
-    \item $E(G)$ to be the set of symmetric pairs
-    $(x,y) \in \mathrm{Sym2}(V(G))$ and integers $i \geq 0$ with
-    $0 \leq i < A_{x,y}$ if $x \neq y$ and $0 \leq i < A_{x,x}/2$ otherwise;
-    \item so that the edge $e = ((x,y),i)$ links $x$ and $y$.
-  \end{itemize}
-\end{definition}
+We can now proceed to the proof of Proposition \ref{prop:eigenvalue_regular_bipartite}.
 
-\begin{lemma}
-  \label{lem:matrix_of_graph_of_matrix}
-  \uses{def:graph_of_matrix}
-  The object constructed in Definition \ref{def:graph_of_matrix} is a graph,
-  and its adjacency matrix is $A$.
-\end{lemma}
+\begin{proof}
+  Let us assume that $- \de$ is an eigenvalue of $a$.
+  Then by definition there exists a non-zero function $f \in \ell^2(G)$ such that
+  $af=-\de f$.
+  In particular $\|af\|=\de \|f\|$. By the equality case in Lemma
+  \ref{lem:bound_a_sup_degree}, for any $x \in V(G)$, any $y, z$ adjacent to $x$,
+  $f(y)=f(z)$.
+  But then we have for $x \in V(G)$
+  \begin{equation*}
+    - \de f(x) = af(x) = \sum_{d \in \dartset(x)} f(\ept(d))
+  \end{equation*}
+  a sum with $\de \neq 0$ terms in which all terms are equal. Hence for any $y$
+  adjacent to $x$, $f(y)=-f(x)$.
+  Since $f \neq 0$, there exists $x \in V(G)$ such that $f(x) \neq 0$.
+  We apply Lemma \ref{lem:bipartite_odd_function} to the graph $\ccm(x)$ with the
+  restriction of the function $f$ (which we can do as $\ccm(x)$ is preconnected
+  and has at least one edge since $\deg(x) = \de \geq 1$),
+  and obtain that $\ccm(x)$ is bipartite.
 
-\section{Random regular graphs}
-
-Let us define one model of random regular graphs, the permutation model.
+  Now, let us assume that one connected component $C$ of $G$ is bipartite.
+  $C$ is not empty so it contains at least one vertex, which has at least one
+  incident edge as the graph is regular of degree $\de \geq 1$.
+  Hence we can apply Lemma \ref{lem:bipartite_odd_function} to $C$
+  and obtain a function $f$ such that, for any $x$, $y$ adjacent, $f(x)=-f(y)$.
+  Then, let us define $F(x) = f(x)$ if $x \in C$ and $0$ otherwise.
+  $F \in \ell^2(G)$ since $G$ is finite.
+  We check that $aF=- \de F$ (here using the fact that, if $x$, $y$ are adjacent,
+  then $x \in C \Leftrightarrow y \in C$). $F \neq 0$ as there exists $x \in C \subset V(G)$
+  for which $F(x) = f(x) \neq 0$. So $-\de$ is an eigenvalue of $a$.
+\end{proof}
