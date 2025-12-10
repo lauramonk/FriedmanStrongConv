@@ -183,3 +183,36 @@ We can now proceed to the proof of Proposition \ref{prop:eigenvalue_regular_bipa
   then $x \in C \Leftrightarrow y \in C$). $F \neq 0$ as there exists $x \in C \subset V(G)$
   for which $F(x) = f(x) \neq 0$. So $-\de$ is an eigenvalue of $a$.
 \end{proof}
+
+\section{The Alon--Boppana bound}
+
+We shall here prove a lower bound on the second eigenvalue of a regular graph.
+
+\begin{theorem}
+  \label{thm:Alon_Boppana}
+  \uses{def:diameter}
+  \notready
+  Let $G$ be a regular graph of degree $\de$ with $V(G)$ finite.
+  We denote as $\lambda_1 \geq \lambda_2 \ldots \geq \lambda_{\#V(G)}$ the
+  ordered eigenvalues of the adjacency matrix. Then
+  \begin{equation*}
+    \lambda_2 \geq 2 \sqrt{2 \de -1}
+     - \frac{2 \sqrt{2 \de -1}-1}{\lfloor \diam (G) /2 \rfloor}.
+  \end{equation*}
+\end{theorem}
+
+From this onservation Alon famously conjectured that most large regular trees
+satisfied $\lambda_2 \leq 2 \sqrt{2\de -1} + o(1)$. The aim of this blueprint
+is to prove this result.
+
+\section{The infinite regular tree}
+
+Let $\de \geq 1$ be an integer.
+
+\begin{definition}
+  \label{def:regular_tree}
+  \uses{def:regular,def:tree}
+  A graph $G$ is a $\de$-regular tree if it is a tree and regular of degree $\de$.
+\end{definition}
+
+We can construct an explicit example.

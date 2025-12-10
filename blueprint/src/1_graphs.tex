@@ -337,6 +337,19 @@ We define a notion of walk on the graph.
   Then the walk $(x, y)$ and $(e)$ is a walk from $x$ to $y$.
 \end{proof}
 
+\begin{definition}
+  \label{def:path}
+  Let $x, y \in V(G)$.
+  A \emph{path} from $x$ to $y$ on $G$ is a walk $(v_i)_{0 \leq i \leq m}$,
+  $(e_i)_{1 \leq i \leq m}$
+  such that, for all $i \neq j$, $v_i \neq v_j$.
+\end{definition}
+
+\begin{definition}
+  \label{def:tree}
+  The graph $G$ is a \emph{tree} if, for all $x$, $y \in V(G)$,
+  there exists a unique path from $x$ to $y$.
+\end{definition}
 
 \subsection{Connectedness}
 
@@ -491,6 +504,46 @@ We define the notion of connectedness and the connected components of a graph.
   $U_2$ of $V(G)$ such that, for all $e \in E(G)$, $e$ links an element of $U_1$
   and an element of $U_2$.
 \end{definition}
+
+\subsection{Metric and diameter}
+
+\begin{definition}
+  \label{def:edistance}
+  \uses{def:walk}
+  Let $x, y \in V(G)$. The \emph{extended distance} $\edist(x,y)$
+  between $x$ and $y$
+  is the length of the shortest walk from $x$ to $y$ (with value in
+  $\N \cup \{\infty\}$).
+\end{definition}
+
+\begin{definition}
+  \label{def:distance}
+  \uses{def:edistance}
+  The \emph{distance} between $x$ and $y$
+  is $\dist(x,y) = \edist(x,y).\mathrm{toNat}$.
+\end{definition}
+
+\begin{definition}
+  \label{def:ediameter}
+  \uses{def:edistance}
+  The \emph{extended diameter} of a graph $G$ is
+  $\ediam(G) := \sup_{x,y \in V(G)} \edist(x,y)$.
+\end{definition}
+
+\begin{definition}
+  \label{def:diameter}
+  \uses{def:ediameter}
+  The \emph{diameter} of $G$ is $\diam(G) = \ediam(G).\mathrm{toNat}$.
+\end{definition}
+
+\begin{lemma}
+  \label{connected_iff_diam_ne_zero}
+  Assume $V(G)$ is finite and non-empty. Then $\diam(G) \neq 0$ if and only if
+  $G$ is connected.
+\end{lemma}
+\begin{proof}
+  To be adapted from SimpleGraph.
+\end{proof}
 
 \section{Space of functions on a graph}
 
