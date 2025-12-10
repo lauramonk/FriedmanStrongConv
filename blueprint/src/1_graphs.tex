@@ -1015,13 +1015,15 @@ finite graphs.
 \begin{definition}
   \label{def:adjacency_like}
   Let $V$ be a set.
-  An operator $a \in \mathcal{B}(\ell^2(G))$ is \emph{adjacency-like} if it satisfies the following
-  properties:
+  An operator $a : V^{\C} \rightarrow V^{\C}$ is \emph{adjacency-like}
+  if it satisfies the following properties:
   \begin{itemize}
-    \item $a$ is self-adjoint;
-    \item for all $x, y \in V$, $\langle a \const_{\{x\}}, \const_{\{y\}} \rangle$ is a non-negative
+    \item for all $x \in V$, $a \const_{\{x\}} \in \ell^2(G)$;
+    \item for all $x, y \in V$,
+    $a_{x,y} := \langle a \const_{\{x\}}, \const_{\{y\}} \rangle$ is a non-negative
     integer;
-    \item for all $x \in V$, $\langle a \const_{\{x\}}, \const_{\{x\}} \rangle$ is even.
+    \item for all $x, y \in V$, $a_{x,y}=a_{y,x}$;
+    \item for all $x \in V$, $a_{x,x}$ is even.
   \end{itemize}
 \end{definition}
 
@@ -1035,12 +1037,10 @@ We then associate to any adjacent-like operator a dart-like structure.
   \begin{itemize}
     \item $D$ is the set of $(x,y,i)$ where $x \in V$, $y \in V$, and $i$ is an integer such that
     \begin{itemize}
-      \item if $x \neq y$ then $1 \leq i \leq \langle a \const_{\{x\}}, \const_{\{y\}} \rangle$;
-      \item if $x=y$ then $1 \leq |i| \leq \langle a \const_{\{x\}}, \const_{\{y\}} \rangle$.
+      \item if $x \neq y$ then $1 \leq i \leq a_{x,y}$;
+      \item if $x=y$ then $1 \leq |i| \leq a_{x,x}$.
     \end{itemize}
-    \item the map $\spt$ is defined by $\spt(x,y,i)=x$;
-    \item the map $\ept$ is defined by $\ept(x,y,i)=y$;
-    \item the map $\symm$ is defined by
+    \item for any $(x,y,i) \in D$, we let $\spt(x,y,i)=x$, $\ept(x,y,i)=y$ and
     \begin{equation*}
       \symm(x,y,i) := \begin{cases}
         \symm(y,x,i) & \text{if } x \neq y \\
@@ -1074,59 +1074,129 @@ We then associate to any adjacent-like operator a dart-like structure.
 
 \section{Permutation graphs}
 
-Let $V$ be a finite set and $\mathfrak{S_V} = \{ \pi : V \rightarrow V \text{ bijective}\}$
+Let $V$ be a finite set and $\perm{V} = \{ \pi : V \rightarrow V \text{ bijective}\}$
 the set of permutations of $V$.
 
+We define a graph associated to a family of permutations.
+
 \begin{definition}
-  \label{def:u_pi}
-  To a $\pi \in \perm{V}$ we associate an operator $u_\pi$ acting on functions
-  $f : V \rightarrow \C$ by
+  \label{def:dart_of_pi}
+  \uses{def:dartlike}
+  Let $k \geq 1$ be an integer. To a family $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{V}^k$
+  we associate a dart-like structure on $V$ by taking:
+  \begin{itemize}
+    \item $D = V \times \{1, \ldots, k\} \times \{-1,+1\}$
+    \item for $(x,i,\epsilon) \in D$, we let $\spt(x,i,\epsilon) = x$,
+    $\ept(x,i,\epsilon) = \pi_i^\epsilon(x)$ and
+    $\symm(x,i,\epsilon) = (\pi_i^\epsilon(x),i,-\epsilon)$.
+  \end{itemize}
+\end{definition}
+
+\begin{proof}
+  We check that
   \begin{equation*}
-    \forall x \in V, u_\pi f(x) = f(\pi^{-1}(x)).
+    \spt(\symm(x,i,\epsilon))
+    = \spt(\pi_i^\epsilon(x),i,-\epsilon)
+    = \pi_i^\epsilon(x)
+    = \ept(x,i,\epsilon)
   \end{equation*}
+  and
+  \begin{equation*}
+    \ept(\symm(x,i,\epsilon))
+    = \ept(\pi_i^\epsilon(x),i,-\epsilon)
+    = \pi_i^{-\epsilon}(\pi_i^\epsilon(x))
+    = x = \spt(x,i,\epsilon)
+  \end{equation*}
+  and
+  \begin{equation*}
+    \symm(\symm(x,i,\epsilon))
+    = \symm((\pi_i^\epsilon(x),i,-\epsilon))
+    = (\pi_i^{-\epsilon}(\pi_i^\epsilon(x)),i,--\epsilon)
+    = (x,i,\epsilon).
+  \end{equation*}
+\end{proof}
+
+\begin{definition}
+  \label{def:graph_of_pi}
+  \uses{def:dart_of_pi,def:graph_of_dart}
+   Let $k \geq 1$ be an integer. To a family $\vec{\pi} \in \perm{V}^k$
+  we associate a graph $G_{\vec{\pi}}$ on $V$ by taking the graph associated to the dart-like
+  structure associated to $\vec{\pi}$.
 \end{definition}
 
 \begin{lemma}
-  \label{lem:u_pi_mult}
-  \uses{def:u_pi}
-  For $\pi_1, \pi_2 \in \perm{V}$, $u_{\pi_1} u_{\pi_2} = u_{\pi_1 \pi_2}$.
+  \label{lem:dartset_pair_pi}
+  \uses{def:dartset_pair,def:graph_of_pi}
+  Let $k \geq 1$ be an integer and take $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{V}^k$.
+  Then, for any $x, y \in V$,
+  \begin{equation*}
+    \dartset(x,y) = \{(x,i,\epsilon): y = \pi_i^\epsilon(x)\}.
+  \end{equation*}
 \end{lemma}
 
-\begin{proof}
-  Let $f : V \rightarrow \C$ and $x \in V$. Then
+\begin{lemma}
+  \label{lem:dartset_pi}
+  \uses{lem:dartset_pair_pi}
+  Let $k \geq 1$ be an integer and take $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{V}^k$.
+  Then, for any $x \in V$,
   \begin{equation*}
-    u_{\pi_1} u_{\pi_2} f(x)
-    = u_{\pi_1} f(\pi_2^{-1}(x))
-    = f(\pi_2^{-1}(\pi_1^{-1}(x)))
-    = f((\pi_1\pi_2)^{-1}(x))
-    = u_{\pi_1 \pi_2}f(x).
+    \dartset(x) = \{(x,i,\epsilon): 1 \leq i \leq k, \epsilon = \pm 1\}.
   \end{equation*}
-\end{proof}
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:graph_pi_regular}
+  \uses{lem:dartset_pi,def:regular}
+  The graph $G_{\vec{\pi}}$ is regular of degree $2k$.
+\end{lemma}
+
+[I need to decide the conventions about the side of the actions below]
+
+\begin{definition}
+  \label{def:u_pi}
+  For $\pi \in \perm{V}$, we define an operator $u_\pi : V^{\C} \rightarrow V^{\C}$ by
+  letting, for $f : V \rightarrow \C$,
+  \begin{equation*}
+    \forall x \in V,
+    u_\pi f(x) = f(\pi^{-1}(x))
+  \end{equation*}
+\end{definition}
 
 \begin{lemma}
   \label{lem:u_pi_unitary}
   \uses{def:u_pi}
-  For $\pi \in \perm{V}$,
-  $u_\pi$ is a unitary operator acting on $\ell^2(V)$.
+  For $\pi \in \perm{V}$, the operator $u_\pi$ is a unitary operator on $\ell^2(V)$
+  and $u_\pi^*=u_\pi^{-1}=u_{\pi^{-1}}$.
 \end{lemma}
 
 \begin{lemma}
-  \label{lem:a_pi_adjlike}
-  \uses{lem:u_pi_unitary,def:adjacency_like}
-  For $\pi \in \perm{V}$, $a_\pi := u_\pi + u_\pi^*$ is adjacency-like.
+  \label{lem:adjacency_of_pi}
+  \uses{def:u_pi,def:adjacency_operator,lem:u_pi_unitary}
+  Let $k \geq 1$ be an integer. For any family $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{V}^k$,
+  the adjacency operator $a_{\vec{\pi}}$ of $G_{\vec{\pi}}$ can be written as
+  \begin{equation*}
+    a_{\vec{\pi}} = \sum_{i=1}^k (u_{\pi_i} + u_{\pi_i}^*).
+  \end{equation*}
 \end{lemma}
+
+\begin{proof}
+  We have by definition of the adjacency operator for a function $f : V \rightarrow \C$
+  and $x \in V$,
+  \begin{equation*}
+    af(x)
+    = \sum_{d \in \dartset(x)} f(\ept(d))
+    = \sum_{i=1}^k \sum_{\epsilon = \pm 1} f(\pi_i^\epsilon(x))
+    =  \sum_{i=1}^k (f(\pi_i^{-1}(x)) + f(\pi_i(x)))
+  \end{equation*}
+  which leads to the conclusion as we recognise $u_{\pi_i}$ and $u_{\pi_i^{-1}} = u_{\pi_i}^*$.
+\end{proof}
+
+In what follows, we write $\perm{n}$ for the set of permutations of $[n]$.
 
 \begin{definition}
-  \label{def:graph_of_permutations}
-  \uses{lem:a_pi_adjlike,def:graph_of_adjlike}
-  Let $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{V}^k$. The graph associated to $\vec{\pi}$
-  is defined as the graph $G_{\pi}$ associated to the ajcencency-like
-  operator $a_{\vec{\pi}} = \sum_{i=1}^k a_{\pi_i} =  \sum_{i=1}^k (u_{\pi_i} + u_{\pi_i}^*)$.
+  \label{def:random_perm_graph}
+  Let $k, n \geq 1$ be integers.
+  A\emph{random permutation graph of degree $2k$ with $n$ vertices} is the graph associated to
+  a family $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{n}$ of $k$ i.i.d. uniform elements of
+  $\perm{n}$.
 \end{definition}
-
-\begin{lemma}
-  \label{lem:permgraph_is_regular}
-  \uses{def:graph_of_permutations,def:regular}
-  For any $\vec{\pi} \in \perm{V}^k$, the graph $G_{\vec{\pi}}$
-  is regular of degree $2k$.
-\end{lemma}
