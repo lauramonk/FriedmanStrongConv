@@ -1015,7 +1015,7 @@ finite graphs.
 \begin{definition}
   \label{def:adjacency_like}
   Let $V$ be a set.
-  An operator $a \in \mathcal{B}(\ell^2(G))$ is \emph{adjacent-like} if it satisfies the following
+  An operator $a \in \mathcal{B}(\ell^2(G))$ is \emph{adjacency-like} if it satisfies the following
   properties:
   \begin{itemize}
     \item $a$ is self-adjoint;
@@ -1030,7 +1030,7 @@ We then associate to any adjacent-like operator a dart-like structure.
 \begin{definition}
   \label{def:dartlike_of_adjlike}
   \uses{def:adjacency_like,def:dartlike}
-  Let $V$ be a set and $a$ be an adjacent-like operator on $V$.
+  Let $V$ be a set and $a$ be an adjacency-like operator on $V$.
   We define a dart-like structure on $V$ by taking:
   \begin{itemize}
     \item $D$ is the set of $(x,y,i)$ where $x \in V$, $y \in V$, and $i$ is an integer such that
@@ -1070,4 +1070,63 @@ We then associate to any adjacent-like operator a dart-like structure.
   \uses{def:adjacency_like}
   Let $V$ be a set. The space of adjacency-like operators on $V$ is stable by addition, i.e.
   if $a$, $a'$ are adjacency-like, so is $a+a'$.
+\end{lemma}
+
+\section{Permutation graphs}
+
+Let $V$ be a finite set and $\mathfrak{S_V} = \{ \pi : V \rightarrow V \text{ bijective}\}$
+the set of permutations of $V$.
+
+\begin{definition}
+  \label{def:u_pi}
+  To a $\pi \in \perm{V}$ we associate an operator $u_\pi$ acting on functions
+  $f : V \rightarrow \C$ by
+  \begin{equation*}
+    \forall x \in V, u_\pi f(x) = f(\pi^{-1}(x)).
+  \end{equation*}
+\end{definition}
+
+\begin{lemma}
+  \label{lem:u_pi_mult}
+  \uses{def:u_pi}
+  For $\pi_1, \pi_2 \in \perm{V}$, $u_{\pi_1} u_{\pi_2} = u_{\pi_1 \pi_2}$.
+\end{lemma}
+
+\begin{proof}
+  Let $f : V \rightarrow \C$ and $x \in V$. Then
+  \begin{equation*}
+    u_{\pi_1} u_{\pi_2} f(x)
+    = u_{\pi_1} f(\pi_2^{-1}(x))
+    = f(\pi_2^{-1}(\pi_1^{-1}(x)))
+    = f((\pi_1\pi_2)^{-1}(x))
+    = u_{\pi_1 \pi_2}f(x).
+  \end{equation*}
+\end{proof}
+
+\begin{lemma}
+  \label{lem:u_pi_unitary}
+  \uses{def:u_pi}
+  For $\pi \in \perm{V}$,
+  $u_\pi$ is a unitary operator acting on $\ell^2(V)$.
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:a_pi_adjlike}
+  \uses{lem:u_pi_unitary,def:adjacency_like}
+  For $\pi \in \perm{V}$, $a_\pi := u_\pi + u_\pi^*$ is adjacency-like.
+\end{lemma}
+
+\begin{definition}
+  \label{def:graph_of_permutations}
+  \uses{lem:a_pi_adjlike,def:graph_of_adjlike}
+  Let $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{V}^k$. The graph associated to $\vec{\pi}$
+  is defined as the graph $G_{\pi}$ associated to the ajcencency-like
+  operator $a_{\vec{\pi}} = \sum_{i=1}^k a_{\pi_i} =  \sum_{i=1}^k (u_{\pi_i} + u_{\pi_i}^*)$.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:permgraph_is_regular}
+  \uses{def:graph_of_permutations,def:regular}
+  For any $\vec{\pi} \in \perm{V}^k$, the graph $G_{\vec{\pi}}$
+  is regular of degree $2k$.
 \end{lemma}
