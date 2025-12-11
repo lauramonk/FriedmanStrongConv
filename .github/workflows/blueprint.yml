@@ -7,6 +7,7 @@ on:
       - '**/*.lean'
       - '**/blueprint.yml'
       - 'blueprint/**'
+      - 'home_page/**'
       - 'docs/**'
       - 'scripts/**'
       - 'lean-toolchain'
@@ -79,4 +80,4 @@ jobs:
       - uses: leanprover-community/docgen-action@deed0cdc44dd8e5de07a300773eb751d33e32fc8 # 2025-10-26
         with:
           blueprint: true
-          homepage: docs
+          homepage: home_page
