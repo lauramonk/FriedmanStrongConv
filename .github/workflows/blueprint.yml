@@ -76,9 +76,6 @@ jobs:
       - name: Lint project
         run: env LEAN_ABORT_ON_PANIC=1 ~/.elan/bin/lake exe runLinter FriedmanStrongConv
 
-      - name: Upstreaming dashboard
-        run: python3 scripts/upstreaming_dashboard.py
-
       - uses: leanprover-community/docgen-action@deed0cdc44dd8e5de07a300773eb751d33e32fc8 # 2025-10-26
         with:
           blueprint: true
