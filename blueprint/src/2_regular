@@ -292,6 +292,7 @@ $\de$-regular tree.
 
 \begin{theorem}
   \label{thm:regular_tree_norm}
+  \uses{def:regular_tree,def:adjacency_operator}
   \notready
   Let $G$ be a $\de$-regular tree. Then $\|a\| = 2 \sqrt{\de-1}$.
 \end{theorem}
@@ -307,6 +308,7 @@ for the permutation model introduced in Definition \ref{def:random_perm_graph}.
 \begin{theorem}
   \label{thm:Friedman}
   \uses{def:random_perm_graph}
+  \notready
   Let $\de \geq 4$ be an even integer.
   For any $\epsilon > 0$,
 \begin{equation}

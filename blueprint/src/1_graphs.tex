@@ -339,6 +339,7 @@ We define a notion of walk on the graph.
 
 \begin{definition}
   \label{def:path}
+  \uses{def:walk}
   Let $x, y \in V(G)$.
   A \emph{path} from $x$ to $y$ on $G$ is a walk $(v_i)_{0 \leq i \leq m}$,
   $(e_i)_{1 \leq i \leq m}$
@@ -623,6 +624,7 @@ We define the notion of connectedness and the connected components of a graph.
 
 \begin{lemma}
   \label{lem:connected_iff_diam_ne_zero}
+  \uses{def:connected,def:diameter}
   Assume $V(G)$ is finite and non-empty. Then $\diam(G) \neq 0$ if and only if
   $G$ is connected.
 \end{lemma}
@@ -1393,6 +1395,7 @@ In what follows, we write $\perm{n}$ for the set of permutations of $[n]$.
 
 \begin{definition}
   \label{def:random_perm_graph}
+  \uses{def:graph_of_pi}
   Let $k, n \geq 1$ be integers.
   A \emph{random permutation graph of degree $2k$ with $n$ vertices} is the graph associated to
   a family $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{n}$ of $k$ i.i.d. uniform elements of
