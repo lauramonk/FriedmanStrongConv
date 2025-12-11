@@ -505,16 +505,26 @@ We define the notion of connectedness and the connected components of a graph.
   and an element of $U_2$.
 \end{definition}
 
-\subsection{Metric and diameter}
+\subsection{Metric}
 
 \begin{definition}
   \label{def:edistance}
-  \uses{def:walk}
+  \uses{def:length}
   Let $x, y \in V(G)$. The \emph{extended distance} $\edist(x,y)$
   between $x$ and $y$
   is the length of the shortest walk from $x$ to $y$ (with value in
   $\N \cup \{\infty\}$).
 \end{definition}
+
+\begin{lemma}
+  \label{lem:edistance_zero_infty}
+  \uses{def:edistance}
+  Let $x, y \in V(G)$.
+\begin{itemize}
+  \item   $\edist(x,y) = 0$ iff $x = y$;
+  \item $\edist(x,y) \neq \infty$ iff there exists
+  a walk from $x$ to $y$.
+\end{itemize}\end{lemma}
 
 \begin{definition}
   \label{def:distance}
@@ -523,12 +533,87 @@ We define the notion of connectedness and the connected components of a graph.
   is $\dist(x,y) = \edist(x,y).\mathrm{toNat}$.
 \end{definition}
 
+\begin{lemma}
+  \label{lem:distance_ne_zero}
+  \uses{def:distance,lem:edistance_zero_infty}
+  Let $x, y \in V(G)$. $\dist(x,y) \neq 0$ iff $x \neq y$ and there exists
+  a walk from $x$ to $y$.
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:distance_take}
+  \uses{def:distance}
+  Let $x, y \in V(G)$, we assume $\dist(x,y) \neq 0$. Then there exists a walk
+  of length $\dist(x,y)$ from $x$ to $y$.
+\end{lemma}
+
+\begin{definition}
+  \label{def:ball}
+  \uses{def:edistance}
+  Let $x \in V(G)$ and $r \in \N$.
+  We define the \emph{ball $B_r(x)$
+  of radius $r$ centered at $x$} as the set of vertices
+  $y \in V(G)$ such that $\edist(x,y)\leq r$.
+\end{definition}
+
+\begin{definition}
+  \label{def:circle}
+  \uses{def:edistance}
+  Let $x \in V(G)$ and $r \in \N$.
+  We define the \emph{circle $C_r(x)$
+  of radius $r$ centered at $x$} as the set of vertices
+  $y \in V(G)$ such that $\edist(x,y) = r$.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:ball_circle_radius_zero}
+  \uses{lem:edistance_zero_infty,def:circle,def:ball}
+  For any $x \in V(G)$, $B_0(x) = C_0(x) = \{x\}$.
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:circle_vs_ball}
+  \uses{def:ball,def:circle}
+  For any $x \in V(G)$, $r \in \N$,
+  $C_r(x) \subseteq B_r(x)$ and if
+  $r \geq 1$ then $C_r(x) = B_r(x) - B_{r-1}(x)$.
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:circle_r_vs_rplusone}
+  \uses{def:circle,lem:distance_take}
+  Let $x \in V(G)$ and $r \in \N$.
+  For any $y \in C_{r+1}(x)$, there exists $z \in C_r(x)$ such that
+  $y$ and $z$ are adjacent.
+\end{lemma}
+
+\begin{proof}
+  Take $y \in C_{r+1}(x)$. Then there exists a walk $(v_i)_{0 \leq i \leq r+1}$,
+  $(e_i)_{1 \leq i \leq r+1}$ from $x$ to $y$.
+  We take $z=v_{r}$ and check it is adjacent to $y$ and lies in $C_r(x)$.
+\end{proof}
+
+\begin{proposition}
+  \label{prop:growth_ball}
+  \uses{def:locally_bounded,lem:circle_vs_ball,lem:ball_circle_radius_zero,lem:circle_r_vs_rplusone}
+  Assume $G$ is locally bounded and let $D = \sup_{x \in V(G)} \deg (x)$.
+  Then, for any $x \in V(G)$, any $r \in \N$,
+  $\# B_r(x) \leq D^r$.
+\end{proposition}
+
+\begin{proof}
+  todo
+\end{proof}
+
+\subsection{Diameter}
+
 \begin{definition}
   \label{def:ediameter}
   \uses{def:edistance}
   The \emph{extended diameter} of a graph $G$ is
   $\ediam(G) := \sup_{x,y \in V(G)} \edist(x,y)$.
 \end{definition}
+
 
 \begin{definition}
   \label{def:diameter}
@@ -537,12 +622,42 @@ We define the notion of connectedness and the connected components of a graph.
 \end{definition}
 
 \begin{lemma}
-  \label{connected_iff_diam_ne_zero}
+  \label{lem:connected_iff_diam_ne_zero}
   Assume $V(G)$ is finite and non-empty. Then $\diam(G) \neq 0$ if and only if
   $G$ is connected.
 \end{lemma}
 \begin{proof}
   To be adapted from SimpleGraph.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:vertexset_incl_ball_diam}
+  \uses{def:diameter,def:ball}
+  Assume $G$ is a graph of finite diameter.
+  For any $x \in V(G)$, $V(G)$ is included in the ball of radius $\diam(G)$
+  centered at $x$.
+\end{lemma}
+
+\begin{proof}
+  Let $x, y \in V(G)$. By definition of the diameter, $\dist(x,y) \leq \diam(G)$
+  and hence $y$ lies in the ball of radius $\diam(G)$ centered at $x$.
+\end{proof}
+
+\begin{proposition}
+  \label{prop:bound_diameter_regular}
+  \uses{lem:vertexset_incl_ball_diam,prop:growth_ball}
+  Let $G$ be a regular graph of degree $\de$. Assume $V(G)$ is finite and not empty.
+  Then
+  \begin{equation}
+    \diam(G) \geq \log_{\de} \# V(G).
+  \end{equation}
+\end{proposition}
+
+\begin{proof}
+  Let $x \in V(G)$.
+  By Lemma \ref{lem:vertexset_incl_ball_diam}, if $r := \diam(G)$,
+  then $V(G) \subseteq B_r(x)$. In particular $\# V(G) \leq \# B_r(X) \leq \de^r$
+  by Proposition \ref{prop:growth_ball}.
 \end{proof}
 
 \section{Space of functions on a graph}
@@ -622,6 +737,25 @@ Let us introduce several useful families of functions.
   The space of constant functions is included in $\ell^2(G)$
   if and only if $V(G)$ is finite.
 \end{lemma}
+
+\begin{lemma}
+  \label{lem:orth_constant}
+  \uses{thm:space_constant}
+  Assume $V(G)$ is non-empty and finite.
+  Then, the orthogonal of the space of constant functions is
+  \begin{equation*}
+    \const^\perp = \Big\{ f : V(G) \rightarrow \C :
+    \sum_{x \in V(G)}f(x)=0 \Big\}.
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  By definition of the orthogonal, $\const^\perp$ is the space of functions $f \in \ell^2(G)$
+  such that $\langle f, \const \rangle = 0$.
+  Since $V(G)$ is finite all functions $V(G) \rightarrow \C$ are in $\ell^(G)$.
+  By definition of the scalar product and the constant function,
+  $\langle f, \const \rangle = \sum_{x \in V(G)}f(x)$.
+\end{proof}
 
 \subsection{Indicator functions}
 
@@ -997,7 +1131,7 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
 \begin{corollary}
   \label{cor:spectrum_is_real}
   \uses{prop:adjacency_is_selfadjoint}
-  The spectrum of the adjacency matrix is real.
+  The spectrum of the adjacency operator is real.
 \end{corollary}
 
 \begin{proof}
@@ -1018,6 +1152,19 @@ We are now ready to prove Proposition \ref{prop:adjacency_is_selfadjoint}.
   it is included in the closed ball of center $0$ and
   radius $\|a\|$.
   We have $\|a\| \leq D$ by Theorem \ref{thm:norm_adjacency_leq_sup_degree}.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:spectrum_finite}
+  \uses{prop:adjacency_is_selfadjoint,thm:norm_adjacency_leq_sup_degree}
+  If $V(G)$ is finite, then the spectrum of the adjacency operator
+  is a family of $\# V(G)$ eigenvalues.
+\end{lemma}
+
+\begin{proof}
+  If $V(G)$ is finite, then $\ell^2(G)$ has finite dimension.
+  So this is just the spectral theorem for self-adjoint operators in finite
+  dimension.
 \end{proof}
 
 \subsection{From adjacency operator to graph}
@@ -1250,4 +1397,6 @@ In what follows, we write $\perm{n}$ for the set of permutations of $[n]$.
   A \emph{random permutation graph of degree $2k$ with $n$ vertices} is the graph associated to
   a family $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{n}$ of $k$ i.i.d. uniform elements of
   $\perm{n}$.
+  We denote by $\Prob$ the corresponding probability measure on the space
+  of $\de$ regular graphs with vertex set $[n]$.
 \end{definition}

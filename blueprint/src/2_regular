@@ -4,6 +4,7 @@ We shall here present the basic results in the spectral theory of regular graphs
 state the main results this project aims to formalise.
 
 \section{Trivial eigenvalues}
+\label{sec:trivial_eigenvalues}
 
 Let $\de$ be a non-negative integer.
 We know the spectrum of any regular graph is included in $[-\de,\de]$ by
@@ -184,30 +185,104 @@ We can now proceed to the proof of Proposition \ref{prop:eigenvalue_regular_bipa
   for which $F(x) = f(x) \neq 0$. So $-\de$ is an eigenvalue of $a$.
 \end{proof}
 
-\section{The Alon--Boppana bound}
+\section{The spectral gap}
 
-We shall here prove a lower bound on the second eigenvalue of a regular graph.
+Let us now introduce the main object of interest of this project, the spectral gap.
+
+\begin{lemma}
+  \label{lem:projection_orth_constant}
+  \uses{lem:constant_eigenfunction_regular,lem:orth_constant}
+  Assume $G$ is regular of degree $\de$ and $V(G)$ is finite.
+  Then the operator $a$ induces a bounded self-adjoint operator $a|_{\const^\perp}$
+  on the orthogonal of $\const$ in $\ell^2(G)$, and $\|a|_{\const^\perp}\| \leq d$.
+\end{lemma}
+
+\begin{proof}
+  This is classic theory of self-adjoint bounded operators, as $\const$ is an
+  eigenvector of $a$ by Lemma \ref{lem:constant_eigenfunction_regular}.
+\end{proof}
+
+We will aim to study $\|a|_{\const^\perp}\|$.
+For us, the ``spectral gap" is the difference
+$$d - \|a|_{\const^\perp}\| = \|a\| - \|a|_{\const^\perp}\| \geq 0.$$
+We will see in the results below why this is an interesting quantity.
+Since there are several co-existing conventions for what the spectral gap is
+we will refrain from making it into a formal definition.
+
+This special norm is actually the absolute value of an eigenvalue of the graph.
+
+\begin{lemma}
+  \label{lem:norm_perp_is_eig}
+  \uses{lem:projection_orth_constant}
+  Assume $G$ is regular of degree $\de$ and $V(G)$ is finite.
+  Then there exists $\lambda \in \R$ and a non-zero
+  function $f : V(G) \rightarrow \C$
+  such that $af=\lambda f$, $\sum_{x \in V(G)}f(x)=0$
+   and $|\lambda| = \|a|_{\const^\perp}\|$.
+\end{lemma}
+
+\begin{proof}
+  The operator $a|_{\const^\perp}$ is a self-adjoint operator in finite dimension
+  by Lemma \ref{lem:projection_orth_constant}, and hence its spectrum is entirely
+  made of real eigenvalues and its norm is the supremum of their absolute values.
+  Hence there exists a function $f \in \const^\perp$ and $\lambda \in \R$
+  such that $a|_{\const^\perp}f = \lambda f$, $f \neq 0$ and $|\lambda|=\|a|_{\const^\perp}\|$.
+  The function $f$ and the number $\lambda$ satisfy the claim.
+\end{proof}
+
+The results proven in Section \ref{sec:trivial_eigenvalues} imply the following.
+
+\begin{proposition}
+  \label{prop:gap_iff}
+  \uses{lem:norm_perp_is_eig,prop:eigenvalue_regular_bipartite,prop:regular_multiplicity_trivial_eigenvalue}
+  Assume $G$ is regular of degree $\de$ and $V(G)$ is finite.
+  Then, $\|a|_{\const^\perp}\| = d$ iff $G$ is disconnected or bipartite.
+\end{proposition}
+
+\begin{proof}
+  By Lemma \ref{lem:norm_perp_is_eig},
+  there exists a function $f : V(G) \rightarrow \C$ and a real number $\lambda$
+  such that $af=\lambda f$, $|\lambda|=d$ and $\sum_{x \in V(G)} f(x)=0$.
+  Since $\lambda \in \R$, either $\lambda = d$ or $\lambda=-d$.
+  \begin{itemize}
+    \item If $\lambda = d$, then since $f$ is not constant (otherwise it would be
+    equal to $0$ as $\sum_{x \in V(G)}f(x)=0$), the multiplicity of
+    the eigenvalue $d$ for $a$ is at least $2$. By Proposition
+    \ref{prop:regular_multiplicity_trivial_eigenvalue}, the number of connected
+    components of $G$ is $\geq 2$ and hence $G$ is disconnected.
+    \item If $\lambda = -d$, then $-d$ is an eigenvalue of $a$.
+    By Proposition \ref{prop:eigenvalue_regular_bipartite},
+    $G$ has a connected component $C$ that is bipartite.
+    \begin{itemize}
+      \item If $C=V(G)$ then $G$ is bipartite.
+      \item Otherwise $G$ is disconnected as it has a strict connected component.
+    \end{itemize}
+  \end{itemize}
+\end{proof}
+
+The Alon--Boppana bound is the following lower bound.
 
 \begin{theorem}
   \label{thm:Alon_Boppana}
   \uses{def:diameter}
   \notready
-  Let $G$ be a regular graph of degree $\de$ with $V(G)$ finite.
-  We denote as $\lambda_1 \geq \lambda_2 \ldots \geq \lambda_{\#V(G)}$ the
-  ordered eigenvalues of the adjacency matrix. Then
+  Let $G$ be a regular graph of degree $\de$ with a finite diameter.
+  Then,
   \begin{equation*}
-    \lambda_2 \geq 2 \sqrt{2 \de -1}
+    \|a|_{\const^\perp}\|
+     \geq 2 \sqrt{2 \de -1}
      - \frac{2 \sqrt{2 \de -1}-1}{\lfloor \diam (G) /2 \rfloor}.
   \end{equation*}
 \end{theorem}
 
-From this onservation Alon famously conjectured that most large regular trees
-satisfied $\lambda_2 \leq 2 \sqrt{2\de -1} + o(1)$. The aim of this blueprint
-is to prove this result.
+This bound is not required for the project, but it is not
+very difficult to prove and I believe it would be a good side project if someone
+wants to give it a try.
+Here is a reference \cite{alon1986}, where the proof if for simple graphs but can
+be easily adapted.
 
-\section{The infinite regular tree}
-
-Let $\de \geq 1$ be an integer.
+The special value $2\sqrt{2 \de - 1}$ appears here as the spectral radius of the
+$\de$-regular tree.
 
 \begin{definition}
   \label{def:regular_tree}
@@ -215,4 +290,78 @@ Let $\de \geq 1$ be an integer.
   A graph $G$ is a $\de$-regular tree if it is a tree and regular of degree $\de$.
 \end{definition}
 
-We can construct an explicit example.
+\begin{theorem}
+  \label{thm:regular_tree_norm}
+  \notready
+  Let $G$ be a $\de$-regular tree. Then $\|a\| = 2 \sqrt{\de-1}$.
+\end{theorem}
+
+The proof of Theorem \ref{thm:regular_tree_norm} will be detailed in Section \ref{sec:tree}.
+
+Proposition \ref{prop:bound_diameter_regular} allows to see the Alon--Boppana
+bound as a limitation for the spectral gap as the graph grows (i.e. $\# V(G)$ is large).
+From this observation Alon famously conjectured that most large regular trees
+have a near-optimal spectral gap. The aim of this blueprint is to prove this result
+for the permutation model introduced in Definition \ref{def:random_perm_graph}.
+
+\begin{theorem}
+  \label{thm:Friedman}
+  \uses{def:random_perm_graph}
+  Let $\de \geq 4$ be an even integer.
+  For any $\epsilon > 0$,
+\begin{equation}
+    \lim_{n \rightarrow \infty}
+    \Prob(\|a|_{\const^\perp}\| \leq 2 \sqrt{2\de -1} + \epsilon) = 1.
+\end{equation}
+\end{theorem}
+
+This result was first proven by Friedman in the early 2000s in a very long proof \cite{friedman2003}.
+We will use a new method introduced by Chen, Garza-Vargas, Tropp and van Handel in \cite{chen2025}
+called the polynomial method, which produced a radically simpler proof of this result.
+
+Let us prove a simple consequence of this result.
+
+\begin{proposition}
+  \label{prop:random_connected_non_bipartite}
+  \uses{thm:Friedman,prop:gap_iff}
+  Let $\de \geq 4$ be an even integer.
+  Then,
+  \begin{equation}
+    \lim_{n \rightarrow \infty} \Prob(G_{\vec{\pi}} \text{ is connected})=1
+  \end{equation}
+  and
+    \begin{equation}
+    \lim_{n \rightarrow \infty} \Prob(G_{\vec{\pi}} \text{ is bipartite})=0.
+  \end{equation}
+\end{proposition}
+
+\begin{proof}
+  Denote $A = "G_{\vec{\pi}} \text{ is disconnected}"$ and
+  $B = "G_{\vec{\pi}} \text{ is bipartite}"$.
+  By Proposition \ref{prop:gap_iff},
+  \begin{equation*}
+    \Prob(A \cup B) = \Prob(\|a|_{\const^\perp}\| = \de).
+  \end{equation*}
+
+  We check directly that $2 \sqrt{2 \de - 1} < \de$.
+  Hence taking $\epsilon = (\de - 2 \sqrt{2 \de - 1})/2 > 0$
+  we obtain
+  \begin{equation*}
+    \forall x, \quad x = \de \Rightarrow x > 2 \sqrt{2\de -1} + \epsilon.
+  \end{equation*}
+  Hence
+  \begin{equation*}
+    \Prob(A \cup B) \leq \Prob(\|a|_{\const^\perp}\| > 2 \sqrt{2\de -1} + \epsilon)
+  \end{equation*}
+  which goes to $0$ as $n \rightarrow \infty$ by Theorem \ref{thm:Friedman}.
+  So $\lim_n \Prob(A) = 0$ and $\lim_n \Prob(B)=0$ which allows to conclude.
+\end{proof}
+
+\section{The infinite regular tree}
+\label{sec:tree}
+
+% Let $\de \geq 1$ be an integer.
+
+
+
+% We can construct an explicit example.
