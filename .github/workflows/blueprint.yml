@@ -20,6 +20,7 @@ on:
       - '**/*.lean'
       - '**/blueprint.yml'
       - 'blueprint/**'
+      - 'home_page/**'
       - 'docs/**'
       - 'scripts/**'
       - 'lean-toolchain'
@@ -68,7 +69,7 @@ jobs:
       - name: Get Mathlib cache
         run: ~/.elan/bin/lake exe cache get || true
 
-      - name: check that FriedmanStrongConv.lean is up to date
+      - name: Check that FriedmanStrongConv.lean is up to date
         run: ~/.elan/bin/lake exe mk_all --check
 
       - name: Build project
