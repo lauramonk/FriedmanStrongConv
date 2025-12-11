@@ -175,14 +175,3 @@ theorem support_subset_support_cons {x y z : α} {e : β} (p : G.Walk y z) (h : 
 
 theorem coe_support {x y : α} (p : G.Walk x y) :
   (p.support : Multiset α) = {x} + p.support.tail := by cases p <;> rfl
-
-theorem isChain_adj_cons_support {x y z : α} (hxy : G.Adj x y) (p : G.Walk y z) : List.Chain G.Adj x
- (support p) :=
-  match p with
-  | nil => List.Chain.cons hxy List.Chain.nil
-  | cons h p' => List.Chain.cons hxy (isChain_adj_cons_support (IsLink.adj h) p')
-
-theorem isChain_adj_support {x y : α} (p : G.Walk x y) : List.Chain' G.Adj (support p) :=
-  match p with
-  | nil => List.chain'_singleton x
-  | cons h p' => isChain_adj_cons_support (IsLink.adj h) p'
