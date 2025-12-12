@@ -10,9 +10,9 @@ import Mathlib.Data.ENat.Lattice
 /-!
 # Graph metric
 
-This module defines the `SimpleGraph.edist` function, which takes pairs of vertices to the length of
-the shortest walk between them, or `⊤` if they are disconnected. It also defines `SimpleGraph.dist`
-which is the `ℕ`-valued version of `SimpleGraph.edist`.
+This module defines the `Graph.edist` function, which takes pairs of vertices to the length of
+the shortest walk between them, or `⊤` if they are disconnected. It also defines `Graph.dist`
+which is the `ℕ`-valued version of `Graph.edist`.
 
 ## Main definitions
 
