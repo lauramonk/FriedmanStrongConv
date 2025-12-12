@@ -7,6 +7,8 @@ Authors: Laura Monk
 import Mathlib.Combinatorics.Graph.Basic
 import FriedmanStrongConv.Graph.Walks.Basic
 
+open Function
+
 universe u v
 variable {α : Type u} {β : Type v} {x y z u v w : α} {e f : β}
 
@@ -181,7 +183,36 @@ theorem reverse_reverse {x y : α} (p : G.Walk x y) : p.reverse.reverse = p := b
   | nil => rfl
   | cons _ _ ih => simp [ih]
 
+theorem reverse_surjective {x y : α} : Function.Surjective (reverse : G.Walk x y → _) :=
+  RightInverse.surjective reverse_reverse
+
+theorem reverse_injective {x y : α} : Function.Injective (reverse : G.Walk x y → _) :=
+  RightInverse.injective reverse_reverse
+
+theorem reverse_bijective {x y : α} : Function.Bijective (reverse : G.Walk x y → _) :=
+  ⟨reverse_injective, reverse_surjective⟩
+
+@[simp]
+theorem length_copy {x y x' y'} (p : G.Walk x y) (hx : x = x') (hy : y = y') :
+    (p.copy hx hy).length = p.length := by
+  subst_vars
+  rfl
+
 @[simp]
 theorem length_append {x y z : α} (p : G.Walk x y) (q : G.Walk y z) :
     (p.append q).length = p.length + q.length := by
   induction p <;> simp [*, add_comm, add_assoc]
+
+@[simp]
+theorem length_concat {x y z : α} {e : β} (p : G.Walk x y) (h : G.IsLink e y z) :
+    (p.concat h).length = p.length + 1 := length_append _ _
+
+@[simp]
+protected theorem length_reverseAux {x y z : α} (p : G.Walk x y) (q : G.Walk x z) :
+    (p.reverseAux q).length = p.length + q.length := by
+  induction p with
+  | nil => simp!
+  | cons _ _ ih => simp [ih, Nat.succ_add, add_assoc]
+
+@[simp]
+theorem length_reverse {x y : α} (p : G.Walk x y) : p.reverse.length = p.length := by simp [reverse]

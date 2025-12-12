@@ -89,3 +89,20 @@ protected theorem edist_triangle : G.edist x z ≤ G.edist x y + G.edist y z := 
       obtain ⟨q, hq⟩ := exists_walk_of_edist_ne_top hyz
       rw [← hp, ← hq, ← Nat.cast_add, ← Walk.length_append]
       exact edist_le _
+
+theorem edist_comm : G.edist x y = G.edist y x := by
+  rw [edist_eq_sInf, ← Set.image_univ, ← Set.image_univ_of_surjective Walk.reverse_surjective,
+    ← Set.image_comp, Set.image_univ, Function.comp_def]
+  simp_rw [Walk.length_reverse, ← edist_eq_sInf]
+
+lemma exists_walk_of_edist_eq_coe {k : ℕ} (h : G.edist x y = k) :
+    ∃ p : G.Walk x y, p.length = k :=
+  have : G.edist x y ≠ ⊤ := by rw [h]; exact ENat.coe_ne_top _
+  have ⟨p, hp⟩ := exists_walk_of_edist_ne_top this
+  ⟨p, Nat.cast_injective (hp.trans h)⟩
+
+lemma edist_ne_top_iff_reachable : G.edist x y ≠ ⊤ ↔ G.Reachable x y := by
+  refine ⟨reachable_of_edist_ne_top, fun h ↦ ?_⟩
+  by_contra hx
+  simp only [edist, iInf_eq_top, ENat.coe_ne_top] at hx
+  exact h.elim hx
