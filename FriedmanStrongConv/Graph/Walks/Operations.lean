@@ -112,3 +112,76 @@ theorem append_concat {x y z u : α} {e : β} (p : G.Walk x y) (q : G.Walk y z) 
 theorem concat_append {x y z u : α} {e : β} (p : G.Walk x y) (h : G.IsLink e y z) (q : G.Walk z u) :
     (p.concat h).append q = p.append (cons h q) := by
   rw [concat_eq_append, ← append_assoc, cons_nil_append]
+
+/-- A non-trivial `cons` walk is representable as a `concat` walk. -/
+theorem exists_cons_eq_concat {x y z : α} {e : β} (h : G.IsLink e x y) (p : G.Walk y z) :
+    ∃ (u : α) (f : β) (q : G.Walk x u) (h' : G.IsLink f u z), cons h p = q.concat h' := by
+  induction p generalizing x e with
+  | nil => exact ⟨_, _, nil, h, rfl⟩
+  | cons h' p ih =>
+    obtain ⟨v, g, q, h'', hc⟩ := ih h'
+    exact ⟨v, g, cons h q, h'', hc ▸ concat_cons _ _ _ ▸ rfl⟩
+
+/-- A non-trivial `concat` walk is representable as a `cons` walk. -/
+theorem exists_concat_eq_cons {x y z : α} {e : β} :
+    ∀ (p : G.Walk x y) (h : G.IsLink e y z),
+      ∃ (u : α) (f : β) (h' : G.IsLink f x u) (q : G.Walk u z), p.concat h = cons h' q
+  | nil, h => ⟨_, _, h, nil, rfl⟩
+  | cons h' p, h => ⟨_, _, h', Walk.concat p h, concat_cons _ _ _⟩
+
+@[simp]
+theorem reverse_nil {x : α} : (nil : G.Walk x x).reverse = nil := rfl
+
+theorem reverse_singleton {x y : α} {e : β} (h : G.IsLink e x y) : (cons h nil).reverse = cons (h.symm) nil := rfl
+
+@[simp]
+theorem cons_reverseAux {x y z u : α} {e : β} (p : G.Walk x y) (q : G.Walk z u) (h : G.IsLink e z x) :
+    (cons h p).reverseAux q = p.reverseAux (cons (h.symm) q) := rfl
+
+@[simp]
+protected theorem append_reverseAux {x y z u : α}
+    (p : G.Walk x y) (q : G.Walk y z) (r : G.Walk x u) :
+    (p.append q).reverseAux r = q.reverseAux (p.reverseAux r) := by
+  induction p with
+  | nil => rfl
+  | cons h _ ih => exact ih q (cons (h.symm) r)
+
+@[simp]
+protected theorem reverseAux_append {x y z u : α}
+    (p : G.Walk x y) (q : G.Walk x z) (r : G.Walk z u) :
+    (p.reverseAux q).append r = p.reverseAux (q.append r) := by
+  induction p with
+  | nil => rfl
+  | cons h _ ih => simp [ih (cons (h.symm) q)]
+
+protected theorem reverseAux_eq_reverse_append {x y z : α} (p : G.Walk x y) (q : G.Walk x z) :
+    p.reverseAux q = p.reverse.append q := by simp [reverse]
+
+@[simp]
+theorem reverse_cons {x y z : α} {e : β} (h : G.IsLink e x y) (p : G.Walk y z) :
+    (cons h p).reverse = p.reverse.append (cons (h.symm) nil) := by simp [reverse]
+
+@[simp]
+theorem reverse_copy {x y x' y'} (p : G.Walk x y) (hx : x = x') (hy : y = y') :
+    (p.copy hx hy).reverse = p.reverse.copy hy hx := by
+  subst_vars
+  rfl
+
+@[simp]
+theorem reverse_append {x y z : α} (p : G.Walk x y) (q : G.Walk y z) :
+    (p.append q).reverse = q.reverse.append p.reverse := by simp [reverse]
+
+@[simp]
+theorem reverse_concat {x y z : α} {e : β} (p : G.Walk x y) (h : G.IsLink e y z) :
+    (p.concat h).reverse = cons (h.symm) p.reverse := by simp [concat_eq_append]
+
+@[simp]
+theorem reverse_reverse {x y : α} (p : G.Walk x y) : p.reverse.reverse = p := by
+  induction p with
+  | nil => rfl
+  | cons _ _ ih => simp [ih]
+
+@[simp]
+theorem length_append {x y z : α} (p : G.Walk x y) (q : G.Walk y z) :
+    (p.append q).length = p.length + q.length := by
+  induction p <;> simp [*, add_comm, add_assoc]
