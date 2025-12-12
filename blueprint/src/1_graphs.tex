@@ -263,6 +263,8 @@ We define a notion of walk on the graph.
 
 \begin{definition}
   \label{def:walk}
+  \leanok
+  \lean{Graph.Walk}
   Let $x, y \in V(G)$. A \emph{walk} from $x$ to $y$ on $G$ is given by two finite lists:
   \begin{itemize}
     \item a list $(v_i)_{0 \leq i \leq m}$ of vertices in $V(G)$;
@@ -278,12 +280,16 @@ We define a notion of walk on the graph.
 \begin{definition}
   \label{def:length}
   \uses{def:walk}
+  \leanok
+  \lean{Graph.Walk.length}
   The \emph{length} of a walk is its number of edges.
 \end{definition}
 
 \begin{definition}
   \label{def:reachable}
   \uses{def:walk}
+  \leanok
+  \lean{Graph.Reachable}
   We define a binary relation on $V(G)$ by: $x \sim y$ if there exists a walk
   from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{reachable}.
 \end{definition}
@@ -291,6 +297,8 @@ We define a notion of walk on the graph.
 \begin{proposition}
   \label{prop:reachable_is_equivalence}
   \uses{def:reachable}
+  \leanok
+  \uses{Graph.Reachable.rfl}
   The reachability relation is an equivalence relation on $V(G)$.
 \end{proposition}
 
@@ -329,6 +337,8 @@ We define a notion of walk on the graph.
 \begin{lemma}
   \label{lem:adj_towalk}
   \uses{def:reachable}
+  \leanok
+  \uses{Adj.reachable}
   Let $x$, $y$ in $V(G)$. If $x$ and $y$ are adjacent then $x$ and $y$ are reachable.
 \end{lemma}
 
@@ -359,12 +369,16 @@ We define the notion of connectedness and the connected components of a graph.
 \begin{definition}
   \label{def:preconnected}
   \uses{def:reachable}
+  \leanok
+  \lean{Preconnected}
   A graph is \emph{preconnected} if any pair of vertices is reachable.
 \end{definition}
 
 \begin{definition}
   \label{def:connected}
-    \uses{def:preconnected}
+  \uses{def:preconnected}
+  \leanok
+  \lean{Connected}
   The graph $G$ is \emph{connected} if it is preconnected and $V(G)$ is not empty.
 \end{definition}
 
@@ -511,6 +525,8 @@ We define the notion of connectedness and the connected components of a graph.
 \begin{definition}
   \label{def:edistance}
   \uses{def:length}
+  \leanok
+  \lean{edist}
   Let $x, y \in V(G)$. The \emph{extended distance} $\edist(x,y)$
   between $x$ and $y$
   is the length of the shortest walk from $x$ to $y$ (with value in
