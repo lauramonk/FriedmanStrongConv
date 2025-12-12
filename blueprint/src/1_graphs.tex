@@ -298,7 +298,7 @@ We define a notion of walk on the graph.
   \label{prop:reachable_is_equivalence}
   \uses{def:reachable}
   \leanok
-  \uses{Graph.Reachable.rfl}
+  \lean{Graph.Reachable.rfl}
   The reachability relation is an equivalence relation on $V(G)$.
 \end{proposition}
 
@@ -370,7 +370,7 @@ We define the notion of connectedness and the connected components of a graph.
   \label{def:preconnected}
   \uses{def:reachable}
   \leanok
-  \lean{Preconnected}
+  \lean{Graph.Preconnected}
   A graph is \emph{preconnected} if any pair of vertices is reachable.
 \end{definition}
 
@@ -378,7 +378,7 @@ We define the notion of connectedness and the connected components of a graph.
   \label{def:connected}
   \uses{def:preconnected}
   \leanok
-  \lean{Connected}
+  \lean{Graph.Connected}
   The graph $G$ is \emph{connected} if it is preconnected and $V(G)$ is not empty.
 \end{definition}
 
@@ -526,7 +526,7 @@ We define the notion of connectedness and the connected components of a graph.
   \label{def:edistance}
   \uses{def:length}
   \leanok
-  \lean{edist}
+  \lean{Graph.edist}
   Let $x, y \in V(G)$. The \emph{extended distance} $\edist(x,y)$
   between $x$ and $y$
   is the length of the shortest walk from $x$ to $y$ (with value in
