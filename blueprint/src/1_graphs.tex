@@ -285,6 +285,28 @@ We define a notion of walk on the graph.
   The \emph{length} of a walk is its number of edges.
 \end{definition}
 
+The following definition is actually what we want if we want to count walks
+on the multi-graph, I am not sure if it would be accepted as a definition though?
+\begin{definition}
+  \label{def:dartwalk}
+  Let $x, y \in V(G)$.
+  A \emph{dartwalk} from $x$ to $y$ on $G$ is
+  a finite list of darts $(d_i)_{1 \leq i \leq m}$ where:
+  \begin{itemize}
+    \item $\spt(d_1)=x$;
+    \item $\ept(d_m)=y$;
+    \item for all $1 \leq i < m$, $\ept(d_i)=\spt(d_{i+1})$.
+  \end{itemize}
+\end{definition}
+
+\begin{definition}
+  \label{def:dartwalk_support}
+  \uses{def:dartwalk}
+  The \emph{support} of the dartwalk $(d_i)_{1 \leq i \leq m}$
+  is the list $(x_i)_{0 \leq i \leq m}$ with $x_0=\spt(d_1)$ and
+  $x_i = \ept(d_i)$ for $1 \leq i \leq m$.
+\end{definition}
+
 \begin{definition}
   \label{def:reachable}
   \uses{def:walk}
@@ -357,9 +379,16 @@ We define a notion of walk on the graph.
 \end{definition}
 
 \begin{definition}
+  \label{def:dartpath}
+  \uses{def:dartwalk_support}
+  A dartwalk $(d_i)_{1 \leq i \leq k}$ is a \emph{dartpath} if all vertices in its
+  support are distinct.
+\end{definition}
+
+\begin{definition}
   \label{def:tree}
   The graph $G$ is a \emph{tree} if, for all $x$, $y \in V(G)$,
-  there exists a unique path from $x$ to $y$.
+  there exists a unique dartpath from $x$ to $y$.
 \end{definition}
 
 \subsection{Connectedness}
