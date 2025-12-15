@@ -362,7 +362,10 @@ Let us prove a simple consequence of this result.
 \section{The infinite regular tree}
 \label{sec:tree}
 
-Let $\de \geq 1$ be an integer.
+Let $\de \geq 2$ be an integer.
+
+\subsection{A model for the regular tree}
+
 We define a model for the $\de$-regular tree.
 Let $W_\de$ denote the set of words on the alphabet $[\de]$,
 $V_\de$ denote the set of reduced words in $W_\de$ and
@@ -516,6 +519,30 @@ We now prove that $\tree$ is a tree.
   So this is the unique path from $w$ to $w'$.
 \end{proof}
 
+\subsection{The spectrum of the regular tree}
 
+Let $\de \geq 2$ be an integer.
 
-% We can construct an explicit example.
+\begin{proposition}
+  \label{prop:bound_norm_regtree}
+  \uses{lem:scalar_of_adjacency,def:regular_tree}
+  \notready
+  Let $G$ be a $\de$-regular tree.
+  Then, for any $f \in \ell^2(G)$,
+  $|\langle af, f \rangle| \leq 2 \sqrt{\de-1} \| f \|^2$.
+\end{proposition}
+
+\begin{proof}
+  Take $f \in \ell^2(G)$.
+  By Lemma \ref{lem:scalar_of_adjacency},
+  \begin{equation*}
+    \langle af, f \rangle
+    = \sum_{d \in D(G)} f(\ept(d)) \overline{f(\spt(d))}
+  \end{equation*}
+  so by the triangular inequality
+  \begin{equation*}
+    |\langle af, f \rangle|
+    \leq \sum_{d \in D(G)} |f(\ept(d)) \overline{f(\spt(d))}|.
+  \end{equation*}
+  [todo:continue]
+\end{proof}
