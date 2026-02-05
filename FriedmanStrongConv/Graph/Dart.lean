@@ -19,39 +19,27 @@ variable {α : Type u} {β : Type v} {x y z u v w : α} {e f : β}
 
 namespace Graph
 
-inductive Dart {G : Graph α β}
-  | Fwd : {x : α} -> {e : β} -> (h : G.IsLoopAt e x) -> Dart
-  | Bck : {x : α} -> {e : β} -> (h : G.IsLoopAt e x) -> Dart
-  | Dir : {x : α} -> {e : β} -> (h : G.IsNonloopAt e x) -> Dart
+-- inductive Dart {G : Graph α β}
+--   | Fwd : {x : α} -> {e : β} -> (h : G.IsLoopAt e x) -> Dart
+--   | Bck : {x : α} -> {e : β} -> (h : G.IsLoopAt e x) -> Dart
+--   | Dir : {x : α} -> {e : β} -> (h : G.IsNonloopAt e x) -> Dart
 
 variable {G : Graph α β}
 
+structure Dart extends α × α where
+  edge : β
+  isLink : G.IsLink edge fst snd
+  orienOfEq : fst = snd -> Bool
+  deriving DecidableEq
+
 namespace Dart
 
--- TODO: define Dart.vertex_mem which takes a dart and shows x is in V(G)
--- using IsLoopAt.vertex_mem and IsNonloopAt.vertex_mem
+lemma fst_mem (d : G.Dart) : d.fst ∈ V(G) := d.isLink.left_mem
 
--- def startPt : G.Dart → V(G)
---   | Fwd (h : G.IsLoopAt _ x) => x
---   | Bck (h : G.IsLoopAt _ x) => x
---   | Dir (h : G.IsNonloopAt _ x) => x
+lemma snd_mem (d : G.Dart) : d.snd ∈ V(G) := d.isLink.right_mem
 
+lemma edge_mem (d : G.Dart) : d.edge ∈ E(G) := d.isLink.edge_mem
 
--- def endPt : G.Dart → V(G)
---   | Fwd (h : G.IsLoopAt x) => x
---   | Bck (h : G.IsLoopAt x) => x
---   | Dir (h : G.IsNonloopAt e x) =>
- -- TODO: take the y from IsNonloopAt using Inc.inc_other
-
--- TODO: define Dart.edge_mem which takes a dart and shows e is in E(G)
--- using IsLoopAt.edge_mem and IsNonloopAt.edge_mem
-
--- def edge : G.Dart → E(G)
---   | Fwd (h : G.IsLoopAt e _) => e
---   | Bck (h : G.IsLoopAt e _) => e
---   | Dir (h : G.IsNonloopAt e _) => e
-
+def symm (d : G.Dart) : G.Dart := -- todo
 
 -- TODO: define a symmetry function which flips a dart
--- Might need a lemma showing that if IsNonLoopAt e x then IsNonLoopAt e y where
--- y is the other endpoint (would be easy as we can just take x)
