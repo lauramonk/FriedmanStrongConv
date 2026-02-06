@@ -53,12 +53,12 @@ Here are key properties that must be satisfied by our implementation of darts.
 
 \begin{lemma}
   \label{lem:dart_API}
-  \leanok[stated]
   \uses{def:reverse_dart}
   \begin{itemize}
     \item For any dart $d$, $\symm(d) \neq d$.
     \item For any dart $d$, $\symm(\symm(d)) = d$.
-    \item For any edge $e$, there exists a dart $d$ such that $\edge(d)=e$.
+    \item For any $e \in E(G)$, there exists $d \in D(G)$ such that
+          $\edge^{-1}(\{e\}) = \{d, \symm(d)\}$.
     \item For any $d, d'$, if $\edge(d)=\edge(d')$ then $d=d'$ or $d=\symm(d')$.
   \end{itemize}
 \end{lemma}
@@ -95,46 +95,11 @@ Here are key properties that must be satisfied by our implementation of darts.
   \end{enumerate}
 \end{lemma}
 
-\begin{proof}
-  We start by proving (1) $\Rightarrow$ (2).
-  Assume $x$ and $y$ are adjacent.
-  Then there exists an edge $e$ linking $x$ and $y$.
-  The function $\edge$ is surjective so there exists $d \in D(G)$ such that $\edge(d)=e$.
-  $e$ links $x$ and $y$ but also $\spt(d)$ and $\ept(d)$ so:
-  \begin{itemize}
-    \item either $x=\spt(d)$ and $y=\ept(d)$, in which case $d \in \dartset(x)$
-    satisfies the claim;
-    \item otherwise $x = \ept(d) = \spt(\symm(d))$ and $y = \spt(d) = \ept(\symm(d))$ and
-    hence $\symm(d) \in \dartset(x)$ satisfies the claim.
-  \end{itemize}
-
-  The implication (2) $\Rightarrow$ (3) is immediate by definition of $\dartset(x,y)$.
-
-  To conclude, (3) $\Rightarrow$ (1) because, if $d \in \dartset(x,y)$, then $\edge(d)$
-  links $x$ and $y$ and hence they are adjacent.
-\end{proof}
-
-\begin{lemma}
-  \label{lem:edge_preimage}
-  \uses{def:dart}
-  For any $e \in E(G)$, there exists $d \in D(G)$ such that
-  $\edge^{-1}(\{e\}) = \{d, \symm(d)\}$.
-\end{lemma}
-
-\begin{proof}
-  Let $e \in E(G)$.
-  The map $\edge$ is surjective so there exists $d \in D(G)$ such that $\edge(d)=e$.
-  We have $\edge(\symm(d))=\edge(d)=e$. This proves $\{d, \symm(d)\} \subseteq \edge^{-1}(\{e\})$.
-  For the other direction, if $d' \in D(G)$ satisfies $\edge(d')=e$, then
-  $\edge(d)=\edge(d')$ which implies by definition that $d'=d$ or $d'=\symm(d)$, which is the
-  claim.
-\end{proof}
-
 \begin{lemma}
   \label{lem:edge_range_of_darset}
-  \uses{lem:edge_preimage,def:dartset_pair}
+  \uses{lem:dart_API,def:dartset_pair}
   Let $x,y \in V(G)$.
-  The range of the restriction of the function $\edge$
+  The range of the restriction of the function $\edge : D(G) \to E(G)$
   to $\dartset(x,y)$
   is exactly the set $\{e \in E(G) : e \text{ links } x, y\}$.
   Furthermore, this map is $1$-to-$1$ if $x \neq y$ and $2$-to-$1$ if $x=y$.
@@ -144,7 +109,7 @@ Here are key properties that must be satisfied by our implementation of darts.
   Let $d \in \dartset(x,y)$. Then, $\edge(d) \in E(G)$ links $\spt(d)=x$
   and $\ept(d)=y$. So $\edge(d)$ belongs in the claimed set.
 
-  Now take $e \in E(G)$ linking $x$ and $y$. By Lemma \ref{lem:edge_preimage},
+  Now take $e \in E(G)$ linking $x$ and $y$. By Lemma \ref{lem:dart_API},
   there exists $d \in D(G)$ such that $\edge^{-1}(\{e\}) = \{d, \symm(d)\}$.
   We check that $d$ or $\symm(d)$ belongs in $\dartset(x,y)$, and that
   both of them do iff $x=y$, which leads to the claim.
@@ -181,10 +146,6 @@ We can alternatively define a graph from its darts in the following fashion.
   classes are of the form $\{d, \symm(d)\}$ (the two of which are distinct).
 \end{lemma}
 
-\begin{proof}
-  This is a classic fact for involutions with no fixed points.
-\end{proof}
-
 \begin{definition}
   \label{def:graph_of_dart}
   Let $V$ be a set and $D$, $\spt, \ept, \symm$ be a dart-like structure.
@@ -197,27 +158,20 @@ We can alternatively define a graph from its darts in the following fashion.
   \end{itemize}
 \end{definition}
 
-\begin{proof}
-  The only thing to check is that the definition of the links does not depend on the
-  choice of a representative, which is true since
-  $\spt \circ \symm = \ept$ and $\ept \circ \symm = \spt$.
-\end{proof}
-
 \begin{theorem}
   \label{thm:dart_of_graph_of_dart}
   \uses{def:graph_of_dart,def:dart}
-  The graph constructed in Definition \ref{def:graph_of_dart} is a graph,
-  and $D(G) := D$, $\spt$, $\ept$, $\symm$ are darts of this graph, with the projection
-  edge map $\edge : D(G) \rightarrow E(G)$.
+  The graph $G$ constructed in Definition \ref{def:graph_of_dart} is a graph,
+  and $D(G) = D$.
 \end{theorem}
 
 \subsection{Subgraphs}
 
-The definition of subgraph is easier for Graph as the vertexset is just a subset.
+The definition of subgraph is easier for Graph than SimpleGraph as the vertexset is just a subset.
 
 \begin{definition}
   \label{def:subgraph}
-  A \emph{subgraph} $H$ of $G$ is a graph (ofthe same type as $G$) defined by:
+  A \emph{subgraph} $H$ of $G$ is a graph (of the same type as $G$) defined by:
   \begin{itemize}
     \item a vertex set $V(H)$ included in the vextex set of $G$
     \item an edge set $E(H)$ included in the edge set of $H$
@@ -264,210 +218,14 @@ The definition of subgraph is easier for Graph as the vertexset is just a subset
   A subgraph is induced iff it is induced from as subset of $V(G)$.
 \end{lemma}
 
-\subsection{Walks and reachability}
+\subsection{Finiteness}
 
-We define a notion of walk on the graph.
-
-\begin{definition}
-  \label{def:walk}
-  \leanok
-  \lean{Graph.Walk}
-  Let $x, y \in V(G)$. A \emph{walk} from $x$ to $y$ on $G$ is given by two finite lists:
-  \begin{itemize}
-    \item a list $(v_i)_{0 \leq i \leq m}$ of vertices in $V(G)$;
-    \item a list $(e_i)_{1 \leq i \leq m}$ of edges in $E(G)$;
-  \end{itemize}
-  satisfying the following:
-    \begin{itemize}
-      \item $v_0=x$ and $v_m=y$;
-      \item for any $i \in \{1, \ldots, m\}$, $e_i$ links $v_{i-1}$ and $v_i$.
-    \end{itemize}
-\end{definition}
+TODO: determine which notion of finiteness we use.
 
 \begin{definition}
-  \label{def:length}
-  \uses{def:walk}
-  \leanok
-  \lean{Graph.Walk.length}
-  The \emph{length} of a walk is its number of edges.
+  \label{def:finite}
+  A graph $G$ is \emph{finite} if $V(G)$ and $E(G)$ are both finite sets.
 \end{definition}
-
-The following definition is actually what we want if we want to count walks
-on the multi-graph, I am not sure if it would be accepted as a definition though?
-\begin{definition}
-  \label{def:dartwalk}
-  Let $x, y \in V(G)$.
-  A \emph{dartwalk} from $x$ to $y$ on $G$ is
-  a finite list of darts $(d_i)_{1 \leq i \leq m}$ where:
-  \begin{itemize}
-    \item $\spt(d_1)=x$;
-    \item $\ept(d_m)=y$;
-    \item for all $1 \leq i < m$, $\ept(d_i)=\spt(d_{i+1})$.
-  \end{itemize}
-\end{definition}
-
-\begin{definition}
-  \label{def:dartwalk_support}
-  \uses{def:dartwalk}
-  The \emph{support} of the dartwalk $(d_i)_{1 \leq i \leq m}$
-  is the list $(x_i)_{0 \leq i \leq m}$ with $x_0=\spt(d_1)$ and
-  $x_i = \ept(d_i)$ for $1 \leq i \leq m$.
-\end{definition}
-
-\begin{definition}
-  \label{def:reachable}
-  \uses{def:walk}
-  \leanok
-  \lean{Graph.Reachable}
-  We define a binary relation on $V(G)$ by: $x \sim y$ if there exists a walk
-  from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{reachable}.
-\end{definition}
-
-\begin{proposition}
-  \label{prop:reachable_is_equivalence}
-  \uses{def:reachable}
-  \leanok
-  \lean{Graph.Reachable.rfl}
-  The reachability relation is an equivalence relation on $V(G)$.
-\end{proposition}
-
-\begin{proof}
-  The reachability relation is reflexive: $x \sim x$ for any $x \in V(G)$.
-  Indeed, let $x \in V(G)$. We take $m=0$ and set $v_0=x$. Then this is a walk from
-  $x$ to $x$ on $G$.
-
-  The reachability relation is symmetric: if $x \sim y$ then  $y \sim x$.
-  Let $x$, $y$ be two vertices. We assume $x \sim y$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
-  be a walk from $x$ to $y$. Then $(v_{m-i})_{0 \leq i \leq m}$ and $(e_{m+1-i})_{1 \leq i \leq m}$
-  is a walk from $y$ to $x$. So $y \sim x$.
-
-  The reachability relation is transitive: if $x \sim y$ and $y \sim z$ then
-  $x \sim z$.
-  Assume $x \sim y$ and $y \sim z$. Let $(v_i)_{0 \leq i \leq m}$ and $(e_i)_{1 \leq i \leq m}$
-  be a walk from $x$ to $y$ and $(v_i')_{0 \leq i \leq m'}$, $(e_i')_{1 \leq i \leq m'}$
-  be a walk from $y$ to $z$.
-  We let $m''=m+m'$ and define for $i \in \{0, \ldots, m'\}$
-  \begin{equation}
-    v_i'' := \begin{cases}
-      v_i & \text{if } i \leq m \\
-      v_{i-m-1}' & \text{otherwise}
-    \end{cases}
-  \end{equation}
- and for $i \in \{1, \ldots, m'\}$
-   \begin{equation}
-    e_i'' := \begin{cases}
-      e_i & \text{if } i \leq m \\
-      e_{i-m}' & \text{otherwise}.
-    \end{cases}
-  \end{equation}
-  Then this is a walk from $x$ to $z$, hence $x \sim z$.
-\end{proof}
-
-\begin{lemma}
-  \label{lem:adj_towalk}
-  \uses{def:reachable}
-  \leanok
-  \lean{Graph.Adj.reachable}
-  Let $x$, $y$ in $V(G)$. If $x$ and $y$ are adjacent then $x$ and $y$ are reachable.
-\end{lemma}
-
-\begin{proof}
-  By definition of adjacency, there exists an edge $e \in E(G)$ linking $x$ and $y$.
-  Then the walk $(x, y)$ and $(e)$ is a walk from $x$ to $y$.
-\end{proof}
-
-\begin{definition}
-  \label{def:path}
-  \uses{def:walk}
-  Let $x, y \in V(G)$.
-  A \emph{path} from $x$ to $y$ on $G$ is a walk $(v_i)_{0 \leq i \leq m}$,
-  $(e_i)_{1 \leq i \leq m}$
-  such that, for all $i \neq j$, $v_i \neq v_j$.
-\end{definition}
-
-\begin{definition}
-  \label{def:dartpath}
-  \uses{def:dartwalk_support}
-  A dartwalk $(d_i)_{1 \leq i \leq k}$ is a \emph{dartpath} if all vertices in its
-  support are distinct.
-\end{definition}
-
-\begin{definition}
-  \label{def:tree}
-  The graph $G$ is a \emph{tree} if, for all $x$, $y \in V(G)$,
-  there exists a unique dartpath from $x$ to $y$.
-\end{definition}
-
-\subsection{Connectedness}
-
-We define the notion of connectedness and the connected components of a graph.
-
-\begin{definition}
-  \label{def:preconnected}
-  \uses{def:reachable}
-  \leanok
-  \lean{Graph.Preconnected}
-  A graph is \emph{preconnected} if any pair of vertices is reachable.
-\end{definition}
-
-\begin{definition}
-  \label{def:connected}
-  \uses{def:preconnected}
-  \leanok
-  \lean{Graph.Connected}
-  The graph $G$ is \emph{connected} if it is preconnected and $V(G)$ is not empty.
-\end{definition}
-
-\begin{lemma}
-  \label{lem:connected_iff_exists_forall_reachable}
-  \uses{def:connected}
-  The graph $G$ is connected if and only if there exists $x \in V(G)$ such that,
-  for all $y \in V(G)$, $x$ and $y$ are reachable.
-\end{lemma}
-
-\begin{definition}
-  \label{def:connected_component}
-  \uses{prop:reachable_is_equivalence}
-  A \emph{connected component} of $G$ is an equivalence class of $V(G)$ for
-  the relation reachable.
-\end{definition}
-
-\begin{definition}
-  \label{def:connected_component_Mk}
-  \uses{def:connected_component}
-  For any vertex $x$, we define $\ccm(x)$ to be the unique connected component
-  of $G$ containing $x$.
-\end{definition}
-
-\begin{lemma}
-  \label{lem:cc_eq}
-  \uses{def:connected_component_Mk}
-  Let $x, y \in V(G)$. Then $\ccm(x) = \ccm(y)$ iff $x$ and $y$ are reachable.
-\end{lemma}
-
-\begin{theorem}
-  \label{thm:cc_is_connected}
-  \uses{def:induced_subgraph,def:connected,def:connected_component}
-  Let $C$ be a connected component of $G$. Then the subgraph induced by $C$ is connected.
-\end{theorem}
-
-\begin{definition}
-  \label{def:set_cc}
-  \uses{def:connected_component}
-  We denote as $\cc(G)$ the set of connected components of $G$.
-\end{definition}
-
-\begin{proposition}
-  \label{prop:cc_is_partition}
-  \uses{def:set_cc}
-  $\cc(G)$ is a partition of $V(G)$.
-\end{proposition}
-
-\begin{lemma}
-  \label{lem:bound_cc}
-  \uses{prop:cc_is_partition}
-  If $V(G)$ is finite, then $\cc(G)$ is finite and $\#V(G) \leq \# \cc(G)$.
-\end{lemma}
 
 
 \subsection{Locally finite graph, degree and regularity}
@@ -556,6 +314,150 @@ We define the notion of connectedness and the connected components of a graph.
   and an element of $U_2$.
 \end{definition}
 
+\subsection{Walks and reachability}
+
+Several conventions can be used to define walks on a non-simple graphs, essentially
+due to the presence of loops. Our convention (essential for our applications)
+is that each loop can be traversed with two different orientations, which hence
+correspond to different walks. For this reason, it will be convenient to define
+walks using darts, as they differentiate between these two options.
+
+\begin{definition}
+  \label{def:dartwalk}
+  Let $x, y \in V(G)$. A \emph{dartwalk} from $x$ to $y$ on $G$ is given by a finite list
+  $(d_1, \ldots, d_m)$ of darts, satisfying the following:
+    \begin{itemize}
+      \item $\spt(d_1)=x$ and $\ept(d_m)=y$;
+      \item for any $i \in \{1, \ldots, m-1\}$, $\ept(d_{i+1}) = \spt(d_i)$.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}
+  \label{def:length}
+  \uses{def:dartwalk}
+  \lean{Graph.Walk.length}
+  The \emph{length} of a walk is its number of darts.
+\end{definition}
+
+\begin{definition}
+  \label{def:dartwalk_support}
+  \uses{def:dartwalk}
+  The \emph{support} of the dartwalk $(d_i)_{1 \leq i \leq m}$
+  is the list $(x_i)_{0 \leq i \leq m}$ with $x_0=\spt(d_1)$ and
+  $x_i = \ept(d_i)$ for $1 \leq i \leq m$.
+\end{definition}
+
+\begin{definition}
+  \label{def:reachable}
+  \uses{def:dartwalk}
+  \lean{Graph.Reachable}
+  We define a binary relation on $V(G)$ by: $x \sim y$ if there exists a dartwalk
+  from $x$ to $y$ on $G$. We then say $x$ and $y$ are \emph{reachable}.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:reachable_is_equivalence}
+  \uses{def:reachable}
+  \lean{Graph.Reachable.rfl}
+  The reachability relation is an equivalence relation on $V(G)$.
+\end{proposition}
+
+\begin{proof}
+  This is the same proof as in SimpleGraph.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:adj_towalk}
+  \uses{def:reachable}
+  \lean{Graph.Adj.reachable}
+  Let $x$, $y$ in $V(G)$. If $x$ and $y$ are adjacent then $x$ and $y$ are reachable.
+\end{lemma}
+
+\begin{definition}
+  \label{def:dartpath}
+  \uses{def:dartwalk_support}
+  A dartwalk $(d_i)_{1 \leq i \leq m}$ is called a \emph{dartpath} if all vertices in its
+  support are distinct.
+\end{definition}
+
+\begin{definition}
+  \label{def:tree}
+  The graph $G$ is a \emph{tree} if, for all $x$, $y \in V(G)$,
+  there exists a unique dartpath from $x$ to $y$.
+\end{definition}
+
+\subsection{Connectedness}
+
+We define the notion of connectedness and the connected components of a graph.
+
+\begin{definition}
+  \label{def:preconnected}
+  \uses{def:reachable}
+  \lean{Graph.Preconnected}
+  A graph is \emph{preconnected} if any pair of vertices is reachable.
+\end{definition}
+
+\begin{definition}
+  \label{def:connected}
+  \uses{def:preconnected}
+  \lean{Graph.Connected}
+  The graph $G$ is \emph{connected} if it is preconnected and $V(G)$ is not empty.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:connected_iff_exists_forall_reachable}
+  \uses{def:connected}
+  The graph $G$ is connected if and only if there exists $x \in V(G)$ such that,
+  for all $y \in V(G)$, $x$ and $y$ are reachable.
+\end{lemma}
+
+\begin{definition}
+  \label{def:connected_component}
+  \uses{prop:reachable_is_equivalence}
+  A \emph{connected component} of $G$ is an equivalence class of $V(G)$ for
+  the relation reachable.
+\end{definition}
+
+\begin{definition}
+  \label{def:connected_component_Mk}
+  \uses{def:connected_component}
+  For any vertex $x$, we define $\ccm(x)$ to be the unique connected component
+  of $G$ containing $x$.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:cc_eq}
+  \uses{def:connected_component_Mk}
+  Let $x, y \in V(G)$. Then $\ccm(x) = \ccm(y)$ iff $x$ and $y$ are reachable.
+\end{lemma}
+
+\begin{theorem}
+  \label{thm:cc_is_connected}
+  \uses{def:induced_subgraph,def:connected,def:connected_component}
+  Let $C$ be a connected component of $G$. Then the subgraph induced by $C$ is connected.
+\end{theorem}
+
+\begin{definition}
+  \label{def:set_cc}
+  \uses{def:connected_component}
+  We denote as $\cc(G)$ the set of connected components of $G$.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:cc_is_partition}
+  \uses{def:set_cc}
+  $\cc(G)$ is a partition of $V(G)$.
+\end{proposition}
+
+\begin{lemma}
+  \label{lem:bound_cc}
+  \uses{prop:cc_is_partition,def:finite}
+  If $V(G)$ is finite, then $\cc(G)$ is finite and $\#V(G) \leq \# \cc(G)$.
+\end{lemma}
+
+
+
+
 \subsection{Metric}
 
 \begin{definition}
@@ -565,7 +467,7 @@ We define the notion of connectedness and the connected components of a graph.
   \lean{Graph.edist}
   Let $x, y \in V(G)$. The \emph{extended distance} $\edist(x,y)$
   between $x$ and $y$
-  is the length of the shortest walk from $x$ to $y$ (with value in
+  is the length of the shortest dartwalk from $x$ to $y$ (with value in
   $\N \cup \{\infty\}$).
 \end{definition}
 
@@ -576,7 +478,7 @@ We define the notion of connectedness and the connected components of a graph.
 \begin{itemize}
   \item   $\edist(x,y) = 0$ iff $x = y$;
   \item $\edist(x,y) \neq \infty$ iff there exists
-  a walk from $x$ to $y$.
+  a dartwalk from $x$ to $y$.
 \end{itemize}\end{lemma}
 
 \begin{definition}
@@ -590,13 +492,13 @@ We define the notion of connectedness and the connected components of a graph.
   \label{lem:distance_ne_zero}
   \uses{def:distance,lem:edistance_zero_infty}
   Let $x, y \in V(G)$. $\dist(x,y) \neq 0$ iff $x \neq y$ and there exists
-  a walk from $x$ to $y$.
+  a dartwalk from $x$ to $y$.
 \end{lemma}
 
 \begin{lemma}
   \label{lem:distance_take}
   \uses{def:distance}
-  Let $x, y \in V(G)$, we assume $\dist(x,y) \neq 0$. Then there exists a walk
+  Let $x, y \in V(G)$, we assume $\dist(x,y) \neq 0$. Then there exists a dartwalk
   of length $\dist(x,y)$ from $x$ to $y$.
 \end{lemma}
 
@@ -641,9 +543,9 @@ We define the notion of connectedness and the connected components of a graph.
 \end{lemma}
 
 \begin{proof}
-  Take $y \in C_{r+1}(x)$. Then there exists a walk $(v_i)_{0 \leq i \leq r+1}$,
-  $(e_i)_{1 \leq i \leq r+1}$ from $x$ to $y$.
-  We take $z=v_{r}$ and check it is adjacent to $y$ and lies in $C_r(x)$.
+  Take $y \in C_{r+1}(x)$. Then there exists a dartwalk $(d_i)_{1 \leq i \leq r+1}$,
+  from $x$ to $y$.
+  We take $z=\spt(d_{r+1})$ and check it is adjacent to $y$ and lies in $C_r(x)$.
 \end{proof}
 
 \begin{proposition}
@@ -676,7 +578,7 @@ We define the notion of connectedness and the connected components of a graph.
 
 \begin{lemma}
   \label{lem:connected_iff_diam_ne_zero}
-  \uses{def:connected,def:diameter}
+  \uses{def:connected,def:diameter,def:finite}
   Assume $V(G)$ is finite and non-empty. Then $\diam(G) \neq 0$ if and only if
   $G$ is connected.
 \end{lemma}
@@ -806,7 +708,7 @@ Let us introduce several useful families of functions.
 \begin{proof}
   By definition of the orthogonal, $\const^\perp$ is the space of functions $f \in \ell^2(G)$
   such that $\langle f, \const \rangle = 0$.
-  Since $V(G)$ is finite all functions $V(G) \rightarrow \C$ are in $\ell^(G)$.
+  Since $V(G)$ is finite all functions $V(G) \rightarrow \C$ are in $\ell^2(G)$.
   By definition of the scalar product and the constant function,
   $\langle f, \const \rangle = \sum_{x \in V(G)}f(x)$.
 \end{proof}
