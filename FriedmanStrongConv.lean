@@ -1,6 +1,7 @@
 import FriedmanStrongConv.Example
 import FriedmanStrongConv.Graph.Basic
 import FriedmanStrongConv.Graph.Connectivity
+import FriedmanStrongConv.Graph.Dart
 import FriedmanStrongConv.Graph.Finite
 import FriedmanStrongConv.Graph.Metric
 import FriedmanStrongConv.Graph.Walks.Basic
