@@ -24,6 +24,7 @@ variable {G : Graph α β}
 /- A dart is describes a possible direction for a walk starting at one point.
 In order to count walks correctly, we adopt the convention that each loop
 can be taken in two distinct directions, encoded in orienOfEq. -/
+@[ext]
 structure Dart where
   fst : α
   snd : α
@@ -66,3 +67,13 @@ end Dart
 
 /- The dartset of a vertex is the set of darts starting at this vertex. -/
 def dartSet (x : α) : Set G.Dart := {d | d.fst = x}
+
+lemma dart_of_edge (e : E(G)) : ∃ d : G.Dart, d.edge = e := sorry
+
+/- Two darts have the same edge iff they are equal or reverse of one another. -/
+lemma edge_dart_eq_iff {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁ = d₂ ∨ d₁ = d₂.reverse := sorry
+
+/- An edge is incident to a vertex iff there is a dart starting at this vertex
+carried by this edge.-/
+lemma Inc_iff_exists_dart {x : α} {e : β} :
+  G.Inc e x ↔ ∃ d : G.Dart, d.fst = x ∧ d.edge = e := by sorry
