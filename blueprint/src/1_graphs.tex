@@ -20,41 +20,48 @@ with good API and following the naming conventions, in particular of SimpleGraph
 \subsection{Darts}
 
 We define a notion of darts, which are oriented edges on the graph.
-As opposed to the case of SimpleGraph, I could not think of a natural explicit description of
-darts. However they are defined by the following structure.
+
 
 \begin{definition}
   \label{def:dart}
-  We define a set $D(G)$ of \emph{darts} on $G$ with applications
+  \leanok
+  \lean{Graph.Dart}
+  A \emph{dart} $d$ in a graph $G$ is an oriented edge, meaning it has a start point
+  $\spt(d)$, and endpoint $\ept(d)$, is carried by an edge $\edge(d)$, and, in the
+  case where $e$ is a loop, it has an additional information encoded in a boolean
+  $\in \{0, 1\}$ encoding an orientation.
+
+  We denote as $D(G)$ the set of darts on $G$.
+\end{definition}
+
+\begin{definition}
+  \label{def:reverse_dart}
+  \uses{def:dart}
+  \leanok
+  \lean{Graph.Dart.reverse}
+  To each dart $d$ we associate a \emph{reverse dart} $\symm(d)$ such that:
   \begin{itemize}
-  \item $\spt, \ept : D(G) \rightarrow V(G)$;
-  \item $\edge : D(G) \rightarrow E(G)$;
-  \item $\symm : D(G) \rightarrow D(G)$;
-  \end{itemize}
-  such that:
-  \begin{itemize}
-    \item for all $d \in D(G)$, $\edge(d)$ links $\spt(d)$ and $\ept(d)$;
-    \item $\edge \circ \symm = \edge$;
-    \item $\spt \circ \symm = \ept$ and $\ept \circ \symm = \spt$;
-    \item for $d \in D(G)$, $\spt(d) = \ept(d)$ if and only if $\edge(d)$ is
-    a loop;
-    \item $\edge$ is surjective;
-    \item for $d, d' \in D(G)$, $\edge(d) = \edge(d')$ iff $d=d'$ or $d=\symm(d')$;
-    \item for all $d \in D(G)$, $\symm(d) \neq d$.
+    \item $\spt(\symm(d)) = \ept(d)$;
+    \item $\ept(\symm(d)) = \spt(d)$;
+    \item $\edge(\symm(d)) = \edge(d)$;
+    \item if $\edge(d)$ is a loop then the orientation of $\symm(d)$ is
+    the negation of the orientation of $d$.
   \end{itemize}
 \end{definition}
 
-\begin{lemma}
-  \label{lem:dart_symm_involution}
-  \uses{def:dart}
-  For any $d \in D(G)$, $\symm(\symm(d))=d$.
-\end{lemma}
+Here are key properties that must be satisfied by our implementation of darts.
 
-\begin{proof}
-  We have $\edge(\symm(\symm(d))) = \edge(\symm(d)) = \edge(d)$ so
-  have $\symm(\symm(d))=d$ or $\symm(\symm(d))=\symm(d)$. The latter is impossible due to
-  $\symm$ having no fixed point.
-\end{proof}
+\begin{lemma}
+  \label{lem:dart_API}
+  \leanok[stated]
+  \uses{def:reverse_dart}
+  \begin{itemize}
+    \item For any dart $d$, $\symm(d) \neq d$.
+    \item For any dart $d$, $\symm(\symm(d)) = d$.
+    \item For any edge $e$, there exists a dart $d$ such that $\edge(d)=e$.
+    \item For any $d, d'$, if $\edge(d)=\edge(d')$ then $d=d'$ or $d=\symm(d')$.
+  \end{itemize}
+\end{lemma}
 
 \begin{definition}
   \label{def:dartset}
