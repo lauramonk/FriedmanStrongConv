@@ -28,7 +28,6 @@ Some definitions and theorems have inspiration from [Chou1994].
 * `Graph.Walk.length`: The length of a walk
 * `Graph.Walk.support`: The list of vertices a walk visits in order
 * `Graph.Walk.edges`: The list of edges a walk visits in order
-* `Graph.Walk.edgeSet`: The set of edges of a walk visits
 
 ## Tags
 walks

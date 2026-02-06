@@ -77,3 +77,7 @@ lemma edge_dart_eq_iff {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁ =
 carried by this edge.-/
 lemma Inc_iff_exists_dart {x : α} {e : β} :
   G.Inc e x ↔ ∃ d : G.Dart, d.fst = x ∧ d.edge = e := by sorry
+
+/-- The IsDartLink relation is the dart version of IsLink, meaning `IsDartLink d x y`
+iff `d` is a dart starting at `x` and ending at `y`.-/
+def IsDartLink (d : G.Dart) (x y : α) := x = d.fst ∧ y = d.snd
