@@ -5,4 +5,5 @@ import FriedmanStrongConv.Graph.Dart
 import FriedmanStrongConv.Graph.Finite
 import FriedmanStrongConv.Graph.Metric
 import FriedmanStrongConv.Graph.Walks.Basic
+import FriedmanStrongConv.Graph.Walks.Dartwalk
 import FriedmanStrongConv.Graph.Walks.Operations
