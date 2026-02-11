@@ -19,8 +19,6 @@ do homotopy theorists.  A "walk" in graph theory is a "path" in
 homotopy theory.  Another warning: some graph theorists use "path" and
 "simple path" for "walk" and "path."
 
-Some definitions and theorems have inspiration from [Chou1994].
-
 ## Main definitions
 
 * `Graph.Dartwalk` (with accompanying pattern definitions
@@ -46,11 +44,9 @@ For vertices `x y : α`, the type `dartwalk x y` consists of all dartwalks start
 `x` and ending at `y`.
 We here accept the junk value `dartwalk x x` for any `x : α` even if `x` is not a vertex.
 -/
-
 inductive Dartwalk : α → α → Type (max u v)
   | nil {x : α} : Dartwalk x x
   | cons {x y z : α} {d : Dart} (h : G.IsDartLink d x y) (p : Dartwalk y z) : Dartwalk x z
-  deriving DecidableEq
 
 attribute [refl] Dartwalk.nil
 
