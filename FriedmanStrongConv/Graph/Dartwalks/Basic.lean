@@ -57,10 +57,12 @@ instance Dartwalk.instInhabited (x : α) : Inhabited (G.Dartwalk x x) := ⟨Dart
 abbrev IsDartLink.toDartwalk {G : Graph α β} {x y : α} {d : Dart} (h : G.IsDartLink d x y) :
   G.Dartwalk x y := Dartwalk.cons h Dartwalk.nil
 
+/-- If `e` is an edge linking `x` and `y`, returns a length-one dartwalk from `x` to `y` along `e`.-/
  @[match_pattern]
 abbrev Link.toDartwalk {G : Graph α β} {x y : α} {e : β} (h : G.IsLink e x y) :
  G.Dartwalk x y := sorry
 
+/-- If `x` and `y` are adjacent, non-computably returns a length-one dartwalk from `x` to `y`.-/
  @[match_pattern]
 noncomputable abbrev Adj.toDartwalk {G : Graph α β} {x y : α} (h : G.Adj x y) :
  G.Dartwalk x y := sorry
