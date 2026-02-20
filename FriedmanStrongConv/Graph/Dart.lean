@@ -93,6 +93,7 @@ end Dart
 /-- The dartset of a vertex is the set of darts starting at this vertex. -/
 def dartSet (x : α) : Set G.Dart := {d | d.fst = x}
 
+/-- If `e` is an edge linking `x` and `y`, then `e.toDart` is a corresponding dart starting at `x`.-/
 def toDart [DecidableEq α] {x y : α} {e : β} (h : G.IsLink e x y) : G.Dart := by
   by_cases eq : x = y
   · have hx : G.IsLink e x x := by rw [eq.symm] at h; exact h
