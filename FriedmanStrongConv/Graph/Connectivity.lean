@@ -5,8 +5,8 @@ Authors: Laura Monk
 -/
 
 import Mathlib.Combinatorics.Graph.Basic
-import FriedmanStrongConv.Graph.Walks.Basic
-import FriedmanStrongConv.Graph.Walks.Operations
+import FriedmanStrongConv.Graph.Dartwalks.Basic
+import FriedmanStrongConv.Graph.Dartwalks.Operations
 
 variable {α β : Type*} {x y z u v w : α} {e f : β}
 variable (G : Graph α β)
@@ -16,29 +16,29 @@ namespace Graph
 /-! ## `Reachable` and `Connected` -/
 
 /-- Two vertices are *reachable* if there is a walk between them. -/
-def Reachable (x y : α) : Prop := Nonempty (G.Walk x y)
+def Reachable (x y : α) : Prop := Nonempty (G.Dartwalk x y)
 
 variable {G}
 
 theorem reachable_iff_nonempty_univ {x y : α} :
-    G.Reachable x y ↔ (Set.univ : Set (G.Walk x y)).Nonempty :=
+    G.Reachable x y ↔ (Set.univ : Set (G.Dartwalk x y)).Nonempty :=
   Set.nonempty_iff_univ_nonempty
 
 lemma not_reachable_iff_isEmpty_walk {x y : α} :
-  ¬G.Reachable x y ↔ IsEmpty (G.Walk x y) := not_nonempty_iff
+  ¬G.Reachable x y ↔ IsEmpty (G.Dartwalk x y) := not_nonempty_iff
 
 protected theorem Reachable.elim {p : Prop} {x y : α} (h : G.Reachable x y)
-    (hp : G.Walk x y → p) : p :=
+    (hp : G.Dartwalk x y → p) : p :=
   Nonempty.elim h hp
 
-protected theorem Walk.reachable {G : Graph α β} {x y : α} (p : G.Walk x y) :
+protected theorem Dartwalk.reachable {G : Graph α β} {x y : α} (p : G.Dartwalk x y) :
   G.Reachable x y := ⟨p⟩
 
 protected theorem Adj.reachable {x y : α} (h : G.Adj x y) : G.Reachable x y :=
-  h.toWalk.reachable
+  h.toDartwalk.reachable
 
 @[refl]
-protected theorem Reachable.refl (x : α) : G.Reachable x x := ⟨Walk.nil⟩
+protected theorem Reachable.refl (x : α) : G.Reachable x x := ⟨Dartwalk.nil⟩
 
 @[simp] protected theorem Reachable.rfl {x : α} : G.Reachable x x := Reachable.refl _
 

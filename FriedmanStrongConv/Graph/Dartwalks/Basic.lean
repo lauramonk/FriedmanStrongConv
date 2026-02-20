@@ -8,16 +8,15 @@ import Mathlib.Combinatorics.Graph.Basic
 import FriedmanStrongConv.Graph.Dart
 
 /-!
-# Walks
+# Dartwalks
 
-In a graph, a *walk* is a finite sequence of adjacent vertices and corresponding edges.
-The following notions are directly adapted from SimpleGraph, with the significant
-difference that the edges need to be specified for a walk on a Graph due to multi-edges.
-
-**Warning:** graph theorists mean something different by "path" than
-do homotopy theorists.  A "walk" in graph theory is a "path" in
-homotopy theory.  Another warning: some graph theorists use "path" and
-"simple path" for "walk" and "path."
+In a graph, a *dartwalk* is a finite sequence of darts, i.e. oriented edges.
+The following notions are directly adapted from the library SimpleGraph. A significant distinction
+here is that, on the presence of loops and multi-edges, different notions of walks can be defined
+and yield different walk counting problems. Here, we focus on dartwalks, which means that the
+walk knows precisely which edge is traversed (in particular multi-edges will yield different
+walks between adjacent vertices), and in which direction (i.e. any loop corresponds to two
+distinct walks of length 1).
 
 ## Main definitions
 
@@ -29,7 +28,7 @@ homotopy theory.  Another warning: some graph theorists use "path" and
 * `Graph.Dartwalk.edges`: The list of edges a dartwalk visits in order
 
 ## Tags
-walks
+dartwalks
 -/
 
 universe u v
@@ -55,13 +54,16 @@ instance Dartwalk.instInhabited (x : α) : Inhabited (G.Dartwalk x x) := ⟨Dart
 
 /-- The one-dart dartwalk associated to a dart. -/
 @[match_pattern]
-abbrev IsDartLink.toWalk {G : Graph α β} {x y : α} {d : Dart} (h : G.IsDartLink d x y) :
+abbrev IsDartLink.toDartwalk {G : Graph α β} {x y : α} {d : Dart} (h : G.IsDartLink d x y) :
   G.Dartwalk x y := Dartwalk.cons h Dartwalk.nil
 
--- To fix: A one-dart dartwalk associated to a pair of adjacent vertices.
--- @[match_pattern]
--- noncomputable abbrev Adj.toWalk {G : Graph α β} {x y : α} (h : G.Adj x y) : G.Walk x y :=
---   h.choose_spec.toWalk
+ @[match_pattern]
+abbrev Link.toDartwalk {G : Graph α β} {x y : α} {e : β} (h : G.IsLink e x y) :
+ G.Dartwalk x y := sorry
+
+ @[match_pattern]
+noncomputable abbrev Adj.toDartwalk {G : Graph α β} {x y : α} (h : G.Adj x y) :
+ G.Dartwalk x y := sorry
 
 namespace Dartwalk
 variable {G}

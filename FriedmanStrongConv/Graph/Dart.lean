@@ -111,3 +111,6 @@ lemma Inc_iff_exists_dart {x : α} {e : β} :
 /-- The IsDartLink relation is the dart version of IsLink, meaning `IsDartLink d x y`
 iff `d` is a dart starting at `x` and ending at `y`.-/
 def IsDartLink (d : G.Dart) (x y : α) := x = d.fst ∧ y = d.snd
+
+protected lemma IsDartLink.symm {d : G.Dart} (h : G.IsDartLink d x y) : G.IsDartLink d y x :=
+  sorry
