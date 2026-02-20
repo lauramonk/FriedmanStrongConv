@@ -34,24 +34,24 @@ The extended distance between two vertices is the length of the shortest walk be
 It is `⊤` if no such walk exists.
 -/
 noncomputable def edist (x y : α) : ℕ∞ :=
-  ⨅ w : G.Walk x y, w.length
+  ⨅ w : G.Dartwalk x y, w.length
 
 variable {G} {x y z : α}
 
-theorem edist_eq_sInf : G.edist x y = sInf (Set.range fun w : G.Walk x y ↦ (w.length : ℕ∞)) := rfl
+theorem edist_eq_sInf : G.edist x y = sInf (Set.range fun w : G.Dartwalk x y ↦ (w.length : ℕ∞)) := rfl
 
 protected theorem Reachable.exists_walk_length_eq_edist (hr : G.Reachable x y) :
-    ∃ p : G.Walk x y, p.length = G.edist x y :=
+    ∃ p : G.Dartwalk x y, p.length = G.edist x y :=
   csInf_mem <| Set.range_nonempty_iff_nonempty.mpr hr
 
   protected theorem Connected.exists_walk_length_eq_edist (hconn : G.Preconnected) {x y : V(G)} :
-    ∃ p : G.Walk x y, p.length = G.edist x y :=
+    ∃ p : G.Dartwalk x y, p.length = G.edist x y :=
   (hconn x y).exists_walk_length_eq_edist
 
-theorem edist_le (p : G.Walk x y) :
+theorem edist_le (p : G.Dartwalk x y) :
     G.edist x y ≤ p.length :=
   sInf_le ⟨p, rfl⟩
-protected alias Walk.edist_le := edist_le
+protected alias Dartwalk.edist_le := edist_le
 
 @[simp]
 theorem edist_eq_zero_iff :
@@ -75,7 +75,7 @@ theorem reachable_of_edist_ne_top (h : G.edist x y ≠ ⊤) :
   not_not.mp <| edist_eq_top_of_not_reachable.mt h
 
 lemma exists_walk_of_edist_ne_top (h : G.edist x y ≠ ⊤) :
-    ∃ p : G.Walk x y, p.length = G.edist x y :=
+    ∃ p : G.Dartwalk x y, p.length = G.edist x y :=
   (reachable_of_edist_ne_top h).exists_walk_length_eq_edist
 
 protected theorem edist_triangle : G.edist x z ≤ G.edist x y + G.edist y z := by
@@ -87,16 +87,16 @@ protected theorem edist_triangle : G.edist x z ≤ G.edist x y + G.edist y z := 
     | inr hyz =>
       obtain ⟨p, hp⟩ := exists_walk_of_edist_ne_top hxy
       obtain ⟨q, hq⟩ := exists_walk_of_edist_ne_top hyz
-      rw [← hp, ← hq, ← Nat.cast_add, ← Walk.length_append]
+      rw [← hp, ← hq, ← Nat.cast_add, ← Dartwalk.length_append]
       exact edist_le _
 
 theorem edist_comm : G.edist x y = G.edist y x := by
-  rw [edist_eq_sInf, ← Set.image_univ, ← Set.image_univ_of_surjective Walk.reverse_surjective,
+  rw [edist_eq_sInf, ← Set.image_univ, ← Set.image_univ_of_surjective Dartwalk.reverse_surjective,
     ← Set.image_comp, Set.image_univ, Function.comp_def]
-  simp_rw [Walk.length_reverse, ← edist_eq_sInf]
+  simp_rw [Dartwalk.length_reverse, ← edist_eq_sInf]
 
 lemma exists_walk_of_edist_eq_coe {k : ℕ} (h : G.edist x y = k) :
-    ∃ p : G.Walk x y, p.length = k :=
+    ∃ p : G.Dartwalk x y, p.length = k :=
   have : G.edist x y ≠ ⊤ := by rw [h]; exact ENat.coe_ne_top _
   have ⟨p, hp⟩ := exists_walk_of_edist_ne_top this
   ⟨p, Nat.cast_injective (hp.trans h)⟩
