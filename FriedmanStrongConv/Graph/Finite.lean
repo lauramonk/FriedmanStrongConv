@@ -1,6 +1,6 @@
 import Mathlib.Combinatorics.Graph.Basic
 import FriedmanStrongConv.Graph.Dart
-import Mathlib.Data.ENat.Lattice
+import Mathlib.Data.Set.Card
 
 
 /-!
@@ -19,12 +19,27 @@ variable {α : Type u} {β : Type v} {x y z u v w : α} {e f : β}
 
 namespace Graph
 
-section FiniteAt
+variable (G : Graph α β)
 
-/-!
-## Finiteness at a vertex and notion of degree at this vertex
+/-- The edegree of a vertex `x` is the number of darts starting at `x`.
+Note that, in particuliar, loops are counted twice.-/
+noncomputable def edegree (x : α) : ENat := Set.encard (G.dartSet x)
 
-This section contains the notion of finiteness and degree at the vertex `x`.
--/
+/-- The degree of a vertex `x` is the number of darts starting at `x`,
+with the junk value `0` if this is infinite.-/
+noncomputable def degree (x : α) : ℕ := (G.edegree x).toNat
 
-def edegree (x : α) : ℕ∞ := set.ncard dartSet x
+/-- A graph is locally finite if all of its vertices have finite degree.-/
+abbrev LocallyFinite :=
+  ∀ x : α, Finite (G.dartSet x)
+
+/-- A graph is locally bounded if the degrees of its vertices are bounded.-/
+abbrev LocallyBounded :=
+  ∃ M : ℕ, ∀ x : α, G.edegree x < M
+
+/-- A graph is regular of degree `d` if all of its vertices are of degree `d`.-/
+def IsRegularOfDegree (d : ℕ) : Prop :=
+  ∀ x : V(G), G.edegree x = d
+
+theorem IsRegularOfDegree.degree_eq {d : ℕ} (h : G.IsRegularOfDegree d) (x : V(G)) : G.edegree x = d
+:= h x
