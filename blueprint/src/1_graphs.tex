@@ -54,6 +54,8 @@ Here are key properties that must be satisfied by our implementation of darts.
 \begin{lemma}
   \label{lem:dart_API}
   \uses{def:reverse_dart}
+  \leanok
+  \lean{Graph.Dart.reverse}
   \begin{itemize}
     \item For any dart $d$, $\symm(d) \neq d$.
     \item For any dart $d$, $\symm(\symm(d)) = d$.
@@ -66,6 +68,8 @@ Here are key properties that must be satisfied by our implementation of darts.
 \begin{definition}
   \label{def:dartset}
   \uses{def:dart}
+  \leanok
+  \lean{Graph.Dart.dartSet}
   Let $x \in V(G)$. The \emph{dartset} of $x$ is the set
   \begin{equation}
     \dartset(x) := \{ d \in D(G) \, : \, \spt(d)=x\}.
@@ -324,6 +328,8 @@ walks using darts, as they differentiate between these two options.
 
 \begin{definition}
   \label{def:dartwalk}
+  \leanok
+  \lean{Graph.Dartwalk}
   Let $x, y \in V(G)$. A \emph{dartwalk} from $x$ to $y$ on $G$ is given by a finite list
   $(d_1, \ldots, d_m)$ of darts, satisfying the following:
     \begin{itemize}
@@ -335,13 +341,16 @@ walks using darts, as they differentiate between these two options.
 \begin{definition}
   \label{def:length}
   \uses{def:dartwalk}
-  \lean{Graph.Walk.length}
+  \leanok
+  \lean{Graph.Dartwalk.length}
   The \emph{length} of a walk is its number of darts.
 \end{definition}
 
 \begin{definition}
   \label{def:dartwalk_support}
   \uses{def:dartwalk}
+  \leanok
+  \lean{Graph.Dartwalk.support}
   The \emph{support} of the dartwalk $(d_i)_{1 \leq i \leq m}$
   is the list $(x_i)_{0 \leq i \leq m}$ with $x_0=\spt(d_1)$ and
   $x_i = \ept(d_i)$ for $1 \leq i \leq m$.
@@ -358,6 +367,7 @@ walks using darts, as they differentiate between these two options.
 \begin{proposition}
   \label{prop:reachable_is_equivalence}
   \uses{def:reachable}
+  \leanok
   \lean{Graph.Reachable.rfl}
   The reachability relation is an equivalence relation on $V(G)$.
 \end{proposition}
@@ -369,6 +379,7 @@ walks using darts, as they differentiate between these two options.
 \begin{lemma}
   \label{lem:adj_towalk}
   \uses{def:reachable}
+  \leanok
   \lean{Graph.Adj.reachable}
   Let $x$, $y$ in $V(G)$. If $x$ and $y$ are adjacent then $x$ and $y$ are reachable.
 \end{lemma}
@@ -393,6 +404,7 @@ We define the notion of connectedness and the connected components of a graph.
 \begin{definition}
   \label{def:preconnected}
   \uses{def:reachable}
+  \leanok
   \lean{Graph.Preconnected}
   A graph is \emph{preconnected} if any pair of vertices is reachable.
 \end{definition}
@@ -400,6 +412,7 @@ We define the notion of connectedness and the connected components of a graph.
 \begin{definition}
   \label{def:connected}
   \uses{def:preconnected}
+  \leanok
   \lean{Graph.Connected}
   The graph $G$ is \emph{connected} if it is preconnected and $V(G)$ is not empty.
 \end{definition}
