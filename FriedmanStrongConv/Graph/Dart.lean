@@ -52,8 +52,8 @@ def edge (d : G.Dart) : β :=
   | .Fwd _ e _ => e
   | .Bck _ e _ => e
 
-/-- The map `isLink` extracts the link relation from the definition of the dart. -/
-def isLink (d : G.Dart) : G.IsLink d.edge d.fst d.snd :=
+/-- `isLink` extracts the link relation from the definition of the dart. -/
+lemma isLink (d : G.Dart) : G.IsLink d.edge d.fst d.snd :=
   match d with
   | .Dir _ _ _ _ h => h
   | .Fwd _ _ h => h
