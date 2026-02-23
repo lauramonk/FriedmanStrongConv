@@ -191,7 +191,7 @@ theorem reverse_concat {x y z : α} {d : G.Dart} (p : G.Dartwalk x y) (h : G.IsD
 theorem reverse_reverse {x y : α} (p : G.Dartwalk x y) : p.reverse.reverse = p := by
   induction p with
   | nil => rfl
-  | cons _ _ ih => simp [ih]
+  | cons _ _ ih => simp [ih, Dart.reverse_of_reverse]
 
 theorem reverse_surjective {x y : α} : Function.Surjective (reverse : G.Dartwalk x y → _) :=
   RightInverse.surjective reverse_reverse
