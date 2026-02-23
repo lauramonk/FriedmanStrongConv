@@ -65,6 +65,10 @@ Here are key properties that must be satisfied by our implementation of darts.
   \end{itemize}
 \end{lemma}
 
+\begin{proof}
+  \leanok
+\end{proof}
+
 \begin{definition}
   \label{def:dartset}
   \uses{def:dart}
@@ -235,24 +239,21 @@ TODO: determine which notion of finiteness we use.
 \subsection{Locally finite graph, degree and regularity}
 
 \begin{definition}
-  \label{def:locally_finite_at}
-  \uses{def:dartset}
-  Let $x$ be a vertex of $G$.
-  We say $G$ is \emph{locally finite at $x$} if $\dartset (x)$ is finite.
-\end{definition}
-
-\begin{definition}
   \label{def:locally_finite}
-  \uses{def:locally_finite_at}
-  $G$ is said to be \emph{locally finite} if, for all $x \in V(G)$,
-  $G$ is locally finite at $x$.
+  \uses{def:dartset}
+  \leanok
+  \lean{Graph.LocallyFinite}
+  We say $G$ is \emph{locally finite} if, for all $x$, $\dartset (x)$ is finite.
 \end{definition}
 
 \begin{definition}
   \label{def:degree}
-  \uses{def:locally_finite_at}
-  Let $x$ be a vertex of $G$. We assume $G$ is locally finite at $x$.
-  The \emph{degree} of $x$ is defined as $\mathrm{deg}(x) = \# \dartset(x)$.
+  \uses{def:dartset}
+  \leanok
+  Let $x$ be a vertex of $G$.
+  The \emph{edegree} of $x$ is defined as $\mathrm{edeg}(x) = \# \dartset(x)$, which is
+  an element of $\mathbb{N} \cup \{ \infty\}$.
+  The \emph{degree} of $x$ is the natural-number projection of the edegree.
 \end{definition}
 
 \begin{lemma}
