@@ -59,14 +59,17 @@ Here are key properties that must be satisfied by our implementation of darts.
   \begin{itemize}
     \item For any dart $d$, $\symm(d) \neq d$.
     \item For any dart $d$, $\symm(\symm(d)) = d$.
-    \item For any $e \in E(G)$, there exists $d \in D(G)$ such that
-          $\edge^{-1}(\{e\}) = \{d, \symm(d)\}$.
+    \item We have a map $e \in E(G) \mapsto d_e \in D(G)$ such that, for all $e$,
+    if $e$ links $x$ and $y$, then $d_e$ is a dart from $x$ to $y$ carried by $e$.
     \item For any $d, d'$, if $\edge(d)=\edge(d')$ then $d=d'$ or $d=\symm(d')$.
+    \item We have $d_1 = d_2$ iff $\spt(d_1) = \spt(d_2)$ and $\edge(d_1) = \edge(d_2)$
+    (and same characterisation using the endpoints and edges).
   \end{itemize}
 \end{lemma}
 
 \begin{proof}
   \leanok
+  These depend on the implementation of darts, but should be easily verified.
 \end{proof}
 
 \begin{definition}
@@ -94,6 +97,7 @@ Here are key properties that must be satisfied by our implementation of darts.
 \begin{lemma}
   \label{lem:adjacent_vs_dart}
   \uses{def:dartset,def:dartset_pair}
+  \leanok
   Let $x, y \in V(G)$.
   The following are equivalent:
   \begin{enumerate}
@@ -103,25 +107,25 @@ Here are key properties that must be satisfied by our implementation of darts.
   \end{enumerate}
 \end{lemma}
 
+\begin{proof}
+  \leanok
+  Trivial.
+\end{proof}
+
 \begin{lemma}
   \label{lem:edge_range_of_darset}
-  \uses{lem:dart_API,def:dartset_pair}
-  Let $x,y \in V(G)$.
-  The range of the restriction of the function $\edge : D(G) \to E(G)$
-  to $\dartset(x,y)$
-  is exactly the set $\{e \in E(G) : e \text{ links } x, y\}$.
-  Furthermore, this map is $1$-to-$1$ if $x \neq y$ and $2$-to-$1$ if $x=y$.
+  \uses{def:dartset_pair}
+  Let $x, y \in V(G)$.
+  The map
+  \begin{equation*}
+    \begin{split}
+      \dartset(x,y) & \rightarrow E(G) \\
+      d & \mapsto \edge(d)
+    \end{split}
+  \end{equation*}
+  has range $\{e \in E(G) : e \text{ links } x \text{ and } y\}$.
+  It is $2-1$ if $x=y$ and $1-1$ otherwise.
 \end{lemma}
-
-\begin{proof}
-  Let $d \in \dartset(x,y)$. Then, $\edge(d) \in E(G)$ links $\spt(d)=x$
-  and $\ept(d)=y$. So $\edge(d)$ belongs in the claimed set.
-
-  Now take $e \in E(G)$ linking $x$ and $y$. By Lemma \ref{lem:dart_API},
-  there exists $d \in D(G)$ such that $\edge^{-1}(\{e\}) = \{d, \symm(d)\}$.
-  We check that $d$ or $\symm(d)$ belongs in $\dartset(x,y)$, and that
-  both of them do iff $x=y$, which leads to the claim.
-\end{proof}
 
 We can alternatively define a graph from its darts in the following fashion.
 
@@ -199,8 +203,9 @@ The definition of subgraph is easier for Graph than SimpleGraph as the vertexset
 \begin{definition}
   \label{def:max_subgraph,def:min_subgraph}
   \uses{def:subgraph}
-  We define the \emph{union}, resp. \emph{intersection} of two subgraphs by taking the union of
-  their respective vertex sets and edge sets.
+  We define the \emph{union} $H_1 \cup H_2$ of two subgraphs by taking the union of
+  their respective vertex sets and edge sets,
+  and the intersection $H_1 \cap H_2$ by taking their intersection.
 \end{definition}
 
 \begin{definition}
@@ -240,10 +245,11 @@ TODO: determine which notion of finiteness we use.
 
 \begin{definition}
   \label{def:locally_finite}
-  \uses{def:dartset}
-  \leanok
+  \uses{def:dartset}  \leanok
   \lean{Graph.LocallyFinite}
-  We say $G$ is \emph{locally finite} if, for all $x$, $\dartset (x)$ is finite.
+  Let $x \in V(G)$.
+  We say $G$ is \emph{locally finite} at $x$ if $\dartset (x)$ is finite.
+  The graph $G$ is \emph{locally finite} if it is locally finite at every vertex.
 \end{definition}
 
 \begin{definition}
@@ -379,7 +385,7 @@ walks using darts, as they differentiate between these two options.
 
 \begin{lemma}
   \label{lem:adj_towalk}
-  \uses{def:reachable}
+  \uses{def:reachable,lem:adjacent_vs_dart}
   \leanok
   \lean{Graph.Adj.reachable}
   Let $x$, $y$ in $V(G)$. If $x$ and $y$ are adjacent then $x$ and $y$ are reachable.
@@ -387,15 +393,22 @@ walks using darts, as they differentiate between these two options.
 
 \begin{definition}
   \label{def:dartpath}
-  \uses{def:dartwalk_support}
-  A dartwalk $(d_i)_{1 \leq i \leq m}$ is called a \emph{dartpath} if all vertices in its
-  support are distinct.
+  \uses{def:dartwalk}
+  A dartwalk $(d_i)_{1 \leq i \leq m}$ is called a \emph{path} if
+  for all $1 \leq i,j \leq m$, $\spt(d_i) = \spt(d_j) \Rightarrow i=j$.
+\end{definition}
+
+\begin{definition}
+  \label{def:nonbacktracking}
+  \uses{def:dartwalk}
+  A dartwalk $(d_i)_{1 \leq i \leq m}$ is called \emph{non-backtracking} if
+  for all $1 \leq i < m$, $d_{i+1} \neq \symm (d_{i})$.
 \end{definition}
 
 \begin{definition}
   \label{def:tree}
   The graph $G$ is a \emph{tree} if, for all $x$, $y \in V(G)$,
-  there exists a unique dartpath from $x$ to $y$.
+  there exists a unique path from $x$ to $y$.
 \end{definition}
 
 \subsection{Connectedness}
@@ -469,8 +482,32 @@ We define the notion of connectedness and the connected components of a graph.
   If $V(G)$ is finite, then $\cc(G)$ is finite and $\#V(G) \leq \# \cc(G)$.
 \end{lemma}
 
+\subsection{Morphisms between graphs}
 
+  Let $G_1$ and $G_2$ be two graphs.
 
+\begin{definition}
+  \label{def:function_graphs}
+  A \emph{function} $f : G_1 \rightarrow G_2$ is a pair of functions $f_V : V(G_1) \rightarrow V(G_2)$
+  and $f_E : E(G_1) \rightarrow E(G_2)$.
+  We will denote $f_V(x)=f(x)$ for $x \in V(G_1)$ and $f_E(e)=f(e)$ for $e \in E(G_1)$.
+\end{definition}
+
+\begin{definition}
+  \label{def:graph_morphism}
+  \uses{def:function_graphs}
+  A \emph{morphism} $f : G_1 \rightarrow G_2$ is
+  a function $f : G_1 \rightarrow G_2$ such that for all
+  $x, y \in V(G_1)$, $e \in E(G_1)$,
+  if $e$ links $x$ and $y$ in $G_1$, then $f(e)$ links $f(x)$ and $f(y)$ in $G_2$.
+\end{definition}
+
+\begin{definition}
+  \label{def:graph_isomorphism}
+  \uses{def:graph_morphism}
+  A morphism $f : G_1 \rightarrow G_2$ is an \emph{isomorphism} if it is a
+  bijection and its inverse is a graph morphism.
+\end{definition}
 
 \subsection{Metric}
 
