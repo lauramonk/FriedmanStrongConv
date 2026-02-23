@@ -490,8 +490,13 @@ We define the notion of connectedness and the connected components of a graph.
   \label{def:function_graphs}
   A \emph{function} $f : G_1 \rightarrow G_2$ is a pair of functions $f_V : V(G_1) \rightarrow V(G_2)$
   and $f_E : E(G_1) \rightarrow E(G_2)$.
-  We will denote $f_V(x)=f(x)$ for $x \in V(G_1)$ and $f_E(e)=f(e)$ for $e \in E(G_1)$.
+  We will denote $f_V(x)=f(x)$ for $x \in V(G_1)$ and $f_E(e)=f(e)$ for $e \in E(G_1)$,
+  i.e. view $f$ as a function from $V(G_1) \cup E(G_1)$ to $V(G_2) \cup E(G_2)$
+  sending vertices on vertices and edges on edges.
 \end{definition}
+
+In the following, the usual operations and definitions on functions are
+with respect to the function $f : V(G_1) \cup E(G_1) \rightarrow V(G_2) \cup E(G_2)$.
 
 \begin{definition}
   \label{def:graph_morphism}
@@ -505,8 +510,24 @@ We define the notion of connectedness and the connected components of a graph.
 \begin{definition}
   \label{def:graph_isomorphism}
   \uses{def:graph_morphism}
-  A morphism $f : G_1 \rightarrow G_2$ is an \emph{isomorphism} if it is a
-  bijection and its inverse is a graph morphism.
+  A morphism $f : G_1 \rightarrow G_2$ is an \emph{isomorphism} if
+  there exist a morphism $g : G_2 \rightarrow G_1$ which is the inverse of $f$.
+  In this case we denote $f^{-1}$ this inverse.
+\end{definition}
+
+\begin{definition}
+  \label{def:local_isomorphism}
+  \uses{def:graph_morphism}
+  A morphism $f : G_1 \rightarrow G_2$ is a \emph{local isomorphism}
+  if for all $x \in V(G_1)$, the restriction of $f$ to $\incset(x)$ is
+  a bijection onto $\incset(f(x))$.
+\end{definition}
+
+\begin{definition}
+  \label{def:covering_map}
+  \uses{def:local_isomorphism}
+  A morphism $f : G_1 \rightarrow G_2$ is a \emph{covering map} if it is
+  surjective and a local isomorphism.
 \end{definition}
 
 \subsection{Metric}
