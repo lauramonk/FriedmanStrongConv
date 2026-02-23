@@ -65,8 +65,29 @@ lemma snd_mem (d : G.Dart) : d.snd ∈ V(G) := d.isLink.right_mem
 
 lemma edge_mem (d : G.Dart) : d.edge ∈ E(G) := d.isLink.edge_mem
 
-lemma dart_eq {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.snd = d₂.snd ∧ d₁.edge = d₂.edge)
-  := sorry
+lemma eq_iff {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.snd = d₂.snd ∧ d₁.edge = d₂.edge)
+  := by
+  constructor
+  · intro heq
+    rw [heq]
+    exact ⟨rfl, rfl, rfl⟩
+  · sorry
+
+lemma fst_edge_unique {d₁ d₂ : G.Dart} (h₁ : d₁.fst = d₂.fst) (he : d₁.edge = d₂.edge) : d₁ = d₂ := by
+  apply eq_iff.2
+  constructor
+  · exact h₁
+  · constructor
+    · have h : G.IsLink d₁.edge d₁.fst d₂.snd := by rw [he, h₁]; exact d₂.isLink
+      exact IsLink.right_unique d₁.isLink h
+    · exact he
+
+lemma snd_edge_unique {d₁ d₂ : G.Dart} (h₂ : d₁.snd = d₂.snd) (he : d₁.edge = d₂.edge) : d₁ = d₂ := by
+  apply eq_iff.2
+  constructor
+  · have h : G.IsLink d₁.edge d₂.fst d₁.snd := by rw [he, h₂]; exact d₂.isLink
+    exact IsLink.left_unique d₁.isLink h
+  · exact ⟨h₂, he⟩
 
 /-- The reversing operation on darts, which reverses its orientation. -/
 def reverse (d : G.Dart) : G.Dart :=
@@ -105,20 +126,16 @@ def toDart [DecidableEq α] {x y : α} {e : β} (h : G.IsLink e x y) : G.Dart :=
 
 /-- Two darts have the same edge iff they are equal or reverse of one another. -/
 lemma edge_dart_eq_iff {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁ = d₂ ∨ d₁ = d₂.reverse := by
-  by_cases eq : d₁ = d₂
-  · exact Or.inl eq
+  by_cases heq : d₁.fst = d₂.fst
+  · left
+    exact Dart.fst_edge_unique heq h
   · right
-    rw [Dart.dart_eq]
-    constructor
+    apply Dart.fst_edge_unique
     · rw [Dart.fst_of_reverse]
-      /- we should use
-      eq_or_eq_of_isLink_of_isLink d₁.isLink d₂.isLink -/
-      sorry
-    · constructor
-      · rw [Dart.snd_of_reverse]
-        sorry
-      · rw [Dart.edge_of_reverse]
-        assumption
+      have this : G.IsLink d₁.edge d₂.fst d₂.snd := by rw [h]; exact d₂.isLink
+      apply IsLink.left_eq_of_right_ne d₁.isLink this heq
+    . rw [Dart.edge_of_reverse]
+      exact h
 
 
 /-- An edge is incident to a vertex iff there is a dart starting at this vertex
