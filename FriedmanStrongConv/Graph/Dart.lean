@@ -65,6 +65,7 @@ lemma snd_mem (d : G.Dart) : d.snd ∈ V(G) := d.isLink.right_mem
 
 lemma edge_mem (d : G.Dart) : d.edge ∈ E(G) := d.isLink.edge_mem
 
+/-- Two darts are equal iff they share their start points, end points and edges.-/
 lemma eq_iff {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.snd = d₂.snd ∧ d₁.edge = d₂.edge)
   := by
   constructor
@@ -73,6 +74,7 @@ lemma eq_iff {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d
     exact ⟨rfl, rfl, rfl⟩
   · sorry
 
+/-- If two darts share their edge and start point then they are equal. -/
 lemma fst_edge_unique {d₁ d₂ : G.Dart} (h₁ : d₁.fst = d₂.fst) (he : d₁.edge = d₂.edge) : d₁ = d₂ := by
   apply eq_iff.2
   constructor
@@ -82,6 +84,7 @@ lemma fst_edge_unique {d₁ d₂ : G.Dart} (h₁ : d₁.fst = d₂.fst) (he : d�
       exact IsLink.right_unique d₁.isLink h
     · exact he
 
+/-- If two darts share their edge and end point then they are equal. -/
 lemma snd_edge_unique {d₁ d₂ : G.Dart} (h₂ : d₁.snd = d₂.snd) (he : d₁.edge = d₂.edge) : d₁ = d₂ := by
   apply eq_iff.2
   constructor
