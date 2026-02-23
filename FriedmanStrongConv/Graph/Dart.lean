@@ -65,8 +65,11 @@ lemma snd_mem (d : G.Dart) : d.snd ∈ V(G) := d.isLink.right_mem
 
 lemma edge_mem (d : G.Dart) : d.edge ∈ E(G) := d.isLink.edge_mem
 
+lemma dart_eq {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.snd = d₂.snd ∧ d₁.edge = d₂.edge)
+  := sorry
+
 /-- The reversing operation on darts, which reverses its orientation. -/
-noncomputable def reverse (d : G.Dart) : G.Dart :=
+def reverse (d : G.Dart) : G.Dart :=
     match d with
   | .Dir x y e ne h => Dir y x e ne.symm h.symm
   | .Fwd x e h => Bck x e h
@@ -101,16 +104,43 @@ def toDart [DecidableEq α] {x y : α} {e : β} (h : G.IsLink e x y) : G.Dart :=
   . exact Dart.Dir x y e eq h
 
 /-- Two darts have the same edge iff they are equal or reverse of one another. -/
-lemma edge_dart_eq_iff {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁ = d₂ ∨ d₁ = d₂.reverse := sorry
+lemma edge_dart_eq_iff {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁ = d₂ ∨ d₁ = d₂.reverse := by
+  by_cases eq : d₁ = d₂
+  · exact Or.inl eq
+  · right
+    rw [Dart.dart_eq]
+    constructor
+    · rw [Dart.fst_of_reverse]
+      /- we should use
+      eq_or_eq_of_isLink_of_isLink d₁.isLink d₂.isLink -/
+      sorry
+    · constructor
+      · rw [Dart.snd_of_reverse]
+        sorry
+      · rw [Dart.edge_of_reverse]
+        assumption
+
 
 /-- An edge is incident to a vertex iff there is a dart starting at this vertex
 carried by this edge.-/
 lemma Inc_iff_exists_dart {x : α} {e : β} :
-  G.Inc e x ↔ ∃ d : G.Dart, d.fst = x ∧ d.edge = e := by sorry
+  G.Inc e x ↔ ∃ d : G.Dart, d.fst = x ∧ d.edge = e := by
+  constructor
+  . intro ⟨y, he⟩
+    by_cases is_loop : x = y
+    . exists Dart.Fwd x e (is_loop ▸ he)
+    . exists Dart.Dir x y e is_loop he
+  . intro ⟨d, ⟨hf, he⟩⟩
+    exists d.snd
+    exact hf ▸ he ▸ d.isLink
 
 /-- The IsDartLink relation is the dart version of IsLink, meaning `IsDartLink d x y`
 iff `d` is a dart starting at `x` and ending at `y`.-/
 def IsDartLink (d : G.Dart) (x y : α) := x = d.fst ∧ y = d.snd
 
-protected lemma IsDartLink.symm {d : G.Dart} (h : G.IsDartLink d x y) : G.IsDartLink d y x :=
-  sorry
+lemma IsDartLink.symm {d : G.Dart} (h : G.IsDartLink d x y) : G.IsDartLink d.reverse y x := by
+  constructor
+  · rw [Dart.fst_of_reverse]
+    exact h.2
+  · rw [Dart.snd_of_reverse]
+    exact h.1
