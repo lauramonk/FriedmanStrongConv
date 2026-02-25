@@ -59,38 +59,48 @@ lemma isLink (d : G.Dart) : G.IsLink d.edge d.fst d.snd :=
   | .Fwd _ _ h => h
   | .Bck _ _ h => h
 
+/-- The map `isBck` extracts indicates whether the edge is an instance of Dart.Bck. -/
+def isBck (d : G.Dart) : Bool :=
+  match d with
+  | .Dir _ _ _ _ _ => false
+  | .Fwd _ _ _ => false
+  | .Bck _ _ _ => true
+
 lemma fst_mem (d : G.Dart) : d.fst ∈ V(G) := d.isLink.left_mem
 
 lemma snd_mem (d : G.Dart) : d.snd ∈ V(G) := d.isLink.right_mem
 
 lemma edge_mem (d : G.Dart) : d.edge ∈ E(G) := d.isLink.edge_mem
 
-/-- Two darts are equal iff they share their start points, end points and edges.-/
-lemma eq_iff {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.snd = d₂.snd ∧ d₁.edge = d₂.edge)
+/-- The map `isLoop` extracts indicates whether the edge is a loop. -/
+def isLoop (d : G.Dart) : Bool :=
+  match d with
+  | .Dir _ _ _ _ _ => false
+  | .Fwd _ _ _ => true
+  | .Bck _ _ _ => true
+
+lemma isLoop_iff {d : G.Dart} : (d.isLoop) ↔ (d.fst = d.snd) := sorry
+
+/-- Two loop darts are equal iff they have the same edge and orientation.-/
+lemma eq_iff_loop {d₁ d₂ : G.Dart} (h : d₁.isLoop) : (d₁ = d₂) ↔ (d₁.edge = d₂.edge ∧ d₁.isBck = d₂.isBck) := sorry
+
+/-- Two non-loop darts are equal iff they have the same edge and orientation.-/
+lemma eq_iff_non_loop {d₁ d₂ : G.Dart} (h : ¬d₁.isLoop = true) : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.edge = d₂.edge) := sorry
+
+/-- Two darts are equal iff they share their start points, edges and orientation.-/
+lemma eq_iff {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.edge = d₂.edge ∧ d₁.isBck = d₂.isBck)
   := by
   constructor
   · intro heq
     rw [heq]
     exact ⟨rfl, rfl, rfl⟩
-  · sorry
-
-/-- If two darts share their edge and start point then they are equal. -/
-lemma fst_edge_unique {d₁ d₂ : G.Dart} (h₁ : d₁.fst = d₂.fst) (he : d₁.edge = d₂.edge) : d₁ = d₂ := by
-  apply eq_iff.2
-  constructor
-  · exact h₁
-  · constructor
-    · have h : G.IsLink d₁.edge d₁.fst d₂.snd := by rw [he, h₁]; exact d₂.isLink
-      exact IsLink.right_unique d₁.isLink h
-    · exact he
-
-/-- If two darts share their edge and end point then they are equal. -/
-lemma snd_edge_unique {d₁ d₂ : G.Dart} (h₂ : d₁.snd = d₂.snd) (he : d₁.edge = d₂.edge) : d₁ = d₂ := by
-  apply eq_iff.2
-  constructor
-  · have h : G.IsLink d₁.edge d₂.fst d₁.snd := by rw [he, h₂]; exact d₂.isLink
-    exact IsLink.left_unique d₁.isLink h
-  · exact ⟨h₂, he⟩
+  · by_cases h : d₁.isLoop
+    · rintro ⟨_, he, hb⟩
+      apply (eq_iff_loop h).2
+      exact ⟨he, hb⟩
+    · rintro ⟨hf, he, hb⟩
+      apply (eq_iff_non_loop h).2
+      exact ⟨hf, he⟩
 
 /-- The reversing operation on darts, which reverses its orientation. -/
 def reverse (d : G.Dart) : G.Dart :=
@@ -100,19 +110,31 @@ def reverse (d : G.Dart) : G.Dart :=
   | .Bck x e h => Fwd x e h
 
 /-- The start point of the reverse dart is its end point. -/
+@[simp]
 lemma fst_of_reverse (d : G.Dart) : d.reverse.fst = d.snd := by cases d <;> trivial
 
 /-- The end point of the reverse dart is its start point. -/
+@[simp]
 lemma snd_of_reverse (d : G.Dart) : d.reverse.snd = d.fst := by cases d <;> trivial
 
 /-- The edge is unchanged upon reversing the dart. -/
+@[simp]
 lemma edge_of_reverse (d : G.Dart) : d.reverse.edge = d.edge := by cases d <;> trivial
+
+/-- The reverse operation switches the orientation of loops.-/
+@[simp]
+lemma bck_of_reverse_loop {d : G.Dart} (hl : d.isLoop) : d.reverse.isBck = !d.isBck := by cases d <;> trivial
+
+/-- The boolean isLoop is unchanged upon reversing the dart. -/
+@[simp]
+lemma isLoop_of_reverse (d : G.Dart) : d.reverse.isLoop = d.isLoop := by cases d <;> trivial
 
 /-- The reverse of a dart is distinct from the dart. -/
 lemma reverse_neq_self (d : G.Dart) : d.reverse ≠ d := by
   cases d <;> intro hn <;> cases hn; contradiction
 
 /-- The reverse of the reverse of a dart is the dart itself. -/
+@[simp]
 lemma reverse_of_reverse (d : G.Dart) : d.reverse.reverse = d := by cases d <;> rfl
 
 end Dart
@@ -128,18 +150,34 @@ def toDart [DecidableEq α] {x y : α} {e : β} (h : G.IsLink e x y) : G.Dart :=
   . exact Dart.Dir x y e eq h
 
 /-- Two darts have the same edge iff they are equal or reverse of one another. -/
-lemma edge_dart_eq_iff {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁ = d₂ ∨ d₁ = d₂.reverse := by
-  by_cases heq : d₁.fst = d₂.fst
-  · left
-    exact Dart.fst_edge_unique heq h
-  · right
-    apply Dart.fst_edge_unique
-    · rw [Dart.fst_of_reverse]
-      have this : G.IsLink d₁.edge d₂.fst d₂.snd := by rw [h]; exact d₂.isLink
-      apply IsLink.left_eq_of_right_ne d₁.isLink this heq
-    . rw [Dart.edge_of_reverse]
-      exact h
-
+lemma edge_dart_eq_iff {d₁ d₂ : G.Dart} : (d₁.edge = d₂.edge) ↔ (d₁ = d₂ ∨ d₁ = d₂.reverse) := by
+  constructor
+  · intro he
+    by_cases hl : d₁.isLoop
+    · by_cases hb : d₁.isBck = d₂.isBck
+      · left
+        apply (Dart.eq_iff_loop hl).2
+        exact ⟨he, hb⟩
+      · right
+        apply (Dart.eq_iff_loop hl).2
+        constructor
+        · rw [Dart.edge_of_reverse]
+          exact he
+        · sorry
+    · by_cases hf : d₁.fst = d₂.fst
+      · left
+        apply (Dart.eq_iff_non_loop hl).2
+        exact ⟨hf, he⟩
+      · right
+        apply (Dart.eq_iff_non_loop hl).2
+        rw [Dart.fst_of_reverse, Dart.edge_of_reverse]
+        constructor
+        · have this : G.IsLink d₁.edge d₂.fst d₂.snd := by rw [he]; exact d₂.isLink
+          apply IsLink.left_eq_of_right_ne d₁.isLink this hf
+        · exact he
+  · rintro (heq | hrev)
+    · rw [heq]
+    · rw [hrev, Dart.edge_of_reverse]
 
 /-- An edge is incident to a vertex iff there is a dart starting at this vertex
 carried by this edge.-/
@@ -158,6 +196,7 @@ lemma Inc_iff_exists_dart {x : α} {e : β} :
 iff `d` is a dart starting at `x` and ending at `y`.-/
 def IsDartLink (d : G.Dart) (x y : α) := x = d.fst ∧ y = d.snd
 
+@[simp]
 lemma IsDartLink.symm {d : G.Dart} (h : G.IsDartLink d x y) : G.IsDartLink d.reverse y x := by
   constructor
   · rw [Dart.fst_of_reverse]
