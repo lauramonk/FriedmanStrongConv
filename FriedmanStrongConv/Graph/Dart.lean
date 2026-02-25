@@ -66,20 +66,22 @@ def isBck (d : G.Dart) : Bool :=
   | .Fwd _ _ _ => false
   | .Bck _ _ _ => true
 
-lemma fst_mem (d : G.Dart) : d.fst ∈ V(G) := d.isLink.left_mem
-
-lemma snd_mem (d : G.Dart) : d.snd ∈ V(G) := d.isLink.right_mem
-
-lemma edge_mem (d : G.Dart) : d.edge ∈ E(G) := d.isLink.edge_mem
-
-/-- The map `isLoop` extracts indicates whether the edge is a loop. -/
+/-- The map `isLoop` indicates whether the edge is a loop. -/
 def isLoop (d : G.Dart) : Bool :=
   match d with
   | .Dir _ _ _ _ _ => false
   | .Fwd _ _ _ => true
   | .Bck _ _ _ => true
 
+lemma fst_mem (d : G.Dart) : d.fst ∈ V(G) := d.isLink.left_mem
+
+lemma snd_mem (d : G.Dart) : d.snd ∈ V(G) := d.isLink.right_mem
+
+lemma edge_mem (d : G.Dart) : d.edge ∈ E(G) := d.isLink.edge_mem
+
 lemma isLoop_iff {d : G.Dart} : (d.isLoop) ↔ (d.fst = d.snd) := sorry
+
+lemma isLoop_of_isBck {d : G.Dart} : (d.isBck) → (d.isLoop) := sorry
 
 /-- Two loop darts are equal iff they have the same edge and orientation.-/
 lemma eq_iff_loop {d₁ d₂ : G.Dart} (h : d₁.isLoop) : (d₁ = d₂) ↔ (d₁.edge = d₂.edge ∧ d₁.isBck = d₂.isBck) := sorry
