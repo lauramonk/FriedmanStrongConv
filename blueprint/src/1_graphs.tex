@@ -345,6 +345,8 @@ walks using darts, as they differentiate between these two options.
     \end{itemize}
 \end{definition}
 
+[todo: notation start and end of walk]
+
 \begin{definition}
   \label{def:length}
   \uses{def:dartwalk}
@@ -362,6 +364,20 @@ walks using darts, as they differentiate between these two options.
   is the list $(x_i)_{0 \leq i \leq m}$ with $x_0=\spt(d_1)$ and
   $x_i = \ept(d_i)$ for $1 \leq i \leq m$.
 \end{definition}
+
+\begin{definition}
+  \label{def:concatenation}
+  \uses{def:dartwalk}
+  Let $w = (d_i)_{1 \leq i \leq m}$ be a dartwalk from $x$ to $y$
+  and $w' = (d_i')_{1 \leq i \leq m'}$ be a dartwalk from $y$ to $z$.
+  We define the \emph{concatenation} $w \cdot w'$ to be the dartwalk $(d_i'')_{1 \leq i \leq m+m'}$
+  where $d_i''=d_i$ for $i \leq m$ and $d_{i-m}'$ for $i > m$.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:length_concat}
+  The length of the concatenation of two dartwalks is the sum of their lengths.
+\end{lemma}
 
 \begin{definition}
   \label{def:reachable}
@@ -396,13 +412,6 @@ walks using darts, as they differentiate between these two options.
   \uses{def:dartwalk}
   A dartwalk $(d_i)_{1 \leq i \leq m}$ is called a \emph{path} if
   for all $1 \leq i,j \leq m$, $\spt(d_i) = \spt(d_j) \Rightarrow i=j$.
-\end{definition}
-
-\begin{definition}
-  \label{def:nonbacktracking}
-  \uses{def:dartwalk}
-  A dartwalk $(d_i)_{1 \leq i \leq m}$ is called \emph{non-backtracking} if
-  for all $1 \leq i < m$, $d_{i+1} \neq \symm (d_{i})$.
 \end{definition}
 
 \begin{definition}
@@ -529,6 +538,137 @@ with respect to the function $f : V(G_1) \cup E(G_1) \rightarrow V(G_2) \cup E(G
   A morphism $f : G_1 \rightarrow G_2$ is a \emph{covering map} if it is
   surjective and a local isomorphism.
 \end{definition}
+
+[todo: dart version]
+
+\begin{definition}
+  \label{def:covering_graph}
+  \uses{def:covering_map}
+  A graph $G_2$ is a \emph{covering graph} of a graph $G_1$ if there exists
+  a covering map $\pi : G_2 \rightarrow G_1$.
+\end{definition}
+
+\subsection{Rooted graphs}
+
+\begin{definition}
+  \label{def:rooted_graph}
+  A \emph{rooted graph} is a graph $G$ with a distinguished vertex $r$, its \emph{root}.
+\end{definition}
+
+\begin{definition}
+  \label{def:rooted_tree}
+  A \emph{rooted tree} is a rooted graph $(G,r)$ which is a tree.
+\end{definition}
+
+\begin{definition}
+  \label{def:rooted_tree_parent}
+  \uses{def:rooted_tree}
+  Let $(G,r)$ be a rooted tree.
+  Let $x \in V(G)$.
+  A vertex $y \in V(G)$ is a \emph{parent} of $x$ if $y$ is adjacent to $x$
+  and $y$ belongs in the support of a path from $r$ to $x$.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:rooted_tree_unique_parent}
+  \uses{def:rooted_tree_parent}
+  Let $(G,r)$ be a rooted tree.
+  Any vertex $x \in V(G)$, $x \neq r$,  has a unique parent.
+  The root has no parent.
+\end{proposition}
+
+\begin{definition}
+  \label{def:rooted_tree_children}
+  \uses{def:rooted_tree_parent}
+  Let $(G,r)$ be a rooted tree.
+  The \emph{children} of $x \in V(G)$ are all the adjecent vertices which
+  are not its parent.
+\end{definition}
+
+\subsection{Nonbacktracking walks and reduction}
+
+\begin{definition}
+  \label{def:nonbacktracking}
+  \uses{def:dartwalk}
+  A dartwalk $(d_i)_{1 \leq i \leq m}$ is called \emph{non-backtracking} if
+  for all $1 \leq i < m$, $d_{i+1} \neq \symm (d_{i})$.
+\end{definition}
+
+\begin{definition}
+  \label{def:walk_reduction}
+  \uses{def:dartwalk}
+  Let $w = (d_i)_{1 \leq i \leq m}$ be a dartwalk.
+  We say $w$ \emph{admits a reduction} if there exists $1 \leq j < m$ such that
+  $d_{j+1} = \symm(d_j)$.
+  In this case, we call the dartwalk $w'=(d_i')_{1 \leq i \leq m-2}$ obtained by
+  letting $d_i'=d_i$ for $i<j$ and $d_i'=d_{i+2}$ for $i \geq j$ a \emph{reduction} of $w$.
+\end{definition}
+
+\begin{definition}
+  \label{def:homotopy}
+  \uses{def:dartwalk}
+  Let $x, y \in V(G)$.
+  Two dartwalks $w = (d_i)_{1 \leq i \leq m}$ and $w' = (d_i')_{1 \leq i \leq m'}$ from $x$ to $y$
+  are said to be \emph{homotopic} if
+  there exists a finite sequence $(w_j)_{1 \leq j \leq n}$ such that:
+  \begin{itemize}
+    \item for all $1 \leq j \leq n$, $w_j$ is a
+    dartwalk from $x$ to $y$;
+    \item $w_1=w$ and $w_n=w'$;
+    \item for any $1 \leq j < n$, either $w_j$ is a reduction of $w_{j+1}$ or $w_{j+1}$ is a
+    reduction of $w_j$.
+  \end{itemize}
+\end{definition}
+
+\begin{proposition}
+  \label{prop:homotopy_equivalence}
+  The homotopy relation is an equivalence relation.
+\end{proposition}
+
+\begin{theorem}
+  \label{thm:unique_nonbacktracking}
+  \uses{def:nonbacktracking,prop:homotopy_equivalence}
+  Let $x, y \in V(G)$.
+  Any dartwalk from $x$ to $y$ is homotopic to a unique nonbacktracking dartwalk, which we denote by $[w]$.
+\end{theorem}
+
+\begin{proof}
+  Might be able to use the reduction results from coproduct library.
+\end{proof}
+
+\subsection{Universal cover}
+
+Let $(G,r)$ be a rooted graph. We assume in this section that $G$ is connected.
+
+\begin{definition}
+  \label{def:universal_cover}
+  \uses{def:graph_of_dart,def:concatenation,thm:unique_nonbacktracking}
+  We define the \emph{universal cover} $\hat{G}$ of $(G,r)$, which is a rooted graph,
+  by letting:
+  \begin{itemize}
+    \item $V(\hat G)$ be the set of non-backtracking dartwalks on $G$
+    starting at $r$;
+    \item the dartset $D(\hat{G})$ is defined as the set of pairs $(w,d)$ where
+    $w$ is a non-backtracking dartwalk ($w \in V(\hat{G})$) and $d \in D(G)$
+    is a dart on $G$ starting at the endpoint of $w$;
+    \item for $(w,d) \in D(\hat{G})$, $\spt_{\hat{G}}(w,d) = w$,
+    $\ept_{\hat{G}}(d) = [w \cdot d]$ and $\symm_{\hat{G}}(w,d) = ([w \cdot d],\symm_G(d))$;
+    \item the root $\hat{r}$ is the empty walk from $r$ to $r$.
+  \end{itemize}
+\end{definition}
+
+\begin{theorem}
+  \label{thm:univ_cover_is_tree}
+  \uses{def:universal_cover,def:tree}
+  The universal cover $\hat{G}$ of $(G,r)$ is a tree.
+\end{theorem}
+
+\begin{theorem}
+  \label{thm:univ_cover_cover}
+  \uses{def:universal_cover,def:covering_map}
+  The projection map $\pi : \hat{G} \rightarrow G$ which is defined by $\pi(w)=\ept(w)$
+  for $w \in V(\hat G)$ and $\pi(w,d)=d$ for $(w,d) \in D(\hat G)$ is a covering map.
+\end{theorem}
 
 \subsection{Metric}
 
