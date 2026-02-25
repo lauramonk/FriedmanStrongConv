@@ -376,6 +376,7 @@ walks using darts, as they differentiate between these two options.
 
 \begin{lemma}
   \label{lem:length_concat}
+  \uses{def:concatenation,def:length}
   The length of the concatenation of two dartwalks is the sum of their lengths.
 \end{lemma}
 
@@ -556,34 +557,47 @@ with respect to the function $f : V(G_1) \cup E(G_1) \rightarrow V(G_2) \cup E(G
 \end{definition}
 
 \begin{definition}
-  \label{def:rooted_tree}
-  A \emph{rooted tree} is a rooted graph $(G,r)$ which is a tree.
+  \label{def:rooted_graph_parent}
+  \uses{def:rooted_graph}
+  Let $(G,r)$ be a rooted graph.
+  Let $x \in V(G)$.
+  A vertex $y \in V(G)$ is a \emph{parent} of $x$ if $y$ is adjacent to $x$ and $\dist(r,y) = \dist(r,x)-1$.
 \end{definition}
 
+
 \begin{definition}
-  \label{def:rooted_tree_parent}
-  \uses{def:rooted_tree}
-  Let $(G,r)$ be a rooted tree.
-  Let $x \in V(G)$.
-  A vertex $y \in V(G)$ is a \emph{parent} of $x$ if $y$ is adjacent to $x$
-  and $y$ belongs in the support of a path from $r$ to $x$.
+  \label{def:rooted_graph_child}
+  \uses{def:rooted_graph_parent}
+  Let $(G,r)$ be a rooted graph.
+  A \emph{child} of $x \in V(G)$ is an adjacent vertice which is not a parent.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:root_no_parent}
+  \uses{def:rooted_graph_parent}
+  The root of a rooted graph has no parent.
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:exists_parent}
+  \uses{def:rooted_graph_parent}
+  Let $(G,r)$ be a rooted graph. Assume $G$ is connected.
+  Any vertex $x \in V(G)$ distinct from the root admits a parent.
+\end{lemma}
+
+\begin{definition}
+  \label{def:rooted_tree}
+  \uses{def:rooted_graph}
+  A \emph{rooted tree} is a rooted graph $(G,r)$ which is a tree.
 \end{definition}
 
 \begin{proposition}
   \label{prop:rooted_tree_unique_parent}
-  \uses{def:rooted_tree_parent}
+  \uses{lem:exists_parent,def:rooted_tree}
   Let $(G,r)$ be a rooted tree.
-  Any vertex $x \in V(G)$, $x \neq r$,  has a unique parent.
-  The root has no parent.
+  Any vertex $x \in V(G)$ distinct from the root admits a unique parent.
 \end{proposition}
 
-\begin{definition}
-  \label{def:rooted_tree_children}
-  \uses{def:rooted_tree_parent}
-  Let $(G,r)$ be a rooted tree.
-  The \emph{children} of $x \in V(G)$ are all the adjecent vertices which
-  are not its parent.
-\end{definition}
 
 \subsection{Nonbacktracking walks and reduction}
 
@@ -746,23 +760,8 @@ Let $(G,r)$ be a rooted graph. We assume in this section that $G$ is connected.
   $r \geq 1$ then $C_r(x) = B_r(x) - B_{r-1}(x)$.
 \end{lemma}
 
-\begin{lemma}
-  \label{lem:circle_r_vs_rplusone}
-  \uses{def:circle,lem:distance_take}
-  Let $x \in V(G)$ and $r \in \N$.
-  For any $y \in C_{r+1}(x)$, there exists $z \in C_r(x)$ such that
-  $y$ and $z$ are adjacent.
-\end{lemma}
-
-\begin{proof}
-  Take $y \in C_{r+1}(x)$. Then there exists a dartwalk $(d_i)_{1 \leq i \leq r+1}$,
-  from $x$ to $y$.
-  We take $z=\spt(d_{r+1})$ and check it is adjacent to $y$ and lies in $C_r(x)$.
-\end{proof}
-
 \begin{proposition}
   \label{prop:growth_ball}
-  \uses{def:locally_bounded,lem:circle_vs_ball,lem:ball_circle_radius_zero,lem:circle_r_vs_rplusone}
   Assume $G$ is locally bounded and let $D = \sup_{x \in V(G)} \deg (x)$.
   Then, for any $x \in V(G)$, any $r \in \N$,
   $\# B_r(x) \leq D^r$.
