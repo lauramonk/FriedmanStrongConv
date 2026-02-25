@@ -88,19 +88,29 @@ lemma isLoop_iff {d : G.Dart} : (d.isLoop) ↔ (d.fst = d.snd) := by
 
 lemma isLoop_of_isBck {d : G.Dart} (h : d.isBck) : (d.isLoop) := by cases d <;> trivial
 
+/-- Decomposes two darts from a proof that they share an edge.
+Useful for proving trivial properties about darts that share an edge. -/
+syntax "dartcases " Lean.Parser.Tactic.elimTarget " and " Lean.Parser.Tactic.elimTarget " from " Lean.Parser.Tactic.elimTarget: tactic
+
+macro_rules
+| `(tactic|dartcases $d₁:elimTarget and $d₂:elimTarget from $hedge:elimTarget) => `(tactic| (
+  rcases $d₁ with ⟨x₁, y₁, e₁, ne₁, h₁⟩ | ⟨x₁, e₁, h₁⟩ | ⟨x₁, e₁, h₁⟩ -- decompose the first dart
+  <;> rcases $d₂ with ⟨x₂, y₂, e₂, ne₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ -- decompose the second dart
+  <;> rcases $hedge -- unify e₁ = e₂
+  <;> rcases IsLink.eq_and_eq_or_eq_and_eq h₁ h₂ with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩ -- x₁ = x₂ ∧ y₁ = y₂ ∨ x₁ = y₂ ∧ y₁ = x₂
+  all_goals
+    try cases hxx; cases hyy; -- unify x₁ = x₂ and y₁ = y₂
+    try cases hxy; cases hyx -- unify x₁ = y₁ and y₁ = x₂
+))
+
 /-- Two loop darts are equal iff they have the same edge and orientation.-/
 lemma eq_iff_loop {d₁ d₂ : G.Dart} (h : d₁.isLoop) : (d₁ = d₂) ↔ (d₁.edge = d₂.edge ∧ d₁.isBck = d₂.isBck) := by
   constructor
   . rintro rfl
     exact ⟨rfl, rfl⟩
   . intro ⟨hedge, hbck⟩
-    rcases IsLink.eq_and_eq_or_eq_and_eq d₁.isLink (hedge ▸ d₂.isLink) with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩
-    <;> rcases d₁ with ⟨x₁, y₁, e₁, ne₁, h₁⟩ | ⟨x₁, e₁, h₁⟩ | ⟨x₁, e₁, h₁⟩
-    <;> rcases d₂ with ⟨x₂, y₂, e₂, ne₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ | ⟨x₂, e₂, h₂⟩
+    dartcases d₁ and d₂ from hedge
     all_goals
-      cases hedge
-      try cases hxx; cases hyy
-      try cases hxy; cases hyx
       try rfl
       try contradiction
 
@@ -110,13 +120,8 @@ lemma eq_iff_non_loop {d₁ d₂ : G.Dart} (h : ¬d₁.isLoop = true) : (d₁ = 
   . rintro rfl
     exact ⟨rfl, rfl⟩
   . intro ⟨hfst, hedge⟩
-    rcases IsLink.eq_and_eq_or_eq_and_eq d₁.isLink (hedge ▸ d₂.isLink) with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩
-    <;> rcases d₁ with ⟨x₁, y₁, e₁, ne₁, h₁⟩ | ⟨x₁, e₁, h₁⟩ | ⟨x₁, e₁, h₁⟩
-    <;> rcases d₂ with ⟨x₂, y₂, e₂, ne₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ | ⟨x₂, e₂, h₂⟩
+    dartcases d₁ and d₂ from hedge
     all_goals
-      cases hedge
-      try cases hxx; cases hyy
-      try cases hxy; cases hyx
       try rfl
       try contradiction
 
@@ -184,13 +189,8 @@ def toDart [DecidableEq α] {x y : α} {e : β} (h : G.IsLink e x y) : G.Dart :=
 
 /-- Two darts are equal or reverse of one another if they have the same edge. -/
 lemma eq_or_eq_rev_of_edge_dart_eq {d₁ d₂ : G.Dart} (hedge : d₁.edge = d₂.edge) : d₁ = d₂ ∨ d₁ = d₂.reverse := by
-  rcases IsLink.eq_and_eq_or_eq_and_eq d₁.isLink (hedge ▸ d₂.isLink) with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩
-  <;> rcases d₁ with ⟨x₁, y₁, e₁, ne₁, h₁⟩ | ⟨x₁, e₁, h₁⟩ | ⟨x₁, e₁, h₁⟩
-  <;> rcases d₂ with ⟨x₂, y₂, e₂, ne₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ | ⟨x₂, e₂, h₂⟩
+  dartcases d₁ and d₂ from hedge
   all_goals
-    cases hedge
-    try cases hxx; cases hyy
-    try cases hxy; cases hyx
     try left; rfl
     try right; rfl
     try contradiction
