@@ -136,6 +136,14 @@ lemma eq_iff {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d
       apply (eq_iff_non_loop h).2
       exact ⟨hf, he⟩
 
+lemma fst_snd_eq {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁.fst = d₂.fst ↔ d₁.snd = d₂.snd := by
+  dartcases d₁ and d₂ from h
+  all_goals constructor <;> intro lhs <;> trivial
+
+lemma fst_snd_eq' {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁.fst = d₂.snd ↔ d₁.fst = d₂.snd := by
+  dartcases d₁ and d₂ from h
+  all_goals constructor <;> intro lhs <;> trivial
+
 /-- The reversing operation on darts, which reverses its orientation. -/
 def reverse (d : G.Dart) : G.Dart :=
     match d with
