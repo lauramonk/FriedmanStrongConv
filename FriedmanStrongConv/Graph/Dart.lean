@@ -149,35 +149,26 @@ def toDart [DecidableEq α] {x y : α} {e : β} (h : G.IsLink e x y) : G.Dart :=
     exact Dart.Fwd x e hx
   . exact Dart.Dir x y e eq h
 
+/-- Two darts are equal or reverse of one another if they have the same edge. -/
+lemma eq_or_eq_rev_of_edge_dart_eq {d₁ d₂ : G.Dart} (hedge : d₁.edge = d₂.edge) : d₁ = d₂ ∨ d₁ = d₂.reverse := by
+  rcases IsLink.eq_and_eq_or_eq_and_eq d₁.isLink (hedge ▸ d₂.isLink) with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩
+  <;> rcases d₁ with ⟨x₁, y₁, e₁, ne₁, h₁⟩ | ⟨x₁, e₁, h₁⟩ | ⟨x₁, e₁, h₁⟩
+  <;> rcases d₂ with ⟨x₂, y₂, e₂, ne₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ | ⟨x₂, e₂, h₂⟩
+  all_goals
+    cases hedge
+    try cases hxx; cases hyy
+    try cases hxy; cases hyx
+    try left; rfl
+    try right; rfl
+    try contradiction
+
 /-- Two darts have the same edge iff they are equal or reverse of one another. -/
-lemma edge_dart_eq_iff {d₁ d₂ : G.Dart} : (d₁.edge = d₂.edge) ↔ (d₁ = d₂ ∨ d₁ = d₂.reverse) := by
+lemma edge_dart_eq_iff_eq_or_eq_rev {d₁ d₂ : G.Dart} : d₁.edge = d₂.edge ↔ d₁ = d₂ ∨ d₁ = d₂.reverse := by
   constructor
-  · intro he
-    by_cases hl : d₁.isLoop
-    · by_cases hb : d₁.isBck = d₂.isBck
-      · left
-        apply (Dart.eq_iff_loop hl).2
-        exact ⟨he, hb⟩
-      · right
-        apply (Dart.eq_iff_loop hl).2
-        constructor
-        · rw [Dart.edge_of_reverse]
-          exact he
-        · sorry
-    · by_cases hf : d₁.fst = d₂.fst
-      · left
-        apply (Dart.eq_iff_non_loop hl).2
-        exact ⟨hf, he⟩
-      · right
-        apply (Dart.eq_iff_non_loop hl).2
-        rw [Dart.fst_of_reverse, Dart.edge_of_reverse]
-        constructor
-        · have this : G.IsLink d₁.edge d₂.fst d₂.snd := by rw [he]; exact d₂.isLink
-          apply IsLink.left_eq_of_right_ne d₁.isLink this hf
-        · exact he
-  · rintro (heq | hrev)
-    · rw [heq]
-    · rw [hrev, Dart.edge_of_reverse]
+  . exact eq_or_eq_rev_of_edge_dart_eq
+  . rintro (rfl | rfl)
+    . rfl
+    . exact Dart.edge_of_reverse d₂
 
 /-- An edge is incident to a vertex iff there is a dart starting at this vertex
 carried by this edge.-/
