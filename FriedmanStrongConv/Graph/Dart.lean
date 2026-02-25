@@ -79,15 +79,46 @@ lemma snd_mem (d : G.Dart) : d.snd ∈ V(G) := d.isLink.right_mem
 
 lemma edge_mem (d : G.Dart) : d.edge ∈ E(G) := d.isLink.edge_mem
 
-lemma isLoop_iff {d : G.Dart} : (d.isLoop) ↔ (d.fst = d.snd) := sorry
+lemma isLoop_iff {d : G.Dart} : (d.isLoop) ↔ (d.fst = d.snd) := by
+  constructor
+  all_goals
+    intro h
+    cases d
+    all_goals trivial
 
-lemma isLoop_of_isBck {d : G.Dart} : (d.isBck) → (d.isLoop) := sorry
+lemma isLoop_of_isBck {d : G.Dart} (h : d.isBck) : (d.isLoop) := by cases d <;> trivial
 
 /-- Two loop darts are equal iff they have the same edge and orientation.-/
-lemma eq_iff_loop {d₁ d₂ : G.Dart} (h : d₁.isLoop) : (d₁ = d₂) ↔ (d₁.edge = d₂.edge ∧ d₁.isBck = d₂.isBck) := sorry
+lemma eq_iff_loop {d₁ d₂ : G.Dart} (h : d₁.isLoop) : (d₁ = d₂) ↔ (d₁.edge = d₂.edge ∧ d₁.isBck = d₂.isBck) := by
+  constructor
+  . rintro rfl
+    exact ⟨rfl, rfl⟩
+  . intro ⟨hedge, hbck⟩
+    rcases IsLink.eq_and_eq_or_eq_and_eq d₁.isLink (hedge ▸ d₂.isLink) with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩
+    <;> rcases d₁ with ⟨x₁, y₁, e₁, ne₁, h₁⟩ | ⟨x₁, e₁, h₁⟩ | ⟨x₁, e₁, h₁⟩
+    <;> rcases d₂ with ⟨x₂, y₂, e₂, ne₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ | ⟨x₂, e₂, h₂⟩
+    all_goals
+      cases hedge
+      try cases hxx; cases hyy
+      try cases hxy; cases hyx
+      try rfl
+      try contradiction
 
 /-- Two non-loop darts are equal iff they have the same edge and orientation.-/
-lemma eq_iff_non_loop {d₁ d₂ : G.Dart} (h : ¬d₁.isLoop = true) : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.edge = d₂.edge) := sorry
+lemma eq_iff_non_loop {d₁ d₂ : G.Dart} (h : ¬d₁.isLoop = true) : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.edge = d₂.edge) := by
+  constructor
+  . rintro rfl
+    exact ⟨rfl, rfl⟩
+  . intro ⟨hfst, hedge⟩
+    rcases IsLink.eq_and_eq_or_eq_and_eq d₁.isLink (hedge ▸ d₂.isLink) with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩
+    <;> rcases d₁ with ⟨x₁, y₁, e₁, ne₁, h₁⟩ | ⟨x₁, e₁, h₁⟩ | ⟨x₁, e₁, h₁⟩
+    <;> rcases d₂ with ⟨x₂, y₂, e₂, ne₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ | ⟨x₂, e₂, h₂⟩
+    all_goals
+      cases hedge
+      try cases hxx; cases hyy
+      try cases hxy; cases hyx
+      try rfl
+      try contradiction
 
 /-- Two darts are equal iff they share their start points, edges and orientation.-/
 lemma eq_iff {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.edge = d₂.edge ∧ d₁.isBck = d₂.isBck)
