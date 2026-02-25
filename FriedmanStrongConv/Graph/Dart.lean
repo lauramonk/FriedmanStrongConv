@@ -100,7 +100,7 @@ macro_rules
   <;> rcases IsLink.eq_and_eq_or_eq_and_eq h₁ h₂ with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩ -- x₁ = x₂ ∧ y₁ = y₂ ∨ x₁ = y₂ ∧ y₁ = x₂
   all_goals first
     | cases hxx; cases hyy -- unify x₁ = x₂ and y₁ = y₂
-    | cases hxy; cases hyx -- unify x₁ = y₁ and y₁ = x₂
+    | cases hxy; cases hyx -- unify x₁ = y₂ and y₁ = x₂
 ))
 
 /-- Two loop darts are equal iff they have the same edge and orientation.-/
