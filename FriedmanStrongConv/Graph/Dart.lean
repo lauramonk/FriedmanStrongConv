@@ -110,9 +110,7 @@ lemma eq_iff_loop {d₁ d₂ : G.Dart} (h : d₁.isLoop) : (d₁ = d₂) ↔ (d�
     exact ⟨rfl, rfl⟩
   . intro ⟨hedge, hbck⟩
     dartcases d₁ and d₂ from hedge
-    all_goals
-      try rfl
-      try contradiction
+    all_goals trivial
 
 /-- Two non-loop darts are equal iff they have the same edge and orientation.-/
 lemma eq_iff_non_loop {d₁ d₂ : G.Dart} (h : ¬d₁.isLoop = true) : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.edge = d₂.edge) := by
@@ -121,9 +119,7 @@ lemma eq_iff_non_loop {d₁ d₂ : G.Dart} (h : ¬d₁.isLoop = true) : (d₁ = 
     exact ⟨rfl, rfl⟩
   . intro ⟨hfst, hedge⟩
     dartcases d₁ and d₂ from hedge
-    all_goals
-      try rfl
-      try contradiction
+    all_goals trivial
 
 /-- Two darts are equal iff they share their start points, edges and orientation.-/
 lemma eq_iff {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.edge = d₂.edge ∧ d₁.isBck = d₂.isBck)
