@@ -98,9 +98,9 @@ macro_rules
   <;> rcases $d₂ with ⟨x₂, y₂, e₂, ne₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ -- decompose the second dart
   <;> rcases $hedge -- unify e₁ = e₂
   <;> rcases IsLink.eq_and_eq_or_eq_and_eq h₁ h₂ with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩ -- x₁ = x₂ ∧ y₁ = y₂ ∨ x₁ = y₂ ∧ y₁ = x₂
-  all_goals
-    try cases hxx; cases hyy; -- unify x₁ = x₂ and y₁ = y₂
-    try cases hxy; cases hyx -- unify x₁ = y₁ and y₁ = x₂
+  all_goals first
+    | cases hxx; cases hyy -- unify x₁ = x₂ and y₁ = y₂
+    | cases hxy; cases hyx -- unify x₁ = y₁ and y₁ = x₂
 ))
 
 /-- Two loop darts are equal iff they have the same edge and orientation.-/
@@ -186,10 +186,10 @@ def toDart [DecidableEq α] {x y : α} {e : β} (h : G.IsLink e x y) : G.Dart :=
 /-- Two darts are equal or reverse of one another if they have the same edge. -/
 lemma eq_or_eq_rev_of_edge_dart_eq {d₁ d₂ : G.Dart} (hedge : d₁.edge = d₂.edge) : d₁ = d₂ ∨ d₁ = d₂.reverse := by
   dartcases d₁ and d₂ from hedge
-  all_goals
-    try left; rfl
-    try right; rfl
-    try contradiction
+  all_goals first
+    | left; rfl
+    | right; rfl
+    | contradiction
 
 /-- Two darts have the same edge iff they are equal or reverse of one another. -/
 lemma edge_dart_eq_iff_eq_or_eq_rev {d₁ d₂ : G.Dart} : d₁.edge = d₂.edge ↔ d₁ = d₂ ∨ d₁ = d₂.reverse := by
