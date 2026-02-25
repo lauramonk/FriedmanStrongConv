@@ -112,7 +112,7 @@ lemma eq_iff_loop {d₁ d₂ : G.Dart} (h : d₁.isLoop) : (d₁ = d₂) ↔ (d�
     dartcases d₁ and d₂ from hedge
     all_goals trivial
 
-/-- Two non-loop darts are equal iff they have the same edge and orientation.-/
+/-- Two non-loop darts are equal iff they have the same edge and start.-/
 lemma eq_iff_non_loop {d₁ d₂ : G.Dart} (h : ¬d₁.isLoop = true) : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d₁.edge = d₂.edge) := by
   constructor
   . rintro rfl
