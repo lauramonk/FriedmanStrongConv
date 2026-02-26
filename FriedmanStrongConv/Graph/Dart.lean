@@ -88,25 +88,28 @@ lemma isLoop_iff {d : G.Dart} : (d.isLoop) ↔ (d.fst = d.snd) := by
 
 lemma isLoop_of_isBck {d : G.Dart} (h : d.isBck) : (d.isLoop) := by cases d <;> trivial
 
+/-- If e is a loop at x and x', then x equals x' -/
+private lemma IsLink.eq_loop {x x' : α} {e: β} (h : G.IsLoopAt e x) (h' : G.IsLoopAt e x') : x = x' := by
+  rcases h.left_eq_or_eq h' with (rfl | rfl) <;> rfl
+
 /-- Decomposes two darts from a proof that they share an edge.
-Useful for proving trivial properties about darts that share an edge.
-Currently results in 10 cases in total, 6 distinct cases.
-TODO: try to avoid generating the 4 duplicates (i.e. don't
-decompose eq_and_eq_or_eq_and_eq if they are both loops) -/
+Useful for proving trivial properties about darts that share an edge. -/
 syntax "dartcases " Lean.Parser.Tactic.elimTarget " and " Lean.Parser.Tactic.elimTarget " from " Lean.Parser.Tactic.elimTarget: tactic
 
 macro_rules
 | `(tactic|dartcases $d₁:elimTarget and $d₂:elimTarget from $hedge:elimTarget) => `(tactic| (
   rcases $d₁ with ⟨x₁, y₁, e₁, ne₁, h₁⟩ | ⟨x₁, e₁, h₁⟩ | ⟨x₁, e₁, h₁⟩ -- decompose the first dart
   <;> rcases $d₂ with ⟨x₂, y₂, e₂, ne₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ | ⟨x₂, e₂, h₂⟩ -- decompose the second dart
-  <;> rcases $hedge -- unify e₁ = e₂
-  <;> rcases IsLink.eq_and_eq_or_eq_and_eq h₁ h₂ with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩ -- x₁ = x₂ ∧ y₁ = y₂ ∨ x₁ = y₂ ∧ y₁ = x₂
-  all_goals first
-    | cases hxx; cases hyy -- unify x₁ = x₂ and y₁ = y₂
-    | cases hxy; cases hyx -- unify x₁ = y₂ and y₁ = x₂
-  all_goals -- eliminate 8 impossible cases
-    try exact False.elim (ne₁ (Eq.refl _)) -- eliminate d₁ is Dir but d₂ is Fwd or Bck
-    try exact False.elim (ne₂ (Eq.refl _)) -- eliminate d₂ is Dir but d₁ is Fwd or Bck
+  <;> cases $hedge -- unify e₁ = e₂
+  <;> first
+    | cases IsLink.eq_loop h₁ h₂ -- unify x₁ = x₂ if d₁ and d₂ are loops
+    | rcases IsLink.eq_and_eq_or_eq_and_eq h₁ h₂ with ⟨hxx, hyy⟩ | ⟨hxy, hyx⟩ -- x₁ = x₂ ∧ y₁ = y₂ ∨ x₁ = y₂ ∧ y₁ = x₂
+      all_goals first
+        | cases hxx; cases hyy -- unify x₁ = x₂ and y₁ = y₂
+        | cases hxy; cases hyx -- unify x₁ = y₂ and y₁ = x₂
+      all_goals -- eliminate 8 impossible cases
+        try exact False.elim (ne₁ (Eq.refl _)) -- eliminate d₁ is Dir but d₂ is Fwd or Bck
+        try exact False.elim (ne₂ (Eq.refl _)) -- eliminate d₂ is Dir but d₁ is Fwd or Bck
 ))
 
 /-- Two loop darts are equal iff they have the same edge and orientation.-/
@@ -145,12 +148,12 @@ lemma eq_iff {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d
 /-- If two darts share an edge, then their starts points are the same iff their end points are the same. -/
 lemma fst_snd_eq {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁.fst = d₂.fst ↔ d₁.snd = d₂.snd := by
   dartcases d₁ and d₂ from h
-  all_goals constructor <;> intro lhs <;> cases lhs <;> rfl
+  all_goals constructor <;> (intro lhs; cases lhs; rfl)
 
 /-- If two darts share an edge, then first's start point is the seconds's end point iff the first's end point is the seconds's start point. -/
 lemma fst_snd_eq' {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁.fst = d₂.snd ↔ d₁.snd = d₂.fst := by
   dartcases d₁ and d₂ from h
-  all_goals constructor <;> intro lhs <;> cases lhs <;> rfl
+  all_goals constructor <;> (intro lhs; cases lhs; rfl)
 
 /-- The reversing operation on darts, which reverses its orientation. -/
 def reverse (d : G.Dart) : G.Dart :=
