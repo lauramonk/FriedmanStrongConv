@@ -89,7 +89,10 @@ lemma isLoop_iff {d : G.Dart} : (d.isLoop) ↔ (d.fst = d.snd) := by
 lemma isLoop_of_isBck {d : G.Dart} (h : d.isBck) : (d.isLoop) := by cases d <;> trivial
 
 /-- Decomposes two darts from a proof that they share an edge.
-Useful for proving trivial properties about darts that share an edge. -/
+Useful for proving trivial properties about darts that share an edge.
+Currently results in 10 cases in total, 6 distinct cases.
+TODO: try to avoid generating the 4 duplicates (i.e. don't
+decompose eq_and_eq_or_eq_and_eq if they are both loops) -/
 syntax "dartcases " Lean.Parser.Tactic.elimTarget " and " Lean.Parser.Tactic.elimTarget " from " Lean.Parser.Tactic.elimTarget: tactic
 
 macro_rules
@@ -101,6 +104,9 @@ macro_rules
   all_goals first
     | cases hxx; cases hyy -- unify x₁ = x₂ and y₁ = y₂
     | cases hxy; cases hyx -- unify x₁ = y₂ and y₁ = x₂
+  all_goals -- eliminate 8 impossible cases
+    try exact False.elim (ne₁ (Eq.refl _)) -- eliminate d₁ is Dir but d₂ is Fwd or Bck
+    try exact False.elim (ne₂ (Eq.refl _)) -- eliminate d₂ is Dir but d₁ is Fwd or Bck
 ))
 
 /-- Two loop darts are equal iff they have the same edge and orientation.-/
@@ -197,7 +203,6 @@ lemma eq_or_eq_rev_of_edge_dart_eq {d₁ d₂ : G.Dart} (hedge : d₁.edge = d�
   all_goals first
     | left; rfl
     | right; rfl
-    | contradiction
 
 /-- Two darts have the same edge iff they are equal or reverse of one another. -/
 lemma edge_dart_eq_iff_eq_or_eq_rev {d₁ d₂ : G.Dart} : d₁.edge = d₂.edge ↔ d₁ = d₂ ∨ d₁ = d₂.reverse := by
