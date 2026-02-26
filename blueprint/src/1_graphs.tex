@@ -703,16 +703,6 @@ Let $(G,r)$ be a rooted graph. We assume in this section that $G$ is connected.
   $\N \cup \{\infty\}$).
 \end{definition}
 
-\begin{lemma}
-  \label{lem:edistance_zero_infty}
-  \uses{def:edistance}
-  Let $x, y \in V(G)$.
-\begin{itemize}
-  \item   $\edist(x,y) = 0$ iff $x = y$;
-  \item $\edist(x,y) \neq \infty$ iff there exists
-  a dartwalk from $x$ to $y$.
-\end{itemize}\end{lemma}
-
 \begin{definition}
   \label{def:distance}
   \uses{def:edistance}
@@ -722,7 +712,7 @@ Let $(G,r)$ be a rooted graph. We assume in this section that $G$ is connected.
 
 \begin{lemma}
   \label{lem:distance_ne_zero}
-  \uses{def:distance,lem:edistance_zero_infty}
+  \uses{def:distance}
   Let $x, y \in V(G)$. $\dist(x,y) \neq 0$ iff $x \neq y$ and there exists
   a dartwalk from $x$ to $y$.
 \end{lemma}
@@ -743,31 +733,9 @@ Let $(G,r)$ be a rooted graph. We assume in this section that $G$ is connected.
   $y \in V(G)$ such that $\edist(x,y)\leq r$.
 \end{definition}
 
-\begin{definition}
-  \label{def:circle}
-  \uses{def:edistance}
-  Let $x \in V(G)$ and $r \in \N$.
-  We define the \emph{circle $C_r(x)$
-  of radius $r$ centered at $x$} as the set of vertices
-  $y \in V(G)$ such that $\edist(x,y) = r$.
-\end{definition}
-
-\begin{lemma}
-  \label{lem:ball_circle_radius_zero}
-  \uses{lem:edistance_zero_infty,def:circle,def:ball}
-  For any $x \in V(G)$, $B_0(x) = C_0(x) = \{x\}$.
-\end{lemma}
-
-\begin{lemma}
-  \label{lem:circle_vs_ball}
-  \uses{def:ball,def:circle}
-  For any $x \in V(G)$, $r \in \N$,
-  $C_r(x) \subseteq B_r(x)$ and if
-  $r \geq 1$ then $C_r(x) = B_r(x) - B_{r-1}(x)$.
-\end{lemma}
-
 \begin{proposition}
   \label{prop:growth_ball}
+  \uses{def:ball}
   Assume $G$ is locally bounded and let $D = \sup_{x \in V(G)} \deg (x)$.
   Then, for any $x \in V(G)$, any $r \in \N$,
   $\# B_r(x) \leq D^r$.
