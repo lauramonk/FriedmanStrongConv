@@ -494,7 +494,11 @@ We define the notion of connectedness and the connected components of a graph.
 
 \subsection{Morphisms between graphs}
 
-  Let $G_1$ and $G_2$ be two graphs.
+[Question: the following notion of morphism does not contain morphisms which
+reverse loops. Should they be included?]
+
+Let $G_1$ and $G_2$ be two graphs.
+
 
 \begin{definition}
   \label{def:function_graphs}
@@ -643,7 +647,8 @@ with respect to the function $f : V(G_1) \cup E(G_1) \rightarrow V(G_2) \cup E(G
   \label{thm:unique_nonbacktracking}
   \uses{def:nonbacktracking,prop:homotopy_equivalence}
   Let $x, y \in V(G)$.
-  Any dartwalk from $x$ to $y$ is homotopic to a unique nonbacktracking dartwalk, which we denote by $[w]$.
+  Any dartwalk from $x$ to $y$ is homotopic to a unique nonbacktracking dartwalk, which we denote by
+  $w_{\mathrm{nb}}$.
 \end{theorem}
 
 \begin{proof}
@@ -666,7 +671,8 @@ Let $(G,r)$ be a rooted graph. We assume in this section that $G$ is connected.
     $w$ is a non-backtracking dartwalk ($w \in V(\hat{G})$) and $d \in D(G)$
     is a dart on $G$ starting at the endpoint of $w$;
     \item for $(w,d) \in D(\hat{G})$, $\spt_{\hat{G}}(w,d) = w$,
-    $\ept_{\hat{G}}(d) = [w \cdot d]$ and $\symm_{\hat{G}}(w,d) = ([w \cdot d],\symm_G(d))$;
+    $\ept_{\hat{G}}(d) = (w \cdot d)_{\mathrm{nb}}$ and $\symm_{\hat{G}}(w,d) =
+     ((w \cdot d)_{\mathrm{nb}},\symm_G(d))$;
     \item the root $\hat{r}$ is the empty walk from $r$ to $r$.
   \end{itemize}
 \end{definition}
@@ -674,7 +680,7 @@ Let $(G,r)$ be a rooted graph. We assume in this section that $G$ is connected.
 \begin{theorem}
   \label{thm:univ_cover_is_tree}
   \uses{def:universal_cover,def:tree}
-  The universal cover $\hat{G}$ of $(G,r)$ is a tree.
+  The universal cover $(\hat{G}, \hat{r})$ of $(G,r)$ is a rooted tree.
 \end{theorem}
 
 \begin{theorem}
