@@ -122,23 +122,39 @@ We define a graph associated to a family of permutations.
 
 \section{Random permutations}
 
-In what follows, we write $\perm{n}$ for the set of permutations of $[n]$.
+Let $k, n \geq 1$ be integers.
+In what follows, we write $\perm{n}$ for the set of permutations of $[n]$
+and $\perm{n}^k$ the product space of $k$-tuples of elements of $\perm{n}$.
 
 \begin{definition}
-  \label{def:random_perm_graph}
-  \uses{def:graph_of_pi}
-  Let $k, n \geq 1$ be integers.
-  A \emph{random permutation graph of degree $2k$ with $n$ vertices} is the graph associated to
-  a family $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{n}^k$ of $k$ i.i.d. uniform elements of
-  $\perm{n}$.
-  We denote by $\Prob$ the corresponding probability measure on the space
-  of $\de$ regular graphs with vertex set $[n]$ and $\expec$ the expectation w.r.t. $\Prob$.
+  \label{def:probability_measure}
+  We equip $\perm{n}^k$ with the uniform probability measure which we denote as
+  $\Prob$. We denote the corresponding expectation by $\expec$.
 \end{definition}
 
 \begin{lemma}
   \label{lem:formula_expec}
-  [todo]
+  \uses{def:probability_measure}
+  For any function $F : \perm{n}^k \rightarrow \C$,
+  \begin{equation*}
+    \expec [F(\vec{\pi})] = \frac{1}{n!^k} \sum_{\vec{\pi} \in \perm{n}^k} F(\vec{\pi}).
+  \end{equation*}
 \end{lemma}
+
+\begin{proof}
+  This is the expectation for a uniform measure, noting that the cardinal of $\perm{n}$
+  is $n!^k$.
+\end{proof}
+
+\begin{definition}
+  \label{def:proba_on_graphs}
+  \uses{def:probability_measure,def:graph_of_pi}
+  Let $(\Omega_{k,n},\mathcal{F}_{k,n})$ be the set of $2k$-regular graphs with $V(G) = [n]$,
+  with the power-set $\sigma$-algebra.
+  We define a probability measure on $\Omega_{k,n}$ by pushing forward $\Prob$
+  with the function
+  $\perm{n}^k \rightarrow \Omega_{k,n}$ defined in Definition \ref{def:graph_of_pi}.
+\end{definition}
 
 \section{Words in random permutation matrices}
 
