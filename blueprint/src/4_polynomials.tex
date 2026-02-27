@@ -14,23 +14,94 @@ We denote as $C^\infty(I)$ the space of smooth functions $\R \rightarrow \R$, an
 those with compact support. For $h \in C^\infty_c(\R)$, we denote as $\supp h$ its support.
 For real numbers $a < b$ and $h \in C^\infty(\R)$, we write
 \begin{equation*}
-  \|h\|_{C^m(a,b)} = \sup_{0 \leq k \leq m} \sup_{a \leq x \leq b} |h^{(k)}(x)|
+  \|h\|_{C^m[a,b]} = \sup_{0 \leq k \leq m} \sup_{a \leq x \leq b} |h^{(k)}(x)|
 \end{equation*}
 where $h^{(k)}$ is the $k$-th order derivative of $h$.
 We denote as $\mathcal{D}(\R)$ the space of classical distributions on $\R$, i.e. continuous
 linear functionals $\nu : C^\infty_c(\R) \rightarrow \R$.
-Here continuous means that, for any real numbers $a < b$, any integer $m \geq 0$,
-there exists a constant $C_{a,b,m}$ such that
+Here continuous means that, for any real number $K \geq 0$,
+there exists a constant $C \geq 0$ and an integer $m \geq 0$ (both depending on $K$) such that
 \begin{equation*}
   \forall h \in C^\infty_c(\R), \quad
-  \supp h \subseteq [a,b] \Rightarrow  |\nu(h)| \leq C_{a,b,m} \|h\|_{C^m(a,b)}.
+  \supp h \subseteq [-K,K] \Rightarrow  |\nu(h)| \leq C \|h\|_{C^m[-K,K]}.
 \end{equation*}
 
 We recall the definition of support, which should be added quite soon to Mathlib.
 
 \begin{definition}
+  \label{def:distribution_vanishes}
+  Let $A$ be a subset of $\R$. We say $\nu \in \mathcal{D}(\R)$ \emph{vanishes on} $A$
+  if, for all $h \in C_c^\infty(\R)$, if $\supp h \subseteq A$, then $\nu(h)=0$.
+\end{definition}
+
+\begin{definition}
   \label{def:support_distribution}
+  \uses{def:distribution_vanishes}
   Let $\nu \in \mathcal{D}(\R)$.
   The \emph{support} of $\nu$ is the intersection of all closed sets $A \subseteq \R$
   such that $\nu$ vanishes on the complement of $A$. We denote it as $\supp \nu$.
 \end{definition}
+
+\begin{definition}
+  \label{def:compactly_supported_distribution}
+  \uses{def:support_distribution}
+  A distribution $\nu \in \mathcal{D}(\R)$ is \emph{a compactly supported distribution}
+  if its support is compact.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:extension_csd}
+  \uses{def:compactly_supported_distribution}
+  Let $\nu \in \mathcal{D}(\R)$ be a compactly supported distribution.
+  Then there is a unique continuous
+  linear extension $\nu : C^\infty(\R) \rightarrow \R$ of $\nu$. Furthermore,
+  there exist real numbers $K \geq 0$, $C>0$ and an integer $m \geq 0$
+  such that
+  \begin{equation*}
+    \forall h \in C^\infty(\R), \quad |\nu(h)| \leq C \|h\|_{C^m[-K,K]}.
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  In Rudin Functional Analysis according to Wikipedia.
+\end{proof}
+
+This allows us to make sense of $\nu(h)$ for $\nu$ a compactly supported distribution
+and $h$ a polynomial, an essential component of the proof.
+
+\begin{definition}
+  \label{def:radius_csd}
+  \uses{lem:extension_csd}
+  Let $\nu \in \mathcal{D}(\R)$ be a compactly supported distribution.
+  We define $$\rho(\nu) := \limsup_{p \to \infty} |\nu(x^p)|^{1/p} .$$
+\end{definition}
+
+\begin{lemma}
+  \label{lem:radius_finite}
+  \uses{def:radius_csd}
+  Let $\nu \in \mathcal{D}(\R)$ be a compactly supported distribution.
+  Then $\rho(\nu) < \infty$.
+\end{lemma}
+
+\begin{proof}
+  By Lemma \ref{lem:extension_csd}, there exists $K \geq 0$, $C \geq 0$ and an integer $m$
+  such that, for all $h \in C^\infty(\R)$, $|\nu(h)| \leq C \|h\|_{C^m[-K,K]}$.
+Let $p \geq 0$ be an integer.
+Then
+$$|\nu(x^p)| \leq C \|x^p\|_{C^m[-K,K]}
+= C \sup_{0 \leq k \leq m} \sup_{|x| \leq K} |p(p-1) \ldots (p-m+1) x^{p-m}|
+\leq C p^m (K+1)^p$$
+and hence $(|\nu(x^p)|^{1/p})_{p \geq 0}$ is bounded.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:support_limsup}
+  \uses{lem:radius_finite}
+  Let $\nu \in \mathcal{D}(\R)$ be a compactly supported distribution.
+  Let $\nu \in \mathcal{D}(\R)$ be a compactly supported distribution.
+  Then $\supp \nu \subseteq [-\rho(\nu), \rho(\nu)]$.
+\end{lemma}
+
+\begin{proof}
+  Lemma 4.9 in \cite{chen2025}
+\end{proof}
