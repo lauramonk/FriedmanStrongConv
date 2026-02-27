@@ -307,12 +307,12 @@ for the permutation model introduced in Definition \ref{def:proba_on_graphs}.
 
 \begin{theorem}
   \label{thm:Friedman}
-  \uses{def:random_perm_graph}
+  \uses{def:proba_on_graphs}
   \notready
-  Let $k \geq 2$ be a integer and $\de = 2k$.
+  Let $r \geq 2$ be a integer and $\de = 2r$.
   For any $\epsilon > 0$,
 \begin{equation}
-    \lim_{n \rightarrow \infty}
+    \lim_{N \rightarrow \infty}
     \ProbG(\|a|_{\const^\perp}\| \leq 2 \sqrt{2\de -1} + \epsilon) = 1.
 \end{equation}
 \end{theorem}
@@ -326,14 +326,14 @@ Let us prove a simple consequence of this result.
 \begin{proposition}
   \label{prop:random_connected_non_bipartite}
   \uses{thm:Friedman,prop:gap_iff}
-  Let $k \geq 2$ be an integer and $\de = 2k$.
+  Let $r \geq 2$ be an integer and $\de = 2r$.
   Then,
   \begin{equation}
-    \lim_{n \rightarrow \infty} \ProbG(G_{\vec{\pi}} \text{ is connected})=1
+    \lim_{N \rightarrow \infty} \ProbG(G_{\vec{\pi}} \text{ is connected})=1
   \end{equation}
   and
     \begin{equation}
-    \lim_{n \rightarrow \infty} \ProbG(G_{\vec{\pi}} \text{ is bipartite})=0.
+    \lim_{N \rightarrow \infty} \ProbG(G_{\vec{\pi}} \text{ is bipartite})=0.
   \end{equation}
 \end{proposition}
 
@@ -342,7 +342,7 @@ Let us prove a simple consequence of this result.
   $B = "G_{\vec{\pi}} \text{ is bipartite}"$.
   By Proposition \ref{prop:gap_iff},
   \begin{equation*}
-    \ProbG(A \cup B) = \ProbG(\|a|_{\const^\perp}\| = 2k).
+    \ProbG(A \cup B) = \ProbG(\|a|_{\const^\perp}\| = 2r).
   \end{equation*}
 
   We check directly that $2 \sqrt{2 \de - 1} < \de$.
@@ -355,8 +355,8 @@ Let us prove a simple consequence of this result.
   \begin{equation*}
     \ProbG(A \cup B) \leq \ProbG(\|a|_{\const^\perp}\| > 2 \sqrt{2\de -1} + \epsilon)
   \end{equation*}
-  which goes to $0$ as $n \rightarrow \infty$ by Theorem \ref{thm:Friedman}.
-  So $\lim_n \ProbG(A) = 0$ and $\lim_n \ProbG(B)=0$ which allows to conclude.
+  which goes to $0$ as $N \rightarrow \infty$ by Theorem \ref{thm:Friedman}.
+  So $\lim_N \ProbG(A) = 0$ and $\lim_N \ProbG(B)=0$ which allows to conclude.
 \end{proof}
 
 \section{The infinite regular tree}

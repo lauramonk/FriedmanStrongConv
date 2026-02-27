@@ -11,10 +11,10 @@ We define a graph associated to a family of permutations.
 \begin{definition}
   \label{def:dart_of_pi}
   \uses{def:dartlike}
-  Let $k \geq 1$ be an integer. To a family $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{V}^k$
+  Let $r \geq 1$ be an integer. To a family $\vec{\pi} = (\pi_1, \ldots, \pi_r) \in \perm{V}^r$
   we associate a dart-like structure on $V$ by taking:
   \begin{itemize}
-    \item $D = V \times \{1, \ldots, k\} \times \{-1,+1\}$
+    \item $D = V \times \{1, \ldots, r\} \times \{-1,+1\}$
     \item for $(x,i,\epsilon) \in D$, we let $\spt(x,i,\epsilon) = x$,
     $\ept(x,i,\epsilon) = \pi_i^\epsilon(x)$ and
     $\symm(x,i,\epsilon) = (\pi_i^\epsilon(x),i,-\epsilon)$.
@@ -48,15 +48,15 @@ We define a graph associated to a family of permutations.
 \begin{definition}
   \label{def:graph_of_pi}
   \uses{def:dart_of_pi,def:graph_of_dart}
-   Let $k \geq 1$ be an integer. To a family $\vec{\pi} \in \perm{V}^k$
-  we associate a graph $G_{\vec{\pi}}$ on $V$ by taking the graph associated to the dart-like
+   Let $r \geq 1$ be an integer. To a family $\vec{\pi} \in \perm{V}^r$
+  we associate a graph $G_{\vec{\pi}}$ on $V$ by taring the graph associated to the dart-like
   structure associated to $\vec{\pi}$.
 \end{definition}
 
 \begin{lemma}
   \label{lem:dartset_pair_pi}
   \uses{def:dartset_pair,def:graph_of_pi}
-  Let $k \geq 1$ be an integer and take $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{V}^k$.
+  Let $r \geq 1$ be an integer and take $\vec{\pi} = (\pi_1, \ldots, \pi_r) \in \perm{V}^r$.
   Then, for any $x, y \in V$,
   \begin{equation*}
     \dartset(x,y) = \{(x,i,\epsilon): y = \pi_i^\epsilon(x)\}.
@@ -66,17 +66,17 @@ We define a graph associated to a family of permutations.
 \begin{lemma}
   \label{lem:dartset_pi}
   \uses{lem:dartset_pair_pi}
-  Let $k \geq 1$ be an integer and take $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{V}^k$.
+  Let $r \geq 1$ be an integer and take $\vec{\pi} = (\pi_1, \ldots, \pi_r) \in \perm{V}^r$.
   Then, for any $x \in V$,
   \begin{equation*}
-    \dartset(x) = \{(x,i,\epsilon): 1 \leq i \leq k, \epsilon = \pm 1\}.
+    \dartset(x) = \{(x,i,\epsilon): 1 \leq i \leq r, \epsilon = \pm 1\}.
   \end{equation*}
 \end{lemma}
 
 \begin{lemma}
   \label{lem:graph_pi_regular}
   \uses{lem:dartset_pi,def:regular}
-  The graph $G_{\vec{\pi}}$ is regular of degree $2k$.
+  The graph $G_{\vec{\pi}}$ is regular of degree $2r$.
 \end{lemma}
 
 [I need to decide the conventions about the side of the actions below]
@@ -101,10 +101,10 @@ We define a graph associated to a family of permutations.
 \begin{lemma}
   \label{lem:adjacency_of_pi}
   \uses{def:u_pi,def:adjacency_operator,lem:u_pi_unitary}
-  Let $k \geq 1$ be an integer. For any family $\vec{\pi} = (\pi_1, \ldots, \pi_k) \in \perm{V}^k$,
+  Let $r \geq 1$ be an integer. For any family $\vec{\pi} = (\pi_1, \ldots, \pi_r) \in \perm{V}^r$,
   the adjacency operator $a_{\vec{\pi}}$ of $G_{\vec{\pi}}$ can be written as
   \begin{equation*}
-    a_{\vec{\pi}} = \sum_{i=1}^k (u_{\pi_i} + u_{\pi_i}^*).
+    a_{\vec{\pi}} = \sum_{i=1}^r (u_{\pi_i} + u_{\pi_i}^*).
   \end{equation*}
 \end{lemma}
 
@@ -114,49 +114,126 @@ We define a graph associated to a family of permutations.
   \begin{equation*}
     af(x)
     = \sum_{d \in \dartset(x)} f(\ept(d))
-    = \sum_{i=1}^k \sum_{\epsilon = \pm 1} f(\pi_i^\epsilon(x))
-    =  \sum_{i=1}^k (f(\pi_i^{-1}(x)) + f(\pi_i(x)))
+    = \sum_{i=1}^r \sum_{\epsilon = \pm 1} f(\pi_i^\epsilon(x))
+    =  \sum_{i=1}^r (f(\pi_i^{-1}(x)) + f(\pi_i(x)))
   \end{equation*}
   which leads to the conclusion as we recognise $u_{\pi_i}$ and $u_{\pi_i^{-1}} = u_{\pi_i}^*$.
 \end{proof}
 
 \section{Random permutations}
 
-Let $k, n \geq 1$ be integers.
-In what follows, we write $\perm{n}$ for the set of permutations of $[n]$
-and $\perm{n}^k$ the product space of $k$-tuples of elements of $\perm{n}$.
+Let $r, N \geq 1$ be integers.
+In what follows, we write $\perm{N}$ for the set of permutations of $[N]$
+and $\perm{N}^r$ the product space of $r$-tuples of elements of $\perm{N}$.
 
 \begin{definition}
   \label{def:probability_measure}
-  We equip $\perm{n}^k$ with the uniform probability measure which we denote as
+  We equip $\perm{N}^r$ with the uniform probability measure which we denote as
   $\Prob$. We denote the corresponding expectation by $\expec$.
 \end{definition}
 
 \begin{lemma}
   \label{lem:formula_expec}
   \uses{def:probability_measure}
-  For any function $F : \perm{n}^k \rightarrow \C$,
+  For any function $F : \perm{N}^r \rightarrow \C$,
   \begin{equation*}
-    \expec [F(\vec{\pi})] = \frac{1}{n!^k} \sum_{\vec{\pi} \in \perm{n}^k} F(\vec{\pi}).
+    \expec [F(\vec{\pi})] = \frac{1}{N!^r} \sum_{\vec{\pi} \in \perm{N}^r} F(\vec{\pi}).
   \end{equation*}
 \end{lemma}
 
 \begin{proof}
-  This is the expectation for a uniform measure, noting that the cardinal of $\perm{n}$
-  is $n!^k$.
+  This is the expectation for a uniform measure, noting that the cardinal of $\perm{N}$
+  is $N!^r$.
 \end{proof}
 
 \begin{definition}
   \label{def:proba_on_graphs}
   \uses{def:probability_measure,def:graph_of_pi}
-  Denote $\de = 2k$.
-  Let $\mathcal{G}_{\de,n}$ be the set of $\de$-regular graphs with $V(G) = [n]$,
+  Denote $\de = 2r$.
+  Let $\mathcal{G}_{\de,N}$ be the set of $\de$-regular graphs with $V(G) = [N]$,
   equiped with the power-set $\sigma$-algebra.
-  We define a probability measure $\ProbG$ on $\mathcal{G}_{\de,n}$ by pushing forward $\Prob$
+  We define a probability measure $\ProbG$ on $\mathcal{G}_{\de,N}$ by pushing forward $\Prob$
   with the function
-  $\perm{n}^k \rightarrow \mathcal{G}_{\de,n}$ defined in Definition \ref{def:graph_of_pi}.
+  $\perm{N}^r \rightarrow \mathcal{G}_{\de,N}$ defined in Definition \ref{def:graph_of_pi}.
 \end{definition}
 
 \section{Words in random permutation matrices}
 
-[here: Lemma 5.1]
+The aim of this section is to prove \cite[Lemma 5.1]{chen2025}, a formula for the expectation
+of traces of words in random permutation matrices.
+
+\subsection{Statement of the result and notations}
+
+We fix an integer $r \geq 1$.
+
+\begin{definition}
+  \label{def:numbering_convention}
+  Let $G$ be a group with neutral element $\mathbf{1}$.
+  To a family $(x_1, \ldots, x_r) \in G^r$ we associate a family $(x_0, \ldots, x_{2r}) \in G^{2r+1}$
+  by letting $x_0= \mathbf{1}$ and for $1 \leq i \leq r$, $x_{r+i} := x_i^{-1}$.
+\end{definition}
+
+\begin{definition}
+  \label{def:word}
+  We denote as $\word$ the set of finite words $w = w_1 \ldots w_q$
+  in the letters $\{0, \ldots 2r\}$.
+  The \emph{length} $|w| = q$ of a word $w$ is its number of letters.
+\end{definition}
+
+\begin{definition}
+  \label{def:word_map}
+  \uses{def:word,def:numbering_convention}
+  Let $w = w_1 \ldots w_q \in \word$
+  and $G$ be a group with neutral element $\mathbf{1}$.
+  The \emph{word map} $w : G^r \rightarrow G$ is defined by
+  letting, for each $(x_1, \ldots, x_r) \in G^r$,
+  $w(x_1, \ldots, x_r) = x_{w_1} \ldots x_{w_q}$
+  with the numbering convention from Definition \ref{def:numbering_convention}.
+\end{definition}
+
+Let $N \geq 1$.
+In what follows, we denote as $\matrices$ the set of $N \times N$ matrices with complex coefficients.
+If $M \in \matrices$, we denote as $M_{i,j}$ its coefficient $(i,j)$.
+We denote as $\TrN M = \sum_{i=1}^N M_{i,i}$ the usual trace on $\matrices$.
+
+\begin{definition}
+  \label{def:normalised_trace}
+  The \emph{normalised trace} $\trN : \matrices \rightarrow \C$ is defined by $\trN := \frac{1}{N} \TrN$.
+\end{definition}
+
+\begin{definition}
+  \label{def:gq}
+  Let $q \geq 1$ be an integer.
+  For $1 \leq j \leq q-1$, we define $r_{r,q,j} := \min (r, \lfloor q/(j+1) \rfloor)$
+  and
+  we define the polynomial $g_{r,q}(x) = \prod_{j=1}^{q-1} (1-j x)^{r_{r,q,j}}$.
+\end{definition}
+
+\begin{lemma}
+  \label{lem:degree_gq}
+  \uses{def:gq}
+  For any $q \geq 1$, the degree of $g_{r,q}$ is at most $q(1+\log r)-1$.
+\end{lemma}
+
+\begin{proof}
+  By comparaison with an integral, we have
+  \begin{align*}
+    \deg g_{r,q}
+    = \sum_{j=1}^{q-1} r_{r,q,j}
+    \leq \int_1^q \min(r, q/x) \d x
+    \leq q(1+\log r) - \min(r,q).
+  \end{align*}
+\end{proof}
+
+We are now ready to state the main result of this section.
+
+\begin{theorem}
+  \label{thm:expectation_word_formula}
+  \notready
+  Let $q \geq 1$.
+  Let $w \in \word$ be a word of length at most $q$.
+  There exists a polynomial $f_w$, of degree at most $q(1+\log r)$, such that for any $N \geq q$,
+  \begin{equation*}
+    \expec [\trN w(\vec \pi)] = \frac{f_w(1/N)}{g_q(1/N)}.
+  \end{equation*}
+\end{theorem}
