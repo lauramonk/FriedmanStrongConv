@@ -1,0 +1,36 @@
+\chapter{Analysis prerequisites}
+
+In this chapter, we prove some results related to the analysis of polynomial and rational
+functions, as well as compactly supported distributions.
+
+\section{Markov inequalities}
+
+\section{Chebyshev polynomials}
+
+\section{Compactly supported distributions}
+
+In this section, we will prove a few useful elementary results on distributions.
+We denote as $C^\infty(I)$ the space of smooth functions $\R \rightarrow \R$, and $C^\infty_c(\R)$
+those with compact support. For $h \in C^\infty_c(\R)$, we denote as $\supp h$ its support.
+For real numbers $a < b$ and $h \in C^\infty(\R)$, we write
+\begin{equation*}
+  \|h\|_{C^m(a,b)} = \sup_{0 \leq k \leq m} \sup_{a \leq x \leq b} |h^{(k)}(x)|
+\end{equation*}
+where $h^{(k)}$ is the $k$-th order derivative of $h$.
+We denote as $\mathcal{D}(\R)$ the space of classical distributions on $\R$, i.e. continuous
+linear functionals $\nu : C^\infty_c(\R) \rightarrow \R$.
+Here continuous means that, for any real numbers $a < b$, any integer $m \geq 0$,
+there exists a constant $C_{a,b,m}$ such that
+\begin{equation*}
+  \forall h \in C^\infty_c(\R), \quad
+  \supp h \subseteq [a,b] \Rightarrow  |\nu(h)| \leq C_{a,b,m} \|h\|_{C^m(a,b)}.
+\end{equation*}
+
+We recall the definition of support, which should be added quite soon to Mathlib.
+
+\begin{definition}
+  \label{def:support_distribution}
+  Let $\nu \in \mathcal{D}(\R)$.
+  The \emph{support} of $\nu$ is the intersection of all closed sets $A \subseteq \R$
+  such that $\nu$ vanishes on the complement of $A$. We denote it as $\supp \nu$.
+\end{definition}
