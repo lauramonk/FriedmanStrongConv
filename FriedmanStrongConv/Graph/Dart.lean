@@ -145,12 +145,12 @@ lemma eq_iff {d₁ d₂ : G.Dart} : (d₁ = d₂) ↔ (d₁.fst = d₂.fst ∧ d
 /-- If two darts share an edge, then their starts points are the same iff their end points are the same. -/
 lemma fst_snd_eq {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁.fst = d₂.fst ↔ d₁.snd = d₂.snd := by
   dartcases d₁ and d₂ from h
-  all_goals constructor <;> intro lhs <;> trivial
+  all_goals constructor <;> (intro lhs; cases lhs; rfl)
 
 /-- If two darts share an edge, then first's start point is the seconds's end point iff the first's end point is the seconds's start point. -/
 lemma fst_snd_eq' {d₁ d₂ : G.Dart} (h : d₁.edge = d₂.edge) : d₁.fst = d₂.snd ↔ d₁.snd = d₂.fst := by
   dartcases d₁ and d₂ from h
-  all_goals constructor <;> intro lhs <;> sorry
+  all_goals constructor <;> (intro lhs; cases lhs; rfl)
 
 /-- The reversing operation on darts, which reverses its orientation. -/
 def reverse (d : G.Dart) : G.Dart :=
