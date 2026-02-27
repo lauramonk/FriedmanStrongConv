@@ -236,21 +236,21 @@ The results proven in Section \ref{sec:trivial_eigenvalues} imply the following.
   \label{prop:gap_iff}
   \uses{lem:norm_perp_is_eig,prop:eigenvalue_regular_bipartite,prop:regular_multiplicity_trivial_eigenvalue}
   Assume $G$ is regular of degree $\de$ and $V(G)$ is finite.
-  Then, $\|a|_{\const^\perp}\| = d$ iff $G$ is disconnected or bipartite.
+  Then, $\|a|_{\const^\perp}\| = \de$ iff $G$ is disconnected or bipartite.
 \end{proposition}
 
 \begin{proof}
   By Lemma \ref{lem:norm_perp_is_eig},
   there exists a function $f : V(G) \rightarrow \C$ and a real number $\lambda$
-  such that $af=\lambda f$, $|\lambda|=d$ and $\sum_{x \in V(G)} f(x)=0$.
-  Since $\lambda \in \R$, either $\lambda = d$ or $\lambda=-d$.
+  such that $af=\lambda f$, $|\lambda|=\de$ and $\sum_{x \in V(G)} f(x)=0$.
+  Since $\lambda \in \R$, either $\lambda = \de$ or $\lambda=-\de$.
   \begin{itemize}
-    \item If $\lambda = d$, then since $f$ is not constant (otherwise it would be
+    \item If $\lambda = \de$, then since $f$ is not constant (otherwise it would be
     equal to $0$ as $\sum_{x \in V(G)}f(x)=0$), the multiplicity of
-    the eigenvalue $d$ for $a$ is at least $2$. By Proposition
+    the eigenvalue $\de$ for $a$ is at least $2$. By Proposition
     \ref{prop:regular_multiplicity_trivial_eigenvalue}, the number of connected
     components of $G$ is $\geq 2$ and hence $G$ is disconnected.
-    \item If $\lambda = -d$, then $-d$ is an eigenvalue of $a$.
+    \item If $\lambda = -\de$, then $-\de$ is an eigenvalue of $a$.
     By Proposition \ref{prop:eigenvalue_regular_bipartite},
     $G$ has a connected component $C$ that is bipartite.
     \begin{itemize}
@@ -303,17 +303,17 @@ Proposition \ref{prop:bound_diameter_regular} allows to see the Alon--Boppana
 bound as a limitation for the spectral gap as the graph grows (i.e. $\# V(G)$ is large).
 From this observation Alon famously conjectured that most large regular trees
 have a near-optimal spectral gap. The aim of this blueprint is to prove this result
-for the permutation model introduced in Definition \ref{def:random_perm_graph}.
+for the permutation model introduced in Definition \ref{def:proba_on_graphs}.
 
 \begin{theorem}
   \label{thm:Friedman}
   \uses{def:random_perm_graph}
   \notready
-  Let $\de \geq 4$ be an even integer.
+  Let $k \geq 2$ be a integer and $\de = 2k$.
   For any $\epsilon > 0$,
 \begin{equation}
     \lim_{n \rightarrow \infty}
-    \Prob(\|a|_{\const^\perp}\| \leq 2 \sqrt{2\de -1} + \epsilon) = 1.
+    \ProbG(\|a|_{\const^\perp}\| \leq 2 \sqrt{2\de -1} + \epsilon) = 1.
 \end{equation}
 \end{theorem}
 
@@ -326,14 +326,14 @@ Let us prove a simple consequence of this result.
 \begin{proposition}
   \label{prop:random_connected_non_bipartite}
   \uses{thm:Friedman,prop:gap_iff}
-  Let $\de \geq 4$ be an even integer.
+  Let $k \geq 2$ be an integer and $\de = 2k$.
   Then,
   \begin{equation}
-    \lim_{n \rightarrow \infty} \Prob(G_{\vec{\pi}} \text{ is connected})=1
+    \lim_{n \rightarrow \infty} \ProbG(G_{\vec{\pi}} \text{ is connected})=1
   \end{equation}
   and
     \begin{equation}
-    \lim_{n \rightarrow \infty} \Prob(G_{\vec{\pi}} \text{ is bipartite})=0.
+    \lim_{n \rightarrow \infty} \ProbG(G_{\vec{\pi}} \text{ is bipartite})=0.
   \end{equation}
 \end{proposition}
 
@@ -342,7 +342,7 @@ Let us prove a simple consequence of this result.
   $B = "G_{\vec{\pi}} \text{ is bipartite}"$.
   By Proposition \ref{prop:gap_iff},
   \begin{equation*}
-    \Prob(A \cup B) = \Prob(\|a|_{\const^\perp}\| = \de).
+    \ProbG(A \cup B) = \ProbG(\|a|_{\const^\perp}\| = 2k).
   \end{equation*}
 
   We check directly that $2 \sqrt{2 \de - 1} < \de$.
@@ -353,10 +353,10 @@ Let us prove a simple consequence of this result.
   \end{equation*}
   Hence
   \begin{equation*}
-    \Prob(A \cup B) \leq \Prob(\|a|_{\const^\perp}\| > 2 \sqrt{2\de -1} + \epsilon)
+    \ProbG(A \cup B) \leq \ProbG(\|a|_{\const^\perp}\| > 2 \sqrt{2\de -1} + \epsilon)
   \end{equation*}
   which goes to $0$ as $n \rightarrow \infty$ by Theorem \ref{thm:Friedman}.
-  So $\lim_n \Prob(A) = 0$ and $\lim_n \Prob(B)=0$ which allows to conclude.
+  So $\lim_n \ProbG(A) = 0$ and $\lim_n \ProbG(B)=0$ which allows to conclude.
 \end{proof}
 
 \section{The infinite regular tree}
