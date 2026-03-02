@@ -32,20 +32,21 @@ Let us fix a real number $K > 0$ and an integer $q \geq 0$.
   since for all $0 \leq j \leq q$, $\deg T_j = j$.
 \end{proof}
 
+It will be useful to view the coefficients $(a_j)_{0 \leq j \leq q}$ as trigonometric
+Fourier coefficients, which we do by introducing the following function $f$.
+
 \begin{lemma}
-  \label{lem:f_derivative}
+  \label{lem:f_def}
   \uses{lem:chebyshev_decomp}
   Let $h \in \mathcal{P}_q$ and $(a_j)_{0 \leq j \leq q}$ be the coefficients from Lemma
   \ref{lem:chebyshev_decomp}.
   Let $f : \tor \rightarrow \R$ be the function defined by $f(\theta) = h(K \cos \theta)$.
-  Then, $f$ is a smooth function and for all $m \geq 0$,
+  Then, $f$ is a trigonometric polynomial equal to
   \begin{equation*}
-    f^{(m)}(\theta)
+    f(\theta)
     =
-\begin{cases*}
-      \sum_{j=0}^q (-1)^{m/2} j^m a_j \cos(j \theta) & m \text{ even} \\
-      \sum_{j=0}^q (-1)^{(m+1)/2} j^m a_j \sin(j \theta) & m \text{ odd.}
-\end{cases*}  \end{equation*}
+      \sum_{j=0}^q a_j \cos(j \theta).
+ \end{equation*}
 \end{lemma}
 
 \begin{proof}
@@ -57,35 +58,173 @@ Let us fix a real number $K > 0$ and an integer $q \geq 0$.
     f(\theta) = h(K \cos \theta) = \sum_{j=0}^q a_j T_j(\cos \theta).
   \end{equation*}
   By definition of $(T_j)_{j \geq 0}$, $T_j(\cos \theta) = \cos (j \theta)$.
-  We obtain the formula by linearity of the derivative and
-  explicitely computing the $m$-th derivative of $\theta \mapsto \cos(j \theta)$, which is equal to
-  $(-1)^{m/2} j^m \cos(j \theta)$ if $m$ is even and $(-1)^{(m+1)/2} j^m \sin(j \theta)$
-  if $m$ is odd.
 \end{proof}
 
 \begin{lemma}
-  \label{lem:bound_sum_aj}
-  \uses{lem:f_derivative}
+  \label{lem:bound_a0}
+  \uses{lem:f_def}
   Let $h \in \mathcal{P}_q$ and $(a_j)_{0 \leq j \leq q}$ be the coefficients from Lemma
   \ref{lem:chebyshev_decomp}.
-  There exists a universal constant $C$ such that, for any $m \geq 0$,
-  any $\beta > 1$, if we denote $\beta_* := 1 - 1/\beta$, we have
+  Then,
   \begin{equation*}
-    \sum_{j=1}^q j^m |a_j| \leq C \beta_* \|f^{(m+1)}\|_{L^\beta(\tor)}.
+    |a_0| \leq \| h \|_{C^0[-K,K]}.
   \end{equation*}
 \end{lemma}
 
 \begin{proof}
-  We write
+  By the expression of the Fourier coefficients of $f$, we have
   \begin{equation*}
-    \sum_{j=1}^q j^m |a_j|
-    = \sum_{j=1}^q \frac{1}{j} j^{m+1} |a_j|
-    \leq \left( \sum_{j=1}^q \frac{1}{j^\beta} \right)^{1/\beta}
-    \left( \sum_{j=1}^q (j^{m+1} |a_j|)^{\beta_*} \right)^{1/\beta_*}
+    a_0 = \frac{1}{2 \pi} \int_0^{2 \pi} f(\theta) \d \theta.
   \end{equation*}
-  by H\"older's inequality.
-  The conclusion then follows from the Hausdorff-Young inequality
-  [todo].
+  Hence by the triangle inequality
+  \begin{equation*}
+    |a_0| \leq \frac{1}{2 \pi} \int_0^{2 \pi} |f(\theta)| \d \theta
+    = \frac{1}{2 \pi} \int_0^{2 \pi} |h(K \cos \theta)| \d \theta
+    \leq \| h \|_{C^0[-K,K]}.
+  \end{equation*}
+\end{proof}
+
+We will now provide some bounds on the coefficients $(a_j)_{0 \leq j \leq q}$
+in terms of $L^\beta$-bounds on derivatives of $f$.
+This will be done using the Hausdorff-Young inequality.
+Recall that, for a function $f \in L^1(\tor)$, the Fourier coefficients are defined as
+\begin{equation*}
+  c_j = \frac{1}{2 \pi} \int_0^{2 \pi} f(\theta) e^{-i j \theta} \d \theta.
+\end{equation*}
+
+\begin{theorem}
+  \label{thm:hausdorff_young}
+  Let $1 < \beta \leq 2$ and $1/\beta_* = 1 - 1/\beta$.
+  Let $f \in L^\beta(\tor)$ of Fourier coefficients $(c_j)_{j \in \Z}$.
+  Then,
+  \begin{equation*}
+    \left(\sum_{j \in \Z} |c_j|^{\beta_*} \right)^{1/\beta_*}
+    \leq \left(\frac{1}{2 \pi} \int_0^{2 \pi} |f(\theta)|^\beta \d \theta\right)^{1/\beta}.
+  \end{equation*}
+\end{theorem}
+
+\begin{proof}
+  I think this might be in Mathlib? If not this is a classic result and should be added.
+\end{proof}
+
+We deduce the following lemma.
+
+\begin{lemma}
+  \label{lem:Zygmund}
+  \uses{thm:hausdorff_young}
+  Let $\beta > 1$ and $1/\beta_* = 1-1/\beta$.
+  Let $f \in L^1(\tor)$ of Fourier coefficients $(c_j)_{j \in \Z}$.
+  Assume $f' \in L^\beta(\tor)$.
+  Then,
+  \begin{equation*}
+    \sum_{j \neq 0} |c_j| \leq 4 \beta_* \|f' \|_{L^\beta(\tor)}.
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  Assume $1 < \beta \leq 2$.
+  By the H\"older inequality,
+  \begin{equation*}
+    \sum_{j \neq 0} |c_j|
+    = \sum_{j \neq 0} \frac{1}{j} \times |j c_j|
+    \leq
+    \left(\sum_{j \neq 0} \frac{1}{j^\beta} \right)^{1/\beta}
+    \left(\sum_{j \neq 0} |j c_j|^{\beta_*} \right)^{1/\beta_*}.
+  \end{equation*}
+  We shall bound these two sums successively.
+  \begin{itemize}
+    \item   Since $\beta>1$ the first sum converges. By parity it is equal to twice the sum for $j \geq 1$.
+  Since $t \mapsto 1/t^\beta$
+  is decreasing on $[1,\infty)$, we can compare the sum and integral which yields
+  \begin{equation*}
+    \sum_{j =1}^\infty \frac{1}{j^\beta}
+    \leq 1 + \int_1^\infty \frac{\d t}{t^\beta}
+    = 1 - \left[ \frac{1}{(\beta-1)t^{\beta-1}} \right]_1^\infty
+    = 1 + \frac{1}{\beta - 1}
+    = \frac{\beta}{\beta - 1} = \frac{1}{1 - 1/\beta} = \beta_*.
+  \end{equation*}
+  As a conclusion,
+  \begin{equation*}
+    \left(\sum_{j \neq 0} \frac{1}{j^\beta} \right)^{1/\beta}
+    \leq 2 \beta_*^{1/\beta} \leq 2 \beta_*
+  \end{equation*}
+  since $0 \leq 1/\beta \leq 1$ and $\beta_* \geq 1$.
+  \item For the second sum, we observe that the Fourier coefficients of $f'$
+  are $(i j c_j)_{j \in \Z}$. Since $1 < \beta \leq 2$, we can
+  apply Theorem \ref{thm:hausdorff_young} to $f'$, which yields
+  \begin{equation*}
+    \left(\sum_{j \neq 0} |j c_j|^{\beta_*} \right)^{1/\beta_*}
+    \leq
+    \left(\frac{1}{2 \pi} \int_0^{2 \pi} |f'(\theta)|^\beta \d \theta\right)^{1/\beta}
+    \leq \frac{1}{(2 \pi)^{1/\beta}} \|f'\|_{L^\beta(\tor)}
+    \leq \frac{1}{\sqrt{2 \pi}} \|f'\|_{L^\beta(\tor)}
+  \end{equation*}
+  since $\beta \leq 2$.
+  \end{itemize}
+  Putting everything together we obtain
+  \begin{equation*}
+    \sum_{j \neq 0} |c_j|
+    \leq \sqrt{\frac{2}{\pi}} \beta_*  \|f'\|_{L^\beta(\tor)}
+  \end{equation*}
+  which implies the claim in the case $1 < \beta \leq 2$ since $\sqrt{2/\pi} \leq 4$.
+
+  Now assume $\beta \geq 2$.
+  By the H\"older inequality, since $\tor$ has finite measure $2 \pi$,
+  $L^\beta(\tor) \subseteq L^2(\tor)$ and
+  \begin{equation*}
+    \|f'\|_{L^2(\tor)}^2
+   \leq  \left(\int_0^{2 \pi} 1 \d \theta\right)^{1-\frac{2}{\beta}}
+    \left(\int_0^{2 \pi} |f'(\theta)|^{\beta} \d \theta\right)^{\frac{2}{\beta}}
+    = (2 \pi)^{1-\frac{2}{\beta}}  \|f'\|_{L^\beta(\tor)}^2
+    \leq 2 \pi \|f'\|_{L^\beta(\tor)}^2.
+  \end{equation*}
+  In particular, we can apply the result for $\beta=2$ (in which case $\beta_*=2$),
+  which yields
+  \begin{equation*}
+    \sum_{j \neq 0} |c_j|
+    \leq 2 \sqrt{\frac{2}{\pi}}  \|f'\|_{L^2(\tor)}
+    \leq 4 \|f'\|_{L^\beta(\tor)}
+    \leq 4 \beta_*  \|f'\|_{L^\beta(\tor)}
+  \end{equation*}
+  since $\beta_* \geq 1$.
+\end{proof}
+
+Now we go back to our initial problem.
+
+\begin{lemma}
+  \label{lem:bound_sum_aj}
+  \uses{lem:Zygmund}
+  Let $h \in \mathcal{P}_q$, and $f$ and $(a_j)_{0 \leq j \leq q}$ be as in Lemma \ref{lem:f_def}.
+  For any $m \geq 0$,
+  any $\beta > 1$, if we denote $1/\beta_* := 1 - 1/\beta$, we have
+  \begin{equation*}
+    \sum_{j=1}^q j^m |a_j| \leq 4 \beta_* \|f^{(m+1)}\|_{L^\beta(\tor)}.
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  First, we notice that the Fourier coefficients of $f$ are exactly
+  given by
+  \begin{equation*}
+    c_j =
+    \begin{cases}
+      \frac{1}{2} a_{|j|} & 0 < |j| \leq q \\
+      a_0 & j=0 \\
+      0 & |j| > q.
+    \end{cases}
+  \end{equation*}
+  Let $m \geq 0$. By differentiation,
+  the Fourier coefficients of $f^{(m)}$ satisfy, for
+  all $j$, $c_j^{(m)} =
+    i^m j^m c_j$.
+  In particular,
+  \begin{equation*}
+    \sum_{j \neq 0} |c_j^{(m)}|
+    = \sum_{j \neq 0} j^m |c_j|
+    = \sum_{j =1}^q j^m |a_j|.
+  \end{equation*}
+  The conclusion follows by applying Lemma \ref{lem:Zygmund} to the function $f^{(m)}$,
+  which is in $L^\beta(\tor)$ as it is a trigonometric polynomial and in particular bounded.
 \end{proof}
 
 \section{Compactly supported distributions}
