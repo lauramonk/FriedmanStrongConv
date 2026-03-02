@@ -3,9 +3,90 @@
 In this chapter, we prove some results related to the analysis of polynomial and rational
 functions, as well as compactly supported distributions.
 
+Throughout, the set of real polynomials will be denoted as $\mathcal{P}$, and
+the set of real polynomials of degree at most $q$ by $\mathcal{P}_q$.
+
+We will denote as $\tor = \R / 2 \pi\Z$ the additive circle of length $2 \pi$.
+
 \section{Markov inequalities}
 
 \section{Chebyshev polynomials}
+
+For $j \geq 0$, we denote as $T_j$ the Chebyshev polynomial of the first kind of degree $j$,
+defined by the relation $T_j(\cos \theta) = \cos(j \theta)$ for $\theta \in \R$.
+
+Let us fix a real number $K > 0$ and an integer $q \geq 0$.
+
+\begin{lemma}
+  \label{lem:chebyshev_decomp}
+  Let $h \in \mathcal{P}_q$.
+  There exists a unique family of real numbers $(a_j)_{0 \leq j \leq q}$ such that,
+  for all $x \in \R$,
+  \begin{equation*}
+    h(Kx) = \sum_{j=0}^q a_j T_j (x).
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  This follows from the fact that $h(Kx) \in \mathcal{P}_q$ and $(T_j)_{0 \leq j \leq q}$ is a basis of $\mathcal{P}_q$,
+  since for all $0 \leq j \leq q$, $\deg T_j = j$.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:f_derivative}
+  \uses{lem:chebyshev_decomp}
+  Let $h \in \mathcal{P}_q$ and $(a_j)_{0 \leq j \leq q}$ be the coefficients from Lemma
+  \ref{lem:chebyshev_decomp}.
+  Let $f : \tor \rightarrow \R$ be the function defined by $f(\theta) = h(K \cos \theta)$.
+  Then, $f$ is a smooth function and for all $m \geq 0$,
+  \begin{equation*}
+    f^{(m)}(\theta)
+    =
+\begin{cases*}
+      \sum_{j=0}^q (-1)^{m/2} j^m a_j \cos(j \theta) & m \text{ even} \\
+      \sum_{j=0}^q (-1)^{(m+1)/2} j^m a_j \sin(j \theta) & m \text{ odd.}
+\end{cases*}  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  The function $\cos : \tor \rightarrow [-1,1]$ is a smooth function, so by composition
+  $f(\theta) = h(K \cos \theta)$ also is.
+  By definition of $f$ and $(a_j)_{0 \leq j \leq q}$,
+  for all $\theta \in \tor$,
+  \begin{equation*}
+    f(\theta) = h(K \cos \theta) = \sum_{j=0}^q a_j T_j(\cos \theta).
+  \end{equation*}
+  By definition of $(T_j)_{j \geq 0}$, $T_j(\cos \theta) = \cos (j \theta)$.
+  We obtain the formula by linearity of the derivative and
+  explicitely computing the $m$-th derivative of $\theta \mapsto \cos(j \theta)$, which is equal to
+  $(-1)^{m/2} j^m \cos(j \theta)$ if $m$ is even and $(-1)^{(m+1)/2} j^m \sin(j \theta)$
+  if $m$ is odd.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:bound_sum_aj}
+  \uses{lem:f_derivative}
+  Let $h \in \mathcal{P}_q$ and $(a_j)_{0 \leq j \leq q}$ be the coefficients from Lemma
+  \ref{lem:chebyshev_decomp}.
+  There exists a universal constant $C$ such that, for any $m \geq 0$,
+  any $\beta > 1$, if we denote $\beta_* := 1 - 1/\beta$, we have
+  \begin{equation*}
+    \sum_{j=1}^q j^m |a_j| \leq C \beta_* \|f^{(m+1)}\|_{L^\beta(\tor)}.
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  We write
+  \begin{equation*}
+    \sum_{j=1}^q j^m |a_j|
+    = \sum_{j=1}^q \frac{1}{j} j^{m+1} |a_j|
+    \leq \left( \sum_{j=1}^q \frac{1}{j^\beta} \right)^{1/\beta}
+    \left( \sum_{j=1}^q (j^{m+1} |a_j|)^{\beta_*} \right)^{1/\beta_*}
+  \end{equation*}
+  by H\"older's inequality.
+  The conclusion then follows from the Hausdorff-Young inequality
+  [todo].
+\end{proof}
 
 \section{Compactly supported distributions}
 
