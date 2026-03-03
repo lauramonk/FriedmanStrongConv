@@ -13,7 +13,9 @@ we will denote as $\tor = \R / 2 \pi\Z$ the additive circle of length $2 \pi$.
 For $j \geq 0$, we denote as $T_j$ the Chebyshev polynomial of the first kind of degree $j$,
 defined by the relation $T_j(\cos \theta) = \cos(j \theta)$ for $\theta \in \R$.
 
-Let us fix a real number $K > 0$ and an integer $q \geq 0$.
+Let us fix a real number $K > 0$ and an integer $q \geq 0$ for this section.
+We define coefficients associated to a polynomial $h$ on the set $[-K,K]$ in the following
+fashion.
 
 \begin{lemma}
   \label{lem:chebyshev_decomp}
@@ -39,7 +41,7 @@ Fourier coefficients, which we do by introducing the following function $f$.
   Let $h \in \mathcal{P}_q$ and $(a_j)_{0 \leq j \leq q}$ be the coefficients from Lemma
   \ref{lem:chebyshev_decomp}.
   Let $f : \tor \rightarrow \R$ be the function defined by $f(\theta) = h(K \cos \theta)$.
-  Then, $f$ is a trigonometric polynomial equal to
+  Then, $f$ is an even trigonometric polynomial equal to
   \begin{equation*}
     f(\theta)
     =
@@ -48,19 +50,45 @@ Fourier coefficients, which we do by introducing the following function $f$.
 \end{lemma}
 
 \begin{proof}
-  The function $\cos : \tor \rightarrow [-1,1]$ is a smooth function, so by composition
-  $f(\theta) = h(K \cos \theta)$ also is.
   By definition of $f$ and $(a_j)_{0 \leq j \leq q}$,
   for all $\theta \in \tor$,
   \begin{equation*}
     f(\theta) = h(K \cos \theta) = \sum_{j=0}^q a_j T_j(\cos \theta).
   \end{equation*}
   By definition of $(T_j)_{j \geq 0}$, $T_j(\cos \theta) = \cos (j \theta)$.
+  The evenness comes from the fact that $\cos$ is even.
 \end{proof}
+
+We will now provide some bounds on the coefficients $(a_j)_{0 \leq j \leq q}$
+in terms of $L^\beta$-bounds on derivatives of $f$.
+Recall that, for a function $f \in L^1(\tor)$ and an integer $j \in \Z$,
+the $j$-th Fourier coefficient is defined as
+\begin{equation*}
+  c_j = \frac{1}{2 \pi} \int_0^{2 \pi} f(\theta) e^{-i j \theta} \d \theta.
+\end{equation*}
+
+\begin{lemma}
+  \label{lem:coeff_of_f}
+  Let $f(\theta) = \sum_{j=0}^q a_j \cos(j \theta)$ be an even trigonometric series.
+  Then, the Fourier coefficients of $f$ are exactly, for $j \in \Z$,
+  \begin{equation*}
+    c_j =
+    \begin{cases*}
+      \frac{1}{2} a_{|j|} & if $0 < |j| \leq q$ \\
+      a_0 & if $j=0$ \\
+      0 & if $|j| > q$.
+    \end{cases*}
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  This is probably already in Mathlib.
+\end{proof}
+
 
 \begin{lemma}
   \label{lem:bound_a0}
-  \uses{lem:f_def}
+  \uses{lem:f_def,lem:coeff_of_f}
   Let $h \in \mathcal{P}_q$ and $(a_j)_{0 \leq j \leq q}$ be the coefficients from Lemma
   \ref{lem:chebyshev_decomp}.
   Then,
@@ -70,9 +98,9 @@ Fourier coefficients, which we do by introducing the following function $f$.
 \end{lemma}
 
 \begin{proof}
-  By the expression of the Fourier coefficients of $f$, we have
+  By Lemma \ref{lem:f_def} and \ref{lem:coeff_of_f}, we have
   \begin{equation*}
-    a_0 = \frac{1}{2 \pi} \int_0^{2 \pi} f(\theta) \d \theta.
+    a_0 = c_0 = \frac{1}{2 \pi} \int_0^{2 \pi} f(\theta) \d \theta.
   \end{equation*}
   Hence by the triangle inequality
   \begin{equation*}
@@ -82,13 +110,7 @@ Fourier coefficients, which we do by introducing the following function $f$.
   \end{equation*}
 \end{proof}
 
-We will now provide some bounds on the coefficients $(a_j)_{0 \leq j \leq q}$
-in terms of $L^\beta$-bounds on derivatives of $f$.
-This will be done using the Hausdorff-Young inequality.
-Recall that, for a function $f \in L^1(\tor)$, the Fourier coefficients are defined as
-\begin{equation*}
-  c_j = \frac{1}{2 \pi} \int_0^{2 \pi} f(\theta) e^{-i j \theta} \d \theta.
-\end{equation*}
+The following bound relies on the Hausdorff-Young inequality, which is a classic result.
 
 \begin{theorem}
   \label{thm:hausdorff_young}
@@ -103,6 +125,8 @@ Recall that, for a function $f \in L^1(\tor)$, the Fourier coefficients are defi
 
 \begin{proof}
   I think this might be in Mathlib? If not this is a classic result and should be added.
+  This is proven by interpolation between Parseval and the $L^\infty$-$L^1$ trivial estimate,
+  using Riesz-Thorin.
 \end{proof}
 
 We deduce the following lemma.
@@ -124,9 +148,9 @@ We deduce the following lemma.
   By the H\"older inequality,
   \begin{equation*}
     \sum_{j \neq 0} |c_j|
-    = \sum_{j \neq 0} \frac{1}{j} \times |j c_j|
+    = \sum_{j \neq 0} \frac{1}{|j|} \times |j c_j|
     \leq
-    \left(\sum_{j \neq 0} \frac{1}{j^\beta} \right)^{1/\beta}
+    \left(\sum_{j \neq 0} \frac{1}{|j|^\beta} \right)^{1/\beta}
     \left(\sum_{j \neq 0} |j c_j|^{\beta_*} \right)^{1/\beta_*}.
   \end{equation*}
   We shall bound these two sums successively.
@@ -143,7 +167,7 @@ We deduce the following lemma.
   \end{equation*}
   As a conclusion,
   \begin{equation*}
-    \left(\sum_{j \neq 0} \frac{1}{j^\beta} \right)^{1/\beta}
+    \left(\sum_{j \neq 0} \frac{1}{|j|^\beta} \right)^{1/\beta}
     \leq 2 \beta_*^{1/\beta} \leq 2 \beta_*
   \end{equation*}
   since $0 \leq 1/\beta \leq 1$ and $\beta_* \geq 1$.
@@ -187,11 +211,11 @@ We deduce the following lemma.
   since $\beta_* \geq 1$.
 \end{proof}
 
-Now we go back to our initial problem.
+We now conclude with the main result of this section.
 
 \begin{lemma}
   \label{lem:bound_sum_aj}
-  \uses{lem:Zygmund}
+  \uses{lem:Zygmund,lem:coeff_of_f,lem:f_def}
   Let $h \in \mathcal{P}_q$, and $f$ and $(a_j)_{0 \leq j \leq q}$ be as in Lemma \ref{lem:f_def}.
   For any $m \geq 0$,
   any $\beta > 1$, if we denote $1/\beta_* := 1 - 1/\beta$, we have
@@ -201,16 +225,8 @@ Now we go back to our initial problem.
 \end{lemma}
 
 \begin{proof}
-  First, we notice that the Fourier coefficients of $f$ are exactly
-  given by
-  \begin{equation*}
-    c_j =
-    \begin{cases}
-      \frac{1}{2} a_{|j|} & 0 < |j| \leq q \\
-      a_0 & j=0 \\
-      0 & |j| > q.
-    \end{cases}
-  \end{equation*}
+  First, we apply Lemma \ref{lem:coeff_of_f} to express the Fourier coefficients
+  $(c_j)_{j \in \Z}$ in terms of $(a_j)_{0 \leq j \leq q}$.
   Let $m \geq 0$. By differentiation,
   the Fourier coefficients of $f^{(m)}$ satisfy, for
   all $j$, $c_j^{(m)} =
@@ -218,25 +234,25 @@ Now we go back to our initial problem.
   In particular,
   \begin{equation*}
     \sum_{j \neq 0} |c_j^{(m)}|
-    = \sum_{j \neq 0} j^m |c_j|
+    = \sum_{j \neq 0} |j|^m |c_j|
     = \sum_{j =1}^q j^m |a_j|.
   \end{equation*}
   The conclusion follows by applying Lemma \ref{lem:Zygmund} to the function $f^{(m)}$,
-  which is in $L^\beta(\tor)$ as it is a trigonometric polynomial and in particular bounded.
+  which is in $L^\beta(\tor)$ as it is a trigonometric polynomial and in particular smooth.
 \end{proof}
 
 
 \section{Compactly supported distributions}
 
 In this section, we will prove a few useful elementary results on distributions.
-We denote as $C^\infty(I)$ the space of smooth functions $\R \rightarrow \R$, and $C^\infty_c(\R)$
+We denote as $C^\infty(\R)$ the space of smooth functions $\R \rightarrow \R$, and $C^\infty_c(\R)$
 those with compact support. For $h \in C^\infty_c(\R)$, we denote as $\supp h$ its support.
 For real numbers $a < b$ and $h \in C^\infty(\R)$, we write
 \begin{equation*}
   \|h\|_{C^m[a,b]} = \sup_{0 \leq k \leq m} \sup_{a \leq x \leq b} |h^{(k)}(x)|
 \end{equation*}
 where $h^{(k)}$ is the $k$-th order derivative of $h$.
-We denote as $\mathcal{D}(\R)$ the space of classical distributions on $\R$, i.e. continuous
+We denote as $\mathcal{D}'(\R)$ the space of classical distributions on $\R$, i.e. continuous
 linear functionals $\nu : C^\infty_c(\R) \rightarrow \R$.
 Here continuous means that, for any real number $K \geq 0$,
 there exists a constant $C \geq 0$ and an integer $m \geq 0$ (both depending on $K$) such that
@@ -249,14 +265,14 @@ We recall the definition of support, which should be added quite soon to Mathlib
 
 \begin{definition}
   \label{def:distribution_vanishes}
-  Let $A$ be a subset of $\R$. We say $\nu \in \mathcal{D}(\R)$ \emph{vanishes on} $A$
+  Let $A$ be a subset of $\R$. We say $\nu \in \mathcal{D}'(\R)$ \emph{vanishes on} $A$
   if, for all $h \in C_c^\infty(\R)$, if $\supp h \subseteq A$, then $\nu(h)=0$.
 \end{definition}
 
 \begin{definition}
   \label{def:support_distribution}
   \uses{def:distribution_vanishes}
-  Let $\nu \in \mathcal{D}(\R)$.
+  Let $\nu \in \mathcal{D}'(\R)$.
   The \emph{support} of $\nu$ is the intersection of all closed sets $A \subseteq \R$
   such that $\nu$ vanishes on the complement of $A$. We denote it as $\supp \nu$.
 \end{definition}
@@ -264,7 +280,7 @@ We recall the definition of support, which should be added quite soon to Mathlib
 \begin{definition}
   \label{def:compactly_supported_distribution}
   \uses{def:support_distribution}
-  A distribution $\nu \in \mathcal{D}(\R)$ is \emph{a compactly supported distribution}
+  A distribution $\nu \in \mathcal{D}'(\R)$ is \emph{a compactly supported distribution}
   if its support is compact.
 \end{definition}
 
