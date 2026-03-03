@@ -287,9 +287,9 @@ We recall the definition of support, which should be added quite soon to Mathlib
 \begin{lemma}
   \label{lem:extension_csd}
   \uses{def:compactly_supported_distribution}
-  Let $\nu \in \mathcal{D}(\R)$ be a compactly supported distribution.
+  Let $\nu \in \mathcal{D}'(\R)$ be a compactly supported distribution.
   Then there is a unique continuous
-  linear extension $\nu : C^\infty(\R) \rightarrow \R$ of $\nu$. Furthermore,
+  linear extension $C^\infty(\R) \rightarrow \R$ of $\nu$. Furthermore,
   there exist real numbers $K \geq 0$, $C>0$ and an integer $m \geq 0$
   such that
   \begin{equation*}
@@ -298,7 +298,38 @@ We recall the definition of support, which should be added quite soon to Mathlib
 \end{lemma}
 
 \begin{proof}
-  In Rudin Functional Analysis according to Wikipedia.
+  The support of $\nu$ is compact, hence we can take a real number $K>0$ such that
+  $\supp \nu$ is included in $[-K,K]$.
+  We take a function $\phi \in C^\infty(\R)$ such that $\phi$ is identically equal to
+  $1$ on $[-K,K]$.
+  We then define $\mu : C^\infty(\R) \rightarrow \R$ by letting $\mu(h) := \nu(h \phi)$ for
+  $h \in C^\infty(\R)$.
+ \begin{itemize}
+  \item  This is well-defined as, if $h \in C^\infty(\R)$ and $\phi \in C^\infty_c(\R)$,
+   then $h \phi \in C_c^\infty(\R)$. The linearity is immediate.
+  \item We prove that $\mu$ is an extension of $nu$.
+  Let $h \in C_c^\infty(\R)$.
+  We observe that $(1-\phi) h$ belongs in $C_c^\infty(\R)$ and
+  is identically equal to $0$ on $\supp \nu$.
+  This implies (by a simple lemma on supports) that $\nu((1-\phi)h) = 0$, hence $\nu(h) = \mu(h)$.
+  \item Let us now prove the continuity. Let $(h_i)_{i \in \N}$ be a sequence of
+  functions in $C^\infty(\R)$ converging to $0$. By definition of the topology on $C^\infty(\R)$,
+  this means that, for any real numbers $a<b$, any $m \geq 0$, $\|h_i\|_{C^m[a,b]} \to 0$.
+  Using the Leibniz formula, we deduce that $\phi h_i \to 0$ in $C_c^\infty(\R)$, and hence by
+  continuity of $\nu$, $\mu(h_i) = \nu(\phi h_i) \rightarrow 0$ as $i \to \infty$.
+  \item We conclude the uniqueness by the density of $C_c^\infty(\R)$ in $C^\infty(\R)$.
+\end{itemize}
+To conclude, let us prove the norm estimate on the extension.
+By definition of $\mathcal{D}'(\R)$ applied to $[-K,K]$ as above, we obtain a constant $C_1$
+and an integer $m$ such that, for all $h \in C_c^\infty(\R)$,
+we have $|\nu(h)| \leq C_1 \|h\|_{C^m[-K,K]}$.
+The Leibniz formula grants a constant $C_2$ (depending on $\phi$) such that, for all $h \in C^\infty(\R)$,
+$\|\phi h\|_{C^m[-K,K]} \leq C_2 \|h\|_{C^m[-K,K]}$. Hence,
+for all $h \in C^\infty(\R)$,
+\begin{equation*}
+  |\mu(h)| = |\nu(\phi h)| \leq C_1 \|\phi h\|_{C^m[-K,K]} \leq C_1 C_2 \|h\|_{C^m[-K,K]}
+\end{equation*}
+where we used once again that $\phi h \in C_c^\infty(\R)$. This is the claim with $C := C_1 C_2$.
 \end{proof}
 
 This allows us to make sense of $\nu(h)$ for $\nu$ a compactly supported distribution
