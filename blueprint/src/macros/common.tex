@@ -53,9 +53,12 @@
 \newcommand{\free}{\mathbb{F}_r}
 \newcommand{\word}{\mathbf{W}_r}
 \newcommand{\matrices}{\mathcal{M}_N(\C)}
-\newcommand{\trN}{\mathrm{tr}_N}
-\newcommand{\TrN}{\mathrm{Tr_N}}
+\newcommand{\trN}[1][N]{\mathrm{tr}_{#1}}
+\newcommand{\TrN}[1][N]{\mathrm{Tr}_{#1}}
 \newcommand{\supp}{\mathrm{supp} \,}
-\newcommand{\testfunc}{\mathcal{D}(\R)}
-\newcommand{\distrib}{\mathcal{D}'(\R)}
-\newcommand{\smooth}{\mathcal{C}^\infty(\R)}
+\newcommand{\testfunc}[1][\R, \C]{\mathcal{D}(#1)}
+\newcommand{\distrib}[1][\R, \C]{\mathcal{D}'(#1)}
+\newcommand{\smooth}[1][\R, \C]{\mathcal{E}(#1)}
+\newcommand{\csdistrib}[1][\R, \C]{\mathcal{E}'(#1)}
+\newcommand{\RS}{\hat{\mathbb{C}}}
+\newcommand{\nonco}{\mathcal{M}_D(\C) \otimes \C \langle x_1, \ldots, x_{r} \rangle}

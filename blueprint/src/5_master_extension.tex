@@ -248,35 +248,39 @@ In this section, we will prove a few useful elementary results on distributions.
 
 \subsection{Support of a distribution}
 
-We denote as $\smooth$ the space of smooth functions $\R \rightarrow \R$, and $\testfunc$
-the set of test functions, i.e. functions $\R \rightarrow \R$ with compact support.
-For $h \in \testfunc$, we denote as $\supp h$ its support.
-For real numbers $a < b$ and $h \in \testfunc$, we write
+Let $\Omega$ be an open subset of a real finite-dimensional normed space $E$
+and $F$ be a real locally convex topological vector space.
+
+We denote as $\smooth[\Omega, F]$ the space of smooth functions $\Omega \rightarrow F$, and
+$\testfunc[\Omega, F]$
+the set of smooth functions $\Omega \rightarrow F$ with compact support.
+For $h \in \testfunc[\Omega, F]$, we denote as $\supp h$ its support.
+For $K$ a compact subset of $\Omega$ and $h \in \testfunc[\Omega, F]$, we write
 \begin{equation*}
-  \|h\|_{C^m[a,b]} = \sup_{0 \leq k \leq m} \sup_{a \leq x \leq b} |h^{(k)}(x)|
+  \|h\|_{C^m(K)} = \sup_{0 \leq k \leq m} \sup_{x \in K} |h^{(k)}(x)|
 \end{equation*}
 where $h^{(k)}$ is the $k$-th order derivative of $h$.
-We denote as $\distrib$ the space of classical distributions on $\R$, i.e. continuous
-linear functionals $\nu : \testfunc \rightarrow \R$.
-Here continuous means that, for any real number $K \geq 0$,
+We denote as $\distrib[\Omega, F]$ the space of classical distributions, i.e. continuous
+linear functionals $\nu : \testfunc[\Omega, F] \rightarrow F$.
+Here continuous means that, for any compact $K$ of $\Omega$,
 there exists a constant $C \geq 0$ and an integer $m \geq 0$ (both depending on $K$) such that
 \begin{equation*}
-  \forall h \in C^\infty_c(\R), \quad
-  \supp h \subseteq [-K,K] \Rightarrow  |\nu(h)| \leq C \|h\|_{C^m[-K,K]}.
+  \forall h \in \testfunc[\Omega,F], \quad
+  \supp h \subseteq K \Rightarrow  |\nu(h)| \leq C \|h\|_{C^m(K)}.
 \end{equation*}
 
 We recall the definition of support, which should be added quite soon to Mathlib.
 
 \begin{definition}
   \label{def:distribution_vanishes}
-  Let $A$ be a subset of $\R$. We say $\nu \in \distrib$ \emph{vanishes on} $A$
-  if, for all $h \in \testfunc$, if $\supp h \subseteq A$, then $\nu(h)=0$.
+  Let $A$ be a subset of $\Omega$. We say $\nu \in \distrib[\Omega, F]$ \emph{vanishes on} $A$
+  if, for all $h \in \testfunc[\Omega, F]$, if $\supp h \subseteq A$, then $\nu(h)=0$.
 \end{definition}
 
 \begin{definition}
   \label{def:support_distribution}
   \uses{def:distribution_vanishes}
-  Let $\nu \in \distrib$.
+  Let $\nu \in \distrib[\Omega, F]$.
   The \emph{support} of $\nu$ is the intersection of all closed sets $A \subseteq \R$
   such that $\nu$ vanishes on the complement of $A$. We denote it as $\supp \nu$.
 \end{definition}
@@ -284,133 +288,229 @@ We recall the definition of support, which should be added quite soon to Mathlib
 \begin{definition}
   \label{def:compactly_supported_distribution}
   \uses{def:support_distribution}
-  A distribution $\nu \in \mathcal{D}'(\R)$ is \emph{a compactly supported distribution}
-  if its support is compact.
+  Let $\csdistrib[\Omega,F]$ be the set of \emph{compactly supported distribution}
+  i.e. linear functionals $\nu : \smooth[\Omega,F] \rightarrow F$
+  such that there exists a compact set $K \subset \Omega$, a real number $C$
+  and an integer $m\geq 0$ such that,
+  for all $h \in \smooth[\Omega,F]$,
+  $|\nu(h)| \leq C \|h\|_{C^m(K)}$.
 \end{definition}
 
-\subsection{Extension of compactly supported distributions}
+\begin{lemma}
+  \label{lem:E_implies_CS}
+  \uses{def:compactly_supported_distribution}
+  Let $\nu \in \csdistrib[\Omega,F]$, and let $K$, $C$, $m$ be as in Definition
+  \ref{def:compactly_supported_distribution}.
+  Then the restriction of $\nu$ to $\testfunc[\Omega,F]$ is an element of
+  $\distrib[\Omega,F]$, and its support is included in $K$.
+\end{lemma}
+
+\begin{proof}
+  We first prove that the restriction is an element of $\distrib[\Omega,F]$.
+  By definition, for all $h \in \smooth[\Omega,F]$, we have
+  $|\nu(h)| \leq C \|h\|_{C^m(K)}$, with $K$, $C$, $m$ as in the statement.
+  Now take $K'$ a compact set of $\Omega$.
+  Let $h \in \testfunc[\Omega,F]$ such that $\supp h \subset K'$.
+  In particular, $h \in \smooth[\Omega,F]$, so we have $|\nu(h)| \leq C \|h\|_{C^m(K)}$.
+  But since $h$ is identically equal to $0$ outside of $K'$, $\|h\|_{C^m(K)} \leq \|h\|_{C^m(K')}$,
+  which is what we needed to prove.
+
+  Now to prove the support claim, let us prove that $\nu$ vanishes on $K^c$, ie
+  for all $h \in \testfunc[\Omega,F]$ such that $\supp h \subseteq K^c$,
+  we have $\nu(h)=0$. Indeed, for such a $h$,
+  we have $|\nu(h)| \leq C \|h\|_{C^m(K)}$. But $\|h\|_{C^m(K)} = 0$ since $h$
+  is identically equal to $0$ on $K$, and hence $\nu(h)=0$.
+  Hence, the support of $\nu$ is included in $K$. Since the support is closed
+  and $K$ is compact, $\supp \nu$ is compact.
+\end{proof}
+
+We here prove that $\csdistrib[\Omega, F]$ is the space of elements of $\distrib[\Omega,F]$
+with compact support, which justifies the name.
+
+\begin{lemma}
+  \label{lem:Leibniz}
+  Let $\phi \in \testfunc[\Omega,F]$. Then, for any $h \in \smooth[\Omega,F]$,
+  the product $\phi h$ belongs in $\testfunc[\Omega,F]$
+  and $\supp (\phi h) \subseteq \supp (\phi)$.
+  Furthermore, for any compact set $K$ of $\Omega$, any integer $m \geq 0$,
+  there exists a constant $C$ (depending on $\phi$)
+  such that,
+  for all $h \in \smooth[\Omega,F]$, $\|\phi h\|_{C^m(K)} \leq C \|h\|_{C^m(K)}$.
+\end{lemma}
+
+\begin{proof}
+  This follows from Leibniz's formula.
+\end{proof}
 
 \begin{lemma}
   \label{lem:extension_csd}
-  \uses{def:compactly_supported_distribution}
-  Let $\nu \in \distrib$ be a compactly supported distribution.
-  Then there is a unique continuous
-  linear extension $\smooth \rightarrow \R$ of $\nu$. Furthermore,
-  there exist real numbers $K \geq 0$, $C>0$ and an integer $m \geq 0$
-  such that
-  \begin{equation*}
-    \forall h \in \smooth, \quad |\nu(h)| \leq C \|h\|_{C^m[-K,K]}.
-  \end{equation*}
+  \uses{def:compactly_supported_distribution,lem:Leibniz}
+  Let $\nu \in \distrib[\Omega, F]$. We assume that $\supp \nu$ is compact.
+  Then there is a unique $\mu \in \csdistrib[\Omega,F]$
+  such that, for all $h \in \testfunc[\Omega,F]$,
+  $\nu(h)=\mu(h)$.
 \end{lemma}
 
 \begin{proof}
-  The support of $\nu$ is compact, hence we can take a real number $K_0>0$ such that
-  $\supp \nu$ is included in $[-K_0,K_0]$.
-  We take a function $\phi \in \testfunc$ such that $\phi$ is identically equal to
-  $1$ on $[-K_0,K_0]$.
-  We then define $\mu : \smooth \rightarrow \R$ by letting $\mu(h) := \nu(h \phi)$ for
-  $h \in \smooth$.
+  The support of $\nu$ is compact, we denote it as $K_0$.
+  We take a function $\phi \in \testfunc[\Omega,F]$
+  such that $\phi$ is identically equal to
+  $1$ on $K_0$.
+  We then define $\mu : \smooth[\Omega,F] \rightarrow F$
+  by letting $\mu(h) := \nu(h \phi)$ for $h \in \smooth[\Omega,F]$.
  \begin{itemize}
-  \item  This is well-defined as, if $h \in \smooth$ and $\phi \in \testfunc$,
-   then $h \phi \in \testfunc$. The linearity is immediate.
+  \item  This is well-defined by Lemma \ref{lem:Leibniz}. The linearity is immediate.
   \item We prove that $\mu$ is an extension of $\nu$.
-  Let $h \in \testfunc$.
-  We observe that $(1-\phi) h$ belongs in $\testfunc$ and
-  is identically equal to $0$ on $\supp \nu$.
+  Let $h \in \testfunc[\Omega,F]$.
+  We observe that $(1-\phi) h$ belongs in $\testfunc[\Omega,F]$ and
+  is identically equal to $0$ on $K_0 = \supp \nu$.
   This implies (by a simple lemma on supports) that $\nu((1-\phi)h) = 0$,
   hence $\nu(h) = \nu(\phi h) = \mu(h)$.
-  \item Let us now prove the continuity. Let $(h_i)_{i \in \N}$ be a sequence of
-  functions in $\smooth$ converging to $0$. By definition of the topology on $\smooth$,
-  this means that, for any real numbers $a<b$, any $m \geq 0$, $\|h_i\|_{C^m[a,b]} \to 0$.
-  Using the Leibniz formula, we deduce that $\phi h_i \to 0$ in $\testfunc$, and hence by
-  continuity of $\nu$, $\mu(h_i) = \nu(\phi h_i) \rightarrow 0$ as $i \to \infty$.
-  \item We conclude the uniqueness by the density of $\testfunc$ in $\smooth$.
-\end{itemize}
-To conclude, let us prove the norm estimate on the extension.
+  \item Let us now prove the norm estimate for $\mu$.
 \begin{itemize}
   \item
-  The function $\phi$ has compact support. We can therefore take $K > 0$ such
-  that its support is included in $[-K,K]$.
-  By definition of $\distrib$ applied to $[-K,K]$, we obtain a constant $C_1$
-  and an integer $m$ such that, for all $h \in \testfunc$,
-  if $\supp h$ is included in $[-K,K]$, then
-  we have $|\nu(h)| \leq C_1 \|h\|_{C^m[-K,K]}$.
- \item The Leibniz formula grants a constant $C_2$ (depending on $\phi$) such that, for all $h \in \smooth$,
-  $\|\phi h\|_{C^m[-K,K]} \leq C_2 \|h\|_{C^m[-K,K]}$.
+  The function $\phi$ has compact support, which we denote by $K$.
+  By definition of $\distrib[\Omega,F]$ applied to $K$, we obtain a constant $C_1$
+  and an integer $m$ such that, for all $h \in \testfunc[\Omega,F]$,
+  if $\supp h$ is included in $K$, then
+  we have $|\nu(h)| \leq C_1 \|h\|_{C^m(K)}$.
+ \item Lemma \ref{lem:Leibniz} grants a constant $C_2$ (depending on $\phi$) such that,
+ for all $h \in \smooth[\Omega,F]$,
+  $\|\phi h\|_{C^m(K)} \leq C_2 \|h\|_{C^m(K)}$.
 \end{itemize}
-Now take $h \in \smooth$. We observe that $\phi h \in \testfunc$ and its support is included in
-$[-K,K]$. Hence,
+Now take $h \in \smooth[\Omega,F]$.
+By Lemma \ref{lem:Leibniz}, $\phi h \in \testfunc[\Omega,F]$ and its support is included in
+$K$. Hence,
 \begin{equation*}
-  |\mu(h)| = |\nu(\phi h)| \leq C_1 \|\phi h\|_{C^m[-K,K]}.
+  |\mu(h)| = |\nu(\phi h)| \leq C_1 \|\phi h\|_{C^m(K)}.
 \end{equation*}
-We then note that $\|\phi h\|_{C^m[-K,K]} \leq C_2 \|h\|_{C^m[-K,K]}$.
+We then note that $\|\phi h\|_{C^m(K)} \leq C_2 \|h\|_{C^m(K)}$.
 This proves the claim with $C := C_1 C_2$.
+\item  The uniqueness is then obtained by the density of $\testfunc[\Omega,F]$ in $\smooth[\Omega,F]$.
+\end{itemize}
 \end{proof}
 
 This allows us to make sense of $\nu(h)$ for $\nu$ a compactly supported distribution
-and $h$ a polynomial, an essential component of the proof.
-
-\begin{lemma}
-  \label{lem:extension_C}
-  Any continuous linear functional $\nu : \smooth \rightarrow \R$ can be uniquely extended
-  to a continuous linear functional $\nu : C^\infty(\R,\C) \rightarrow \C$
-  by letting, for $h = h_1 + i h_2$ with $h_1, h_2 \in \smooth$,
-   $\nu(h) := \nu(h_1) + i \nu(h_2)$.
-\end{lemma}
-
-\begin{proof}
-  Probably a baby case of a more general statement.
-\end{proof}
+and $h$ a general smooth function, an essential component of the proof.
 
 \subsection{Stieltjes transform}
 
 In this section we introduce a useful tool which will be essential to the next section.
+Let $\RS$ denote the Riemann sphere.
+
+\begin{lemma}
+  \label{lem:Stieltjes_function}
+  Let $z \in \RS$ such that $z \notin \R$.
+  The function $x \in \R \mapsto \frac{1}{2i\pi} \frac{1}{x-z} \in \C$ is
+  an element of $\smooth$.
+\end{lemma}
+
+\begin{proof}
+  Usual functions.
+\end{proof}
 
 \begin{definition}
   \label{def:Stieltjes}
-  \uses{lem:extension_C,lem:extension_csd}
-  Let $\nu \in \distrib$ be compactly supported.
+  \uses{lem:extension_csd,lem:Stieltjes_function}
+  Let $\nu \in \csdistrib$.
   The \emph{Stieltjes transform} of $\nu$ is defined as the function
-  $F_\nu : \C - \supp \nu \rightarrow \C$ by $F(z) = \nu(x \mapsto \frac{1}{x-z})$.
+  $F_\nu : \RS - \R \rightarrow \C$ by $F(z) = \nu(x \mapsto \frac{1}{2 i \pi}\frac{1}{x-z})$.
 \end{definition}
 
-[todo: lemma on the fact that the function only needs to be defined on the support]
+\begin{theorem}
+  \label{thm:Stieltjes_holomorphic}
+  \uses{def:Stieltjes}
+  Let $\nu \in \csdistrib$.
+  The function $F_\nu : \RS - \R \rightarrow \C$ is analytic.
+  It can be analytically extended to a $x \in \R$ if and only if $x \notin \supp \nu$.
+\end{theorem}
+
+\begin{proof}
+  This might need some work!
+\end{proof}
 
 \subsection{Spectral radius and support}
 
+We shall now show how one can access the support of a distribution
+from its moments.
+
+\begin{lemma}
+  \label{lem:monomial_smooth}
+  Let $p \geq 0$.
+  The monomial function $x \mapsto x^p$ belongs in $\smooth$. Furthermore,
+  for any integer $m \geq 0$, for any compact set $K$ of $\R$,
+  if $K+ := \sup_{x \in K} |x|$, then
+  \begin{equation*}
+    \|x \mapsto x^p\|_{C^m(K)}
+    \leq \max(p,1)^m \max (1, K_+)^p.
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  The regularity is well-known.
+  Let $x \in K$ and $0 \leq k \leq m$ an integer.
+  Then,
+  the $k$-th derivative of the monomial at $x$ is given by
+  $p(p-1) \ldots (p-k+1) x^{p-k}$ if $p\geq k$ and $0$ otherwise.
+  In both cases,
+  this is smaller in absolute value
+  than $\max (p,1)^k \max(K_+,1)^p$ which is smaller than $\max(p,1)^m \max(K_+,1)^p$.
+\end{proof}
+
+\begin{definition}
+  \label{def:moment}
+  \uses{lem:extension_csd,lem:monomial_smooth}
+  Let $\nu \in \csdistrib$.
+  For $p \in \N$, we define the $p$-th moment $\nu_p := \nu(x \mapsto x^p)$.
+\end{definition}
+
 \begin{definition}
   \label{def:radius_csd}
-  \uses{lem:extension_csd}
-  Let $\nu \in \mathcal{D}(\R)$ be a compactly supported distribution.
-  We define $$\rho(\nu) := \limsup_{p \to \infty} |\nu(x^p)|^{1/p} .$$
+  \uses{def:moment}
+  Let $\nu \in \csdistrib$.
+  We define $$\rho(\nu) := \limsup_{p \to \infty} |\nu_p|^{1/p} .$$
 \end{definition}
 
 \begin{lemma}
   \label{lem:radius_finite}
   \uses{def:radius_csd}
-  Let $\nu \in \mathcal{D}(\R)$ be a compactly supported distribution.
+  Let $\nu \in \csdistrib$.
   Then $\rho(\nu) < \infty$.
 \end{lemma}
 
 \begin{proof}
-  By Lemma \ref{lem:extension_csd}, there exists $K \geq 0$, $C \geq 0$ and an integer $m$
-  such that, for all $h \in C^\infty(\R)$, $|\nu(h)| \leq C \|h\|_{C^m[-K,K]}$.
+  By Lemma \ref{lem:extension_csd}, there exists a compact set $K$,
+  a constant $C$ and an integer $m$
+  such that, for all $h \in \smooth$,
+  $|\nu(h)| \leq C \|h\|_{C^m(K)}$.
 Let $p \geq 0$ be an integer.
-Then
-$$|\nu(x^p)| \leq C \|x^p\|_{C^m[-K,K]}
-= C \sup_{0 \leq k \leq m} \sup_{|x| \leq K} |p(p-1) \ldots (p-m+1) x^{p-m}|
-\leq C p^m (K+1)^p$$
-and hence $(|\nu(x^p)|^{1/p})_{p \geq 0}$ is bounded.
+Then by Lemma \ref{lem:monomial_smooth}, if $K_+ := \sup_{x \in K} |x|$,
+$$|\nu_p| \leq C \max(p,1)^m \max (K_+,1)^p$$
+and hence $(|\nu_p|^{1/p})_{p \geq 0}$ is bounded.
 \end{proof}
 
-\begin{lemma}
-  \label{lem:support_limsup}
-  \uses{lem:radius_finite}
-  Let $\nu \in \mathcal{D}(\R)$ be a compactly supported distribution.
-  Let $\nu \in \mathcal{D}(\R)$ be a compactly supported distribution.
-  Then $\supp \nu \subseteq [-\rho(\nu), \rho(\nu)]$.
-\end{lemma}
+\begin{proposition}
+  \label{prop:Stieltjes_expansion}
+  Let $\nu \in \csdistrib$.
+  There exists $M > 0$ such that, for all $z \in \C$ satisfying $|z|>M$,
+  \begin{equation*}
+    F_\nu(z) = \sum_{p=0}^\infty \frac{\nu_p}{z^{p+1}}.
+  \end{equation*}
+\end{proposition}
 
 \begin{proof}
-  Lemma 4.9 in \cite{chen2025}
+  TODO
+\end{proof}
+
+The main result of this section is as follows.
+
+\begin{theorem}
+  \label{thm:support_limsup}
+  \uses{lem:radius_finite,thm:Stieltjes_holomorphic}
+  Let $\nu \in \csdistrib$.
+  Then $\supp \nu \subseteq [-\rho(\nu), \rho(\nu)]$.
+\end{theorem}
+
+\begin{proof}
+  Still need some work!
 \end{proof}

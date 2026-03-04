@@ -6,3 +6,67 @@ Throughout the rest of this preprint, the set of real polynomials will be denote
 and the set of real polynomials of degree at most $q$ by $\mathcal{P}_q$.
 
 \section{Markov inequalities}
+
+\section{The master inequality}
+
+\begin{definition}
+  \label{def:non_comm_poly}
+  \uses{def:word}
+  Let $D \geq 1$ and $r \geq 1$.
+  A \emph{non-commutative polynomial with matrix coefficients} $P \in \nonco$
+  is an expression of the form $\sum_{w \in \word} A_w \otimes w(x_1, \ldots, x_{r})$.
+\end{definition}
+
+\begin{definition}
+  \label{def:non_co_map}
+  \uses{def:non_comm_poly,def:word_map}
+  Let $P = \sum_{w \in \word} A_w \otimes w(x_1, \ldots, x_{r})\in \nonco$.
+  For $(U_1, \ldots, U_r)$ be a $r$-tuple of unitary matrices of shared dimension,
+  we define
+  $P(U_1, \ldots, U_r) = \sum_{w \in \word} A_w \otimes w(U_1, \ldots, U_r)$
+  using the word map defined in Definition \ref{def:word_map}.
+\end{definition}
+
+\begin{definition}
+  \label{def:self_adjoint_P}
+  \uses{def:non_comm_poly}
+  [todo]
+\end{definition}
+
+\begin{definition}
+  \label{def:norm_non_comm_poly}
+  \uses{def:non_co_map}
+  We define a norm on $\nonco$ by taking for a non-commutative polynomial
+  with matrix coefficients $P \in \nonco$,
+  \begin{equation*}
+    \|P\|_{D,r} := \sup \{ \|P(U_1, \ldots, U_r)\|, (U_i)_{1 \leq i \leq r}
+    \text{ unitary matrices}\}.
+  \end{equation*}
+\end{definition}
+
+\begin{theorem}
+  \label{thm:masterI}
+  \uses{def:self_adjoint_P,def:probability_measure}
+  \notready
+  Let $r \geq 2$ and $D \geq 1$.
+  Fix a self-adjoint non-commutative polynomial $P \in \nonco$
+  of degree $q_0$, and let $K = \|P\|_{D,r}$.
+  There exists a family of linear functionals $\nu_i : \mathcal{P} \rightarrow \C$
+  for $i \in \N$ such that for every $N,m \in \N$, $q \geq 1$ and any $h \in \mathcal{P}_q$,
+  \begin{equation*}
+    \left|\expec\left[\trN[ND] h(P(S_1, \ldots, S_r))\right]
+     - \sum_{i=0}^{m-1} \frac{\nu_i(h)}{N^i}\right|
+     \leq \frac{(4 q q_0(1+\log r))^{4m}}{N^m} \|h\|_{C^0([-K,K])}.
+  \end{equation*}
+\end{theorem}
+
+\begin{corollary}
+  \label{coro:masterI}
+  \uses{thm:masterI}
+  With the notations of Theorem \ref{thm:masterI},
+  for every $m \in \N$, $q \geq 1$ and $h \in \mathcal{P}_q$,
+  \begin{equation*}
+    |\nu_m(h)|
+    \leq (4 q q_0(1+\log r))^{4m} \|h\|_{C^0([-K,K])}.
+  \end{equation*}
+\end{corollary}
