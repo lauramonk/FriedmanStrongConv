@@ -71,14 +71,7 @@ the $j$-th Fourier coefficient is defined as
   \label{lem:coeff_of_f}
   Let $f(\theta) = \sum_{j=0}^q a_j \cos(j \theta)$ be an even trigonometric series.
   Then, the Fourier coefficients of $f$ are exactly, for $j \in \Z$,
-  \begin{equation*}
-    c_j =
-    \begin{cases*}
-      \frac{1}{2} a_{|j|} & if $0 < |j| \leq q$ \\
-      a_0 & if $j=0$ \\
-      0 & if $|j| > q$.
-    \end{cases*}
-  \end{equation*}
+  $c_j = \frac{1}{2} a_{|j|}$ if $0 < |j| \leq q$, $a_0$ if $j=0$ and $0$ if $|j|>q$.
 \end{lemma}
 
 \begin{proof}
@@ -238,7 +231,7 @@ We now conclude with the main result of this section.
     = \sum_{j =1}^q j^m |a_j|.
   \end{equation*}
   The conclusion follows by applying Lemma \ref{lem:Zygmund} to the function $f^{(m)}$,
-  which is in $L^\beta(\tor)$ as it is a trigonometric polynomial and in particular smooth.
+  of derivative $f^{(m+1)}$ in $L^\beta(\tor)$ as it is a trigonometric polynomial and in particular smooth.
 \end{proof}
 
 
@@ -392,125 +385,3 @@ This proves the claim with $C := C_1 C_2$.
 
 This allows us to make sense of $\nu(h)$ for $\nu$ a compactly supported distribution
 and $h$ a general smooth function, an essential component of the proof.
-
-\subsection{Stieltjes transform}
-
-In this section we introduce a useful tool which will be essential to the next section.
-Let $\RS$ denote the Riemann sphere.
-
-\begin{lemma}
-  \label{lem:Stieltjes_function}
-  Let $z \in \RS$ such that $z \notin \R$.
-  The function $x \in \R \mapsto \frac{1}{2i\pi} \frac{1}{x-z} \in \C$ is
-  an element of $\smooth$.
-\end{lemma}
-
-\begin{proof}
-  Usual functions.
-\end{proof}
-
-\begin{definition}
-  \label{def:Stieltjes}
-  \uses{lem:extension_csd,lem:Stieltjes_function}
-  Let $\nu \in \csdistrib$.
-  The \emph{Stieltjes transform} of $\nu$ is defined as the function
-  $F_\nu : \RS - \R \rightarrow \C$ by $F(z) = \nu(x \mapsto \frac{1}{2 i \pi}\frac{1}{x-z})$.
-\end{definition}
-
-\begin{theorem}
-  \label{thm:Stieltjes_holomorphic}
-  \uses{def:Stieltjes}
-  Let $\nu \in \csdistrib$.
-  The function $F_\nu : \RS - \R \rightarrow \C$ is analytic.
-  It can be analytically extended to a $x \in \R$ if and only if $x \notin \supp \nu$.
-\end{theorem}
-
-\begin{proof}
-  This might need some work!
-\end{proof}
-
-\subsection{Spectral radius and support}
-
-We shall now show how one can access the support of a distribution
-from its moments.
-
-\begin{lemma}
-  \label{lem:monomial_smooth}
-  Let $p \geq 0$.
-  The monomial function $x \mapsto x^p$ belongs in $\smooth$. Furthermore,
-  for any integer $m \geq 0$, for any compact set $K$ of $\R$,
-  if $K+ := \sup_{x \in K} |x|$, then
-  \begin{equation*}
-    \|x \mapsto x^p\|_{C^m(K)}
-    \leq \max(p,1)^m \max (1, K_+)^p.
-  \end{equation*}
-\end{lemma}
-
-\begin{proof}
-  The regularity is well-known.
-  Let $x \in K$ and $0 \leq k \leq m$ an integer.
-  Then,
-  the $k$-th derivative of the monomial at $x$ is given by
-  $p(p-1) \ldots (p-k+1) x^{p-k}$ if $p\geq k$ and $0$ otherwise.
-  In both cases,
-  this is smaller in absolute value
-  than $\max (p,1)^k \max(K_+,1)^p$ which is smaller than $\max(p,1)^m \max(K_+,1)^p$.
-\end{proof}
-
-\begin{definition}
-  \label{def:moment}
-  \uses{lem:extension_csd,lem:monomial_smooth}
-  Let $\nu \in \csdistrib$.
-  For $p \in \N$, we define the $p$-th moment $\nu_p := \nu(x \mapsto x^p)$.
-\end{definition}
-
-\begin{definition}
-  \label{def:radius_csd}
-  \uses{def:moment}
-  Let $\nu \in \csdistrib$.
-  We define $$\rho(\nu) := \limsup_{p \to \infty} |\nu_p|^{1/p} .$$
-\end{definition}
-
-\begin{lemma}
-  \label{lem:radius_finite}
-  \uses{def:radius_csd}
-  Let $\nu \in \csdistrib$.
-  Then $\rho(\nu) < \infty$.
-\end{lemma}
-
-\begin{proof}
-  By Lemma \ref{lem:extension_csd}, there exists a compact set $K$,
-  a constant $C$ and an integer $m$
-  such that, for all $h \in \smooth$,
-  $|\nu(h)| \leq C \|h\|_{C^m(K)}$.
-Let $p \geq 0$ be an integer.
-Then by Lemma \ref{lem:monomial_smooth}, if $K_+ := \sup_{x \in K} |x|$,
-$$|\nu_p| \leq C \max(p,1)^m \max (K_+,1)^p$$
-and hence $(|\nu_p|^{1/p})_{p \geq 0}$ is bounded.
-\end{proof}
-
-\begin{proposition}
-  \label{prop:Stieltjes_expansion}
-  Let $\nu \in \csdistrib$.
-  There exists $M > 0$ such that, for all $z \in \C$ satisfying $|z|>M$,
-  \begin{equation*}
-    F_\nu(z) = \sum_{p=0}^\infty \frac{\nu_p}{z^{p+1}}.
-  \end{equation*}
-\end{proposition}
-
-\begin{proof}
-  TODO
-\end{proof}
-
-The main result of this section is as follows.
-
-\begin{theorem}
-  \label{thm:support_limsup}
-  \uses{lem:radius_finite,thm:Stieltjes_holomorphic}
-  Let $\nu \in \csdistrib$.
-  Then $\supp \nu \subseteq [-\rho(\nu), \rho(\nu)]$.
-\end{theorem}
-
-\begin{proof}
-  Still need some work!
-\end{proof}
