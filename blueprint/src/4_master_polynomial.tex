@@ -12,7 +12,7 @@ and the set of real polynomials of degree at most $q$ by $\mathcal{P}_q$.
   [todo]
 \end{proposition}
 
-\section{The master inequality}
+\section{Non-commutative polynomials with matrix coefficients}
 
 \begin{definition}
   \label{def:non_comm_poly}
@@ -49,6 +49,10 @@ and the set of real polynomials of degree at most $q$ by $\mathcal{P}_q$.
   \end{equation*}
 \end{definition}
 
+\section{The Master inequality for polynomials}
+
+We are now ready to prove the following statement.
+
 \begin{theorem}
   \label{thm:masterI}
   \uses{def:self_adjoint_P,def:probability_measure}
@@ -65,13 +69,129 @@ and the set of real polynomials of degree at most $q$ by $\mathcal{P}_q$.
   \end{equation*}
 \end{theorem}
 
-\begin{corollary}
+This will be done in several steps.
+
+\subsection{Proof for large values}
+
+We first prove the result for large $N$, which is the main challenge.
+
+\begin{lemma}
+  \label{lem:masterI_largeN}
+  [todo]
+\end{lemma}
+
+\subsection{Bound on the coefficients}
+
+We now prove a bound on the coefficients of the expansion.
+
+\begin{lemma}
   \label{coro:masterI}
-  \uses{thm:masterI}
+  \uses{lem:masterI_largeN,lem:expr_nu_0,lem:bound_trace,lem:expansion_bound}
   With the notations of Theorem \ref{thm:masterI},
   for every $m \in \N$, $q \geq 1$ and $h \in \mathcal{P}_q$,
   \begin{equation*}
     |\nu_m(h)|
     \leq (4 q q_0(1+\log r))^{4m} \|h\|_{C^0([-K,K])}.
   \end{equation*}
-\end{corollary}
+\end{lemma}
+
+This relies on the following simple lemma on asymptotic expansions.
+
+\begin{lemma}
+  \label{lem:expansion_bound}
+  Let $(F_N)_{N \geq 0}$ be a sequence.
+  We assume there exists coefficients $(\nu_i)_{i \geq 0}$, constants $(C_m)_{m \geq 1}$ and
+  $(M_m)_{m \geq 1}$ such that, for all $m \geq 1$, all $N \geq M_m$,
+  \begin{equation*}
+    \left| F_N - \sum_{i=0}^{m-1} \frac{\nu_i}{N^i} \right| \leq \frac{C_m}{N^m}.
+  \end{equation*}
+  Then, for all $m \geq 1$, $|\nu_m| \leq C_m$.
+\end{lemma}
+
+\begin{proof}
+  Let $m \geq 1$ and $N \geq \max(M_m, M_{m+1})$.
+  We have
+  \begin{equation*}
+    \nu_m = N^m \left(F_N - \sum_{i=0}^{m-1} \frac{\nu_i}{N^i} \right)
+    - N^m \left(F_N - \sum_{i=0}^{m} \frac{\nu_i}{N^i}\right)
+  \end{equation*}
+  so by the triangle inequality,
+    \begin{equation*}
+    |\nu_m| \leq N^m \left|F_N - \sum_{i=0}^{m-1} \frac{\nu_i}{N^i} \right|
+    + N^m \left|F_N - \sum_{i=0}^{m} \frac{\nu_i}{N^i}\right|.
+  \end{equation*}
+  We apply the hypothesis to $m$ and $m+1$ (which we can as $N \geq M_m$ and $N \geq M_{m+1}$),
+  which yields
+  \begin{equation*}
+    |\nu_m|
+    \leq N^m \frac{C_m}{N^m} + N^m \frac{C_{m+1}}{N^{m+1}}
+    = C_{m} + \frac{C_{m+1}}{N}.
+  \end{equation*}
+  This is true for all $N \geq \max(M_m,M_{m+1})$, and hence we can take the limit $N \rightarrow + \infty$,
+  and obtain $|\nu_m| \leq C_m$.
+\end{proof}
+
+We will also need to bound the $0$-th coefficient.
+
+\begin{lemma}
+  \label{lem:expr_nu_0}
+  \uses{lem:masterI_largeN}
+  For any $h \in \mathcal{P}$,
+  \begin{equation*}
+    \nu_0(h) = \lim_{N \rightarrow +\infty} \expec [\trN[ND] h(P(S_1, \ldots, S_r))].
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  Let $h \in \mathcal{P}$ and take $q \geq 1$ such that $h \in \mathcal{P}_q$.
+  We apply Lemma \ref{lem:masterI_largeN} for $m=1$.
+  Hence, for any $N \geq M$,
+  \begin{equation*}
+    \left|
+      \expec [\trN[ND] h(P(S_1, \ldots, S_r))]
+      - \nu_0(h)
+    \right| \leq \frac{(4 q q_0(1+\log r))^4}{N}
+  \end{equation*}
+  The right-hand side goes to $0$ as $N \rightarrow \infty$, which leads to the claim.
+\end{proof}
+
+\begin{lemma}
+  \label{lem:bound_trace}
+  \uses{def:norm_non_comm_poly}
+  For any $h \in \mathcal{P}$, any $N \geq 1$,
+  \begin{equation*}
+    |\expec [\trN[ND] h(P(S_1, \ldots, S_r))]| \leq \|h\|_{C^0([-K,K])}.
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  [todo]
+\end{proof}
+
+We can finally prove Lemma \ref{coro:masterI}.
+
+\begin{proof}
+  \proves{coro:masterI}
+  Let $m \geq 0$, $q \geq 1$ and $h \in \mathcal{P}_q$.
+
+  If $m=0$, by Lemma \ref{lem:expr_nu_0},
+  \begin{equation*}
+        \nu_0(h) = \lim_{N \rightarrow +\infty} \expec [\trN[ND] h(P(S_1, \ldots, S_r))].
+  \end{equation*}
+  By Lemma \ref{lem:bound_trace}, this sequence is bounded by $\|h\|_{C^0([-K,K])}$,
+  and in particular we get that at the limit
+  $|\nu_0(h)| \leq \|h\|_{C^0([-K,K])}$. This is the claim for $m=0$.
+
+  The result for $m \geq 1$ is a direct combination of Lemma \ref{lem:masterI_largeN} and
+  Lemma \ref{lem:expansion_bound}.
+\end{proof}
+
+
+\subsection{Proof for small values}
+
+Let us now conclude the proof of Theorem \ref{thm:masterI}.
+
+\begin{proof}
+  \proves{thm:masterI}
+  [todo]
+\end{proof}
