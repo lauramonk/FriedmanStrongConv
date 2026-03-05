@@ -234,6 +234,29 @@ We now conclude with the main result of this section.
   of derivative $f^{(m+1)}$ in $L^\beta(\tor)$ as it is a trigonometric polynomial and in particular smooth.
 \end{proof}
 
+We shall use the following corollary.
+
+\begin{corollary}
+  \label{coro:bound_sum_aj}
+  \uses{lem:bound_sum_aj}
+  Let $m \geq 0$ be an integer and $K > 0$ be a real number.
+  There exists a real number $c_{m,K}$ satisfying the following.
+  For any $q \geq 1$, any
+  $h \in \mathcal{P}_q$, if $(a_j)_{0 \leq j \leq q}$ are
+  the coefficients from Lemma \ref{lem:chebyshev_decomp},
+  then
+  \begin{equation*}
+    \sum_{j=1}^q j^m |a_j| \leq c_{m,K} \|h\|_{C^{m+1}([-K,K])}.
+  \end{equation*}
+\end{corollary}
+
+\begin{proof}
+  We apply Lemma \ref{lem:bound_sum_aj} with $\beta = \infty$, in which case $\beta_*=1$
+  and hence $$\sum_{j=1}^q j^m |a_j| \leq 4 \|f^{(m+1)}\|_{L^\infty(\tor)}.$$
+  We then use the chain rule to find a constant $C_{m,K}$ such that
+  $\|f^{(m+1)}\|_{L^\infty(\tor)} \leq C_{m,K} \|h\|_{C^{m+1}([-K,K])}$
+  and conclude with $c_{m,K}=4C_{m,K}$.
+\end{proof}
 
 \section{Compactly supported distributions}
 
@@ -395,11 +418,11 @@ to compactly supported distributions. The following proposition provides a crite
 
 \begin{proposition}
   \label{prop:extension_poly_smooth}
-  \uses{lem:bound_sum_aj,def:compactly_supported_distribution,prop:Markov_ineq}
+  \uses{coro:bound_sum_aj,def:compactly_supported_distribution,prop:Markov_ineq}
   Let $\nu : \mathcal{P} \rightarrow \C$ be a linear functional.
   The following three properties are equivalent.
   \begin{enumerate}
-    \item There exists $c, K, m \geq 0$ such that, for all $p \geq 1$, all
+    \item There exists $c, K, m \geq 0$ such that, for all $q \geq 1$, all
     $h \in \mathcal{P}_q$,
     \begin{equation*}
       |\nu(h)| \leq c q^m \|h\|_{C^0([-K,K])}.
@@ -411,3 +434,36 @@ to compactly supported distributions. The following proposition provides a crite
     \item $\nu$ extends uniquely to a compactly supported distribution.
   \end{enumerate}
 \end{proposition}
+
+\begin{proof}
+  We will prove $1 \Rightarrow 2 \Rightarrow 3 \Rightarrow 1$.
+
+  Let us assume $1$.
+  Let $j \geq 1$.
+  Let $h (x) := T_j(x/K)$.
+  We note that $h$ is an element of $\mathcal{P}_j$, so can apply the
+  hypothesis to it, which yields $|\nu(h)| \leq c j^m \|h\|_{C^0([-K,K])}$.
+  We conclude by observing that $\|h\|_{C^0([-K,K])} = \|T_j\|_{C^0([-1,1])}=1$
+  using the definition of the Chebyshev polynomials.
+
+  Let us now assume $2$, which gives us some parameters $c, K, m$.
+  Let $q \geq 1$ and $h \in \mathcal{P}_q$. We write $h = \sum_{j=0}^q a_j T_j(\cdot / K)$
+  as before. Then by linearity, the triangle inequality and  the assumption
+  \begin{equation*}
+    |\nu(h)|
+    \leq |a_0| |\nu(1)| + \sum_{j=1}^q |a_j| |\nu(T_j(\cdot / K))|
+    \leq |a_0| |\nu(1)| + c \sum_{j=1}^q j^m|a_j|.
+  \end{equation*}
+  By Lemma \ref{lem:bound_a0}, $|a_0| \leq \|h\|_{C^0([-K,K])}$.
+  By Corollary \ref{coro:bound_sum_aj}, there exists a constant $c_{m,K}$
+  depending only on $m$ and $K$ such that
+  $\sum_{j=1}^q j^m|a_j| \leq c_{m,K} \|h\|_{C^{m+1}([-K,K])}$.
+  Then, taking $C := |\nu(1)| + c c_{m,K}$, we have that
+  for all $h \in \mathcal{P}$,
+  $|\nu(h)| \leq C \|h\|_{C^{m+1}([-K,K])}$.
+  By density of $\mathcal{P}$ in $\smooth$
+  for $\|\cdot \|_{C^{m+1}([-K,K])}$, $\nu$ extends uniquely to a compactly
+  supported distribution.
+
+  To conclude, we prove $3 \Rightarrow 1$. [todo]
+\end{proof}
