@@ -278,6 +278,8 @@ We recall the definition of support, which should be added quite soon to Mathlib
   such that $\nu$ vanishes on the complement of $A$. We denote it as $\supp \nu$.
 \end{definition}
 
+\subsection{Characterisation of compactly supported distributions}
+
 \begin{definition}
   \label{def:compactly_supported_distribution}
   \uses{def:support_distribution}
@@ -385,3 +387,27 @@ This proves the claim with $C := C_1 C_2$.
 
 This allows us to make sense of $\nu(h)$ for $\nu$ a compactly supported distribution
 and $h$ a general smooth function, an essential component of the proof.
+
+\subsection{Extension from polynomials to smooth functions}
+
+It will be essential for us to extend linear operators acting on polynomials
+to compactly supported distributions. The following proposition provides a criterium for this.
+
+\begin{proposition}
+  \label{prop:extension_poly_smooth}
+  \uses{lem:bound_sum_aj,def:compactly_supported_distribution,prop:Markov_ineq}
+  Let $\nu : \mathcal{P} \rightarrow \C$ be a linear functional.
+  The following three properties are equivalent.
+  \begin{enumerate}
+    \item There exists $c, K, m \geq 0$ such that, for all $p \geq 1$, all
+    $h \in \mathcal{P}_q$,
+    \begin{equation*}
+      |\nu(h)| \leq c q^m \|h\|_{C^0([-K,K])}.
+    \end{equation*}
+    \item There exists $c, K, m \geq 0$ such that, for all $j \geq 1$,
+    \begin{equation*}
+      |\nu(T_j(\cdot / K))| \leq c j^m.
+    \end{equation*}
+    \item $\nu$ extends uniquely to a compactly supported distribution.
+  \end{enumerate}
+\end{proposition}
