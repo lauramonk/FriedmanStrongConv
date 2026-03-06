@@ -61,7 +61,7 @@ We are now ready to prove the following statement.
   Fix a self-adjoint non-commutative polynomial $P \in \nonco$
   of degree $q_0$, and let $K = \|P\|_{D,r}$.
   There exists a family of linear functionals $\nu_i : \mathcal{P} \rightarrow \C$
-  for $i \in \N$ such that for every $N,m \in \N$, $q \geq 1$ and any $h \in \mathcal{P}_q$,
+  for $i \geq 0$ such that for every $N,m,q \geq 1$, and any $h \in \mathcal{P}_q$,
   \begin{equation*}
     \left|\expec\left[\trN[ND] h(P(S_1, \ldots, S_r))\right]
      - \sum_{i=0}^{m-1} \frac{\nu_i(h)}{N^i}\right|
@@ -88,7 +88,7 @@ We now prove a bound on the coefficients of the expansion.
   \label{coro:masterI}
   \uses{lem:masterI_largeN,lem:expr_nu_0,lem:bound_trace,lem:expansion_bound}
   With the notations of Theorem \ref{thm:masterI},
-  for every $m \in \N$, $q \geq 1$ and $h \in \mathcal{P}_q$,
+  for every $m, q \geq 1$ and $h \in \mathcal{P}_q$,
   \begin{equation*}
     |\nu_m(h)|
     \leq (4 q q_0(1+\log r))^{4m} \|h\|_{C^0([-K,K])}.
@@ -194,4 +194,24 @@ Let us now conclude the proof of Theorem \ref{thm:masterI}.
 \begin{proof}
   \proves{thm:masterI}
   [todo]
+\end{proof}
+
+\section{Special cases}
+
+\begin{lemma}
+  \label{lem:value_nu_at_one}
+  \uses{thm:masterI}
+  With the notations of Theorem \ref{thm:masterI},
+  if $h$ is a constant polynomial, then
+  \begin{itemize}
+    \item $\nu_0(h)=h(0)$;
+    \item for $i >0$, $\nu_i(h)=0$.
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+  If $h$ is constant, then for any $N \geq 1$,
+  $\expec\left[\trN[ND] h(P(S_1, \ldots, S_r))\right] = h(0)$
+  and the sequence from the claim satisfies the inequality from Theorem \ref{thm:masterI} and
+  is hence the value of $(\nu_i(h))_{i \geq 0}$ by uniqueness [todo].
 \end{proof}

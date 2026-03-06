@@ -34,8 +34,28 @@ Let $\RS$ denote the Riemann sphere.
 \end{definition}
 
 \begin{theorem}
+  \label{thm:Stieltjes_boundary_values}
+  \uses{lem:Stieltjes_function}
+  \notready
+  Let $\nu \in \csdistrib$.
+  For any $h \in \smooth$,
+  \begin{equation*}
+    \nu(h)
+    =
+    \lim_{\epsilon \rightarrow 0^+}
+    \int_{\R} (F_\nu(x+i \epsilon) - F_\nu(x - i \epsilon)) h(x) \d x.
+  \end{equation*}
+\end{theorem}
+
+\begin{proof}
+  This can be done by computing explicitely the values of $F_\nu(x \pm i \epsilon)$
+  and seeing the resulting integral as an approximation of $\delta_x$ as $\epsilon \rightarrow 0^+$,
+  [todo write the details].
+\end{proof}
+
+\begin{theorem}
   \label{thm:Stieltjes_holomorphic}
-  \uses{def:Stieltjes}
+  \uses{thm:Stieltjes_boundary_values}
   \notready
   Let $\nu \in \csdistrib$.
   The function $F_\nu : \RS - \R \rightarrow \C$ is analytic.
@@ -43,7 +63,36 @@ Let $\RS$ denote the Riemann sphere.
 \end{theorem}
 
 \begin{proof}
-  This might need some work!
+  This proof is not complete yet as it requires a bit of work on distributions.
+
+  [todo: find a general result describing when $\nu(h(\cdot, z))$ is holomorphic, there is
+  information on this in Mathematical Methods in Physics: Distributions, Hilbert Space Operators,
+  Variational Methods, and Applications in Quantum Physics]
+
+  [todo: write the details]
+
+  For $z \in \R$, if $z \notin \supp(\nu)$, then we take a
+  $\phi \in \testfunc$ such that $\phi$ is identically equal to $1$ on $\supp (\nu)$
+  and $\phi(z)$ is identically equal to $0$ on a neighbourhood of $z$.
+  We then observe that $x \in \R \mapsto \phi(x) \frac{1}{2 i \pi} \frac{1}{x-z}$
+  is an element of $\smooth$ and hence we can
+  define $\tilde{F}_\nu(z) = \nu(\frac{1}{2 i \pi} \frac{1}{x-z} \phi)$.
+  We check it is an extension of $F_\nu$ and analytic on a neighbourhood of $z$.
+
+  Let $z \in \R$. We assume that $F_\nu$ admits an analytic extension on the ball of radius $r$
+  centered at $z$.
+  Let $r' \in (0,r)$ and
+  $h \in \smooth$ such that $\supp(h) \subset [z-r',z+r']$.
+  By Theorem \ref{thm:Stieltjes_boundary_values},
+  \begin{equation*}
+    \nu(h) = \lim_{\epsilon \rightarrow 0^+}
+    \int_{z-r'}^{z+r'} (F_\nu(x+i \epsilon) - F_\nu(x - i \epsilon)) h(x) \d x.
+  \end{equation*}
+  For small enough $\epsilon>0$, and any $x \in [z-r',z+r']$,
+  $F_\nu(x \pm i \epsilon)$ lies in the ball of radius $r$ around $z$ where $F_\nu$
+  is analytically extended. We use this information to prove the that limit above (and hence
+  $\nu(h)$) is equal to $0$. Since this holds for any $h$ supported on $[z-r',z+r']$,
+  $z \notin \supp(h)$.
 \end{proof}
 
 \subsection{Spectral radius and support}
@@ -111,25 +160,35 @@ and hence $(|\nu_p|^{1/p})_{p \geq 0}$ is bounded.
   \notready
   \uses{lem:radius_finite,def:Stieltjes}
   Let $\nu \in \csdistrib$.
-  There exists $M > 0$ such that, for all $z \in \C$ satisfying $|z|>M$,
-  \begin{equation*}
-    F_\nu(z) = \sum_{p=0}^\infty \frac{\nu_p}{z^{p+1}}.
-  \end{equation*}
+  There exists $M > 0$ such that $z \mapsto -\frac{1}{2 i \pi} \sum_{p=0}^\infty \frac{\nu_p}{z^{p+1}}$
+  is an analytic extension of $F_\nu$ in $\{|z| > M\}$.
 \end{proposition}
 
 \begin{proof}
-  TODO
+  Let $K$, $c$, $m$ be such that $|\nu(h)| \leq c \|h\|_{C^m([-K,K])}$ for all $h \in \smooth$.
+  Let $N \geq 0$, $z \neq 0$. By linearity,
+  \begin{equation*}
+    -\frac{1}{2i \pi}
+    \sum_{p=0}^N \frac{\nu_p}{z^{p+1}}
+    = -\frac{1}{2 i \pi z} \nu \left( \sum_{p=0}^N \left(\frac{x}{z}\right)^p \right).
+  \end{equation*}
+  We need to prove that for $z \notin \R$
+  large enough, $\sum_{p=0}^N \left(\frac{x}{z}\right)^p$
+  converges to $\frac{1}{1-x/z}$ w.r.t. $\|\cdot\|_{C^m([-K,K])}$,
+  which then implies that the above quantity converges to $F_\nu(z)$.
+    [todo write the details]
 \end{proof}
 
 The main result of this section is as follows.
 
 \begin{theorem}
   \label{thm:support_limsup}
+  \notready
   \uses{thm:Stieltjes_holomorphic,prop:Stieltjes_expansion}
   Let $\nu \in \csdistrib$.
   Then $\supp \nu \subseteq [-\rho(\nu), \rho(\nu)]$.
 \end{theorem}
 
 \begin{proof}
-  Still need some work!
+  As in \cite[Lemma 4.9]{chen2025}.
 \end{proof}

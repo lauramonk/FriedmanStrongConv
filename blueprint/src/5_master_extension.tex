@@ -475,5 +475,32 @@ We can now proceed to the proof of second master inequality.
 \begin{theorem}
   \label{thm:masterII}
   \uses{thm:masterI,prop:extension_poly_smooth,lem:bound_sum_aj,coro:masterI}
-  [todo]
+  Let $r \geq 2$ and $D \geq 1$.
+  Fix a self-adjoint non-commutative polynomial $P \in \nonco$
+  of degree $q_0$, and let $K = \|P\|_{D,r}$.
+  There exists a family of compactly supported distributions $(\nu_i)_{i\geq 0}$
+  satisfying the following.
+  For any $\beta > 1$, $\frac{1}{\beta_*} + \frac{1}{\beta} = 1$,
+  any $N,m \geq 1$, any $h \in \smooth$, if $f(\theta) := h(K\cos(\theta))$, then
+  \begin{equation*}
+    \left|\expec\left[\trN[ND] h(P(S_1, \ldots, S_r))\right]
+     - \sum_{i=0}^{m-1} \frac{\nu_i(h)}{N^i}\right|
+     \leq 4 \beta_* \frac{(4 q_0(1+\log r))^{4m}}{N^m} \|f^{(4m+1)}\|_{L^\beta(\tor)}.
+  \end{equation*}
 \end{theorem}
+
+\begin{proof}
+  Let $i \geq 0$.
+  By Lemma \ref{coro:masterI},
+  for every $q \geq 1$ and $h \in \mathcal{P}_q$,
+  \begin{equation*}
+    |\nu_i(h)|
+    \leq c q^{4i} \|h\|_{C^0([-K,K])}.
+  \end{equation*}
+  where $c = (4 q_0(1+\log r))^{4i}$.
+  By Proposition \ref{prop:extension_poly_smooth} ($3 \Rightarrow 1$)
+  with $K$, $c$ and $m=4i$, $\nu_i$ can be uniquely extended to a compactly supported
+  distribution.
+
+  Let us now take $q \geq 1$ and $h \in \mathcal{P}_q$. [todo]
+\end{proof}
