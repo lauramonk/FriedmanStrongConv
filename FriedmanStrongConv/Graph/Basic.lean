@@ -33,16 +33,32 @@ def perm (vertexSet : Set α) {permSet : Set (Equiv.Perm α)}
       · exact he.1.2
       · simp; exact he.1.1
 
+namespace perm
+
 variable {vertexSet : Set α} {permSet : Set (Equiv.Perm α)} {hP : ∀p ∈ permSet, p '' vertexSet ⊆ vertexSet}
 variable {x y : α} {e : α × Equiv.Perm α}
 
-lemma perm.isLink : ((perm vertexSet hP).IsLink e x y) ↔ (e.1 ∈ vertexSet ∧ e.2 ∈ permSet) ∧
+lemma isLink_iff : ((perm vertexSet hP).IsLink e x y) ↔ (e.1 ∈ vertexSet ∧ e.2 ∈ permSet) ∧
 ((x = e.1 ∧ y = e.2 x) ∨ (y = e.1 ∧ x = e.2 y)) := by exact Eq.to_iff rfl
 
-lemma perm.edge_mem : ((perm vertexSet hP).IsLink e x y) → e.2 ∈ permSet := by
-  rw [perm.isLink]
-  exact fun h => h.1.2
+lemma left_mem : ((perm vertexSet hP).IsLink e x y) → x ∈ vertexSet := by apply left_mem_of_isLink
 
-lemma perm.vertex_mem :  ((perm vertexSet hP).IsLink e x y) → x ∈ vertexSet := by apply left_mem_of_isLink
+lemma right_mem : ((perm vertexSet hP).IsLink e x y) → y ∈ vertexSet := sorry
 
-lemma perm_isLoopAt : (perm vertexSet hP).IsLoopAt e x ↔ ((x ∈ vertexSet ∧ e.2 ∈ permSet) ∧ e.2 x = x) := sorry
+lemma edge_mem : ((perm vertexSet hP).IsLink e x y) → e ∈ (perm vertexSet hP).edgeSet := sorry
+
+lemma permSet_mem : ((perm vertexSet hP).IsLink e x y) → e.2 ∈ permSet := sorry
+
+lemma isLink_rel : ((perm vertexSet hP).IsLink e x y) → (x = e.2 y) ∨ (x = e.2.symm y) := sorry
+
+lemma isLoopAt : (perm vertexSet hP).IsLoopAt e x ↔ ((x ∈ vertexSet ∧ e.2 ∈ permSet) ∧ e.2 x = x) := by
+  constructor
+  · intro hx
+    constructor
+    · exact ⟨left_mem hx, permSet_mem hx⟩
+    · have : x = e.2 x ∨ x = e.2.symm x := by exact isLink_rel hx
+      rcases this with h | h
+      · rw [← h]
+      · rw [h]
+        exact (Equiv.apply_eq_iff_eq_symm_apply e.2).mpr (congrArg (⇑(Equiv.symm e.2)) h) -- found with apply?
+  · sorry
